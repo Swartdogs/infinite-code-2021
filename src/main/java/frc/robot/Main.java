@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Main {
   private Main() {
+  
   }
 
   /**
@@ -28,4 +29,4 @@ public final class Main {
   }
 }
 
-/*Git test edit*/
+/*Git test edit */
