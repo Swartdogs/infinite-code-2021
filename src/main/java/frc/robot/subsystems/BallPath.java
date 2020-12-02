@@ -2,13 +2,10 @@
 package frc.robot.Subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class BallPath extends SubsystemBase {
 
@@ -21,21 +18,18 @@ public class BallPath extends SubsystemBase {
 
     private Solenoid        m_upperTrackSolenoid;
 
-    public BallPath() {
+    public BallPath(CANSparkMax upperTrackMotor, CANSparkMax lowerTrackMotor, DigitalInput position1Sensor, 
+                    DigitalInput position2Sensor, DigitalInput shooterSensor, Solenoid upperTrackSolenoid) {
 
-        m_upperTrackMotor       = new CANSparkMax(Constants.CAN.UPPER_TRACK_MOTOR_ID, MotorType.kBrushless);
-        m_lowerTrackMotor       = new CANSparkMax(Constants.CAN.LOWER_TRACK_MOTOR_ID, MotorType.kBrushless);
+        m_upperTrackMotor       = upperTrackMotor;
+        m_lowerTrackMotor       = lowerTrackMotor;
 
-        m_position1Sensor       = new DigitalInput(Constants.DIO.POSITION_1_SENSOR_PORT);
-        m_position2Sensor       = new DigitalInput(Constants.DIO.POSITION_2_SENSOR_PORT);
-        m_shooterSensor         = new DigitalInput(Constants.DIO.SHOOTER_SENSOR_PORT);
+        m_position1Sensor       = position1Sensor;
+        m_position2Sensor       = position2Sensor;
+        m_shooterSensor         = shooterSensor;
 
-        m_upperTrackSolenoid    = new Solenoid(Constants.PCM.UPPER_TRACK_SOLENOID_PORT);
-
-    }
-
-    @Override
-    public void periodic() {
+        m_upperTrackSolenoid    = upperTrackSolenoid;
 
     }
+
 }
