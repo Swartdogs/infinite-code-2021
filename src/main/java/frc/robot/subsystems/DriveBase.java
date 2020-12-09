@@ -36,6 +36,45 @@ public class DriveBase extends SubsystemBase
         m_gyro                  = gyro;
     }
 
-    //all of our functions will go here
+    void arcadeDrive(double drive, double rotate) {
+        double left = 0;
+        double right = 0; 
+
+        left = drive + rotate;  
+        right = drive - rotate; 
+
+        double max = Math.max(Math.abs(left), Math.abs(right));
+
+        if (max > 1.0) {
+            left /= max;
+            right /= max;
+        }
+
+        m_driveLeftPrimary.set(left);
+        m_driveLeftSecondary.set(left);
+        m_driveRightPrimary.set(right);
+        m_driveRightSecondary.set(right);
+    }
+
+    public double getHeading() {
+        return m_gyro.getAngle();
+    }
+
+    public double getLeftDistance() {
+        return m_leftEncoder.getDistance();
+    }
+
+    public double getRightDistance() {
+        return m_rightEncoder.getDistance();
+    }
+
+    public void resetEncoders() {
+        m_leftEncoder.reset();
+        m_rightEncoder.reset();
+    }
+
+    public void resetGyro() {
+        m_gyro.reset();
+    }
 
 }
