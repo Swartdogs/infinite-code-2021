@@ -2,6 +2,7 @@
 package frc.robot.Subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -30,6 +31,34 @@ public class BallPath extends SubsystemBase {
 
         m_upperTrackSolenoid    = upperTrackSolenoid;
 
+        m_upperTrackMotor.setIdleMode(IdleMode.kBrake);
+        m_lowerTrackMotor.setIdleMode(IdleMode.kBrake);
+
+        m_lowerTrackMotor.setInverted(true);
+    }
+
+    public boolean getPosition1Sensor() {
+        return m_position1Sensor.get();
+    }
+
+    public boolean getPosition2Sensor() {
+        return m_position2Sensor.get();
+    }
+
+    public boolean getShooterSensor() {
+        return m_shooterSensor.get();
+    }
+
+    public void setUpperTrackMotorSpeed(double speed) {
+        m_upperTrackMotor.set(speed);
+    }
+
+    public void setLowerTrackMotorSpeed(double speed) {
+        m_lowerTrackMotor.set(speed);
+    }
+
+    public void setUpperTrackSolenoid(boolean isRaised) {
+        m_upperTrackSolenoid.set(isRaised);
     }
 
 }
