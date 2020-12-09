@@ -20,4 +20,15 @@ public class Shooter extends SubsystemBase
 
         m_hoodSolenoid = hoodSolenoid;
     }
+
+    public void setShooter(double speed)
+    {
+        m_primaryMotor.set(speed);
+        m_secondaryMotor.set(speed);
+    }
+
+    public void setHood(boolean on)
+    {
+        m_hoodSolenoid.set(on);
+    }
 }

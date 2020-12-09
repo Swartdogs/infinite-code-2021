@@ -12,4 +12,9 @@ public class Spinner extends SubsystemBase
     {
         m_spinnerMotor = spinnerMotor;
     }
+
+    public void setSpinner(double speed)
+    {
+        m_spinnerMotor.set(speed);
+    }
 }
