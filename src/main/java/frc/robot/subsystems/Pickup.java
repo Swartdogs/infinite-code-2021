@@ -31,4 +31,34 @@ public class Pickup extends SubsystemBase
 
         m_deploySolenoid   = deploySolenoid;
     }
+
+    public void setPrimaryMotor(double speed)
+    {
+        m_primaryMotor.set(speed);
+    }
+
+    public void setLeftMotor(double speed)
+    {
+        m_leftMotor.set(speed);
+    }
+
+    public void setRightMotor(double speed)
+    {
+        m_rightMotor.set(speed);
+    }
+
+    public boolean getLeftLightSensor()
+    {
+        return m_leftLightSensor.get();
+    }
+
+    public boolean getRightLightSensor()
+    {
+        return m_rightLightSensor.get();
+    }
+
+    public void setDeploySolenoid(boolean on)
+    {
+        m_deploySolenoid.set(on);
+    }
 }
