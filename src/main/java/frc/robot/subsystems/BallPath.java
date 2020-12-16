@@ -1,5 +1,4 @@
-
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -8,8 +7,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class BallPath extends SubsystemBase {
-
+public class BallPath extends SubsystemBase 
+{
     private CANSparkMax     m_upperTrackMotor;
     private CANSparkMax     m_lowerTrackMotor;
 
@@ -20,8 +19,8 @@ public class BallPath extends SubsystemBase {
     private Solenoid        m_upperTrackSolenoid;
 
     public BallPath(CANSparkMax upperTrackMotor, CANSparkMax lowerTrackMotor, DigitalInput position1Sensor, 
-                    DigitalInput position2Sensor, DigitalInput shooterSensor, Solenoid upperTrackSolenoid) {
-
+                    DigitalInput position2Sensor, DigitalInput shooterSensor, Solenoid upperTrackSolenoid) 
+    {
         m_upperTrackMotor       = upperTrackMotor;
         m_lowerTrackMotor       = lowerTrackMotor;
 
@@ -60,5 +59,4 @@ public class BallPath extends SubsystemBase {
     public void setUpperTrackSolenoid(boolean isRaised) {
         m_upperTrackSolenoid.set(isRaised);
     }
-
 }
