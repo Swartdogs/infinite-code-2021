@@ -36,7 +36,7 @@ public class DriveBase extends SubsystemBase
         m_gyro                  = gyro;
     }
 
-    void arcadeDrive(double drive, double rotate) {
+    public void arcadeDrive(double drive, double rotate) {
         double left = 0;
         double right = 0; 
 
