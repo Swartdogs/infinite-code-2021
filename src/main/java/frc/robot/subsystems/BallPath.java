@@ -9,6 +9,20 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BallPath extends SubsystemBase 
 {
+    public enum UpperTrackState {
+        Raised,
+        Lowered
+    }
+
+    public enum TrackMotorState {
+        Forwards,
+        Backwards,
+        Stopped
+    }
+
+    private UpperTrackState     m_upperTrackState;
+    private TrackMotorState     m_trackMotorState;
+
     private CANSparkMax     m_upperTrackMotor;
     private CANSparkMax     m_lowerTrackMotor;
 
@@ -21,6 +35,9 @@ public class BallPath extends SubsystemBase
     public BallPath(CANSparkMax upperTrackMotor, CANSparkMax lowerTrackMotor, DigitalInput position1Sensor, 
                     DigitalInput position2Sensor, DigitalInput shooterSensor, Solenoid upperTrackSolenoid) 
     {
+        m_upperTrackState       = UpperTrackState.Raised;
+        m_trackMotorState       = TrackMotorState.Stopped;
+
         m_upperTrackMotor       = upperTrackMotor;
         m_lowerTrackMotor       = lowerTrackMotor;
 
@@ -34,6 +51,8 @@ public class BallPath extends SubsystemBase
         m_lowerTrackMotor.setIdleMode(IdleMode.kBrake);
 
         m_lowerTrackMotor.setInverted(true);
+
+
     }
 
     public boolean getPosition1Sensor() {
@@ -56,7 +75,7 @@ public class BallPath extends SubsystemBase
         m_lowerTrackMotor.set(speed);
     }
 
-    public void setUpperTrackSolenoid(boolean isRaised) {
-        m_upperTrackSolenoid.set(isRaised);
+    public void setUpperTrackSolenoid(UpperTrackState state) {
+        m_upperTrackSolenoid.set(state == UpperTrackState.Raised);
     }
 }
