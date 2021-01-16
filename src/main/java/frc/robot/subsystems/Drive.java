@@ -9,10 +9,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Drive extends SubsystemBase 
 {
     // motors
-    private CANSparkMax         m_driveLeftPrimary;
-    private CANSparkMax         m_driveLeftSecondary;
-    private CANSparkMax         m_driveRightPrimary;
-    private CANSparkMax         m_driveRightSecondary;
+    private CANSparkMax         m_driveLeft;
+    private CANSparkMax         m_driveRight;
 
     // encoder
     private DutyCycleEncoder    m_leftEncoder;
@@ -21,19 +19,16 @@ public class Drive extends SubsystemBase
     // gyro
     private ADXRS450_Gyro       m_gyro;
 
-    public Drive(CANSparkMax driveLeftPrimary, CANSparkMax driveLeftSecondary,
-                 CANSparkMax driveRightPrimary, CANSparkMax driveRightSecondary,
+    public Drive(CANSparkMax driveLeft, CANSparkMax driveRight,
                  DutyCycleEncoder leftEncoder, DutyCycleEncoder rightEncoder, ADXRS450_Gyro gyro) 
     {
-        m_driveLeftPrimary      = driveLeftPrimary;
-        m_driveLeftSecondary    = driveLeftSecondary;
-        m_driveRightPrimary     = driveRightPrimary;
-        m_driveRightSecondary   = driveRightSecondary;
+        m_driveLeft     = driveLeft;
+        m_driveRight    = driveRight;
 
-        m_leftEncoder           = leftEncoder;
-        m_rightEncoder          = rightEncoder;
+        m_leftEncoder   = leftEncoder;
+        m_rightEncoder  = rightEncoder;
 
-        m_gyro                  = gyro;
+        m_gyro          = gyro;
     }
 
     public void arcadeDrive(double drive, double rotate) 
@@ -48,10 +43,8 @@ public class Drive extends SubsystemBase
             right /= max;
         }
 
-        m_driveLeftPrimary.set(left);
-        m_driveLeftSecondary.set(left);
-        m_driveRightPrimary.set(right);
-        m_driveRightSecondary.set(right);
+        m_driveLeft.set(left);
+        m_driveRight.set(right);
     }
 
     public double getHeading() 

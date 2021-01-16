@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.VictorSP;
 
@@ -17,7 +18,7 @@ public final class Hardware
         // private constructor prevents instantiation
     }
 
-    public static void ConfigureHardware()
+    public static void configureHardware()
     {
         /* DEFINITION */
 
@@ -28,6 +29,10 @@ public final class Hardware
         BallPath.Sensors.POSITION_1_SENSOR  = new DigitalInput(4);
         BallPath.Sensors.POSITION_2_SENSOR  = new DigitalInput(2);
         BallPath.Sensors.SHOOTER_SENSOR     = new DigitalInput(3);
+
+        // Controls
+        Controls.Joysticks.DRIVE            = new Joystick(0);
+        Controls.Joysticks.CO_DRIVE         = new Joystick(1);
 
         // Drive
         Drive.Motors.LEFT_PRIMARY           = new CANSparkMax(2, MotorType.kBrushless);
@@ -75,10 +80,48 @@ public final class Hardware
 
         // Shooter
         Shooter.Motors.SECONDARY.follow(Shooter.Motors.PRIMARY);
+
+        /* INIT SUBSYSTEMS */
+
+        BallPath.instance = new frc.robot.subsystems.BallPath
+        (
+            BallPath.Motors.UPPER_TRACK,
+            BallPath.Motors.LOWER_TRACK,
+            BallPath.Sensors.POSITION_1_SENSOR,
+            BallPath.Sensors.POSITION_2_SENSOR,
+            BallPath.Sensors.SHOOTER_SENSOR
+        );
+
+        Drive.instance = new frc.robot.subsystems.Drive
+        (
+            Drive.Motors.LEFT_PRIMARY, 
+            Drive.Motors.RIGHT_PRIMARY, 
+            Drive.Sensors.LEFT_ENCODER, 
+            Drive.Sensors.RIGHT_ENCODER, 
+            Drive.Sensors.GYRO
+        );
+
+        Pickup.instance = new frc.robot.subsystems.Pickup
+        (
+            Pickup.Motors.PRIMARY,
+            Pickup.Motors.LEFT,
+            Pickup.Motors.RIGHT,
+            Pickup.Sensors.LEFT,
+            Pickup.Sensors.RIGHT,
+            Pickup.Solenoids.DEPLOY
+        );
+
+        Shooter.instance = new frc.robot.subsystems.Shooter
+        (
+            Shooter.Motors.PRIMARY,
+            Shooter.Solenoids.HOOD
+        );
     }
 
     public static class BallPath
     {
+        public static frc.robot.subsystems.BallPath instance;
+
         public static class Motors
         {
             public static CANSparkMax       UPPER_TRACK; 
@@ -93,8 +136,19 @@ public final class Hardware
         }
     }
 
+    public static class Controls
+    {
+        public static class Joysticks
+        {
+            public static Joystick          DRIVE;
+            public static Joystick          CO_DRIVE;
+        }
+    }
+
     public static class Drive
     {
+        public static frc.robot.subsystems.Drive instance;
+
         public static class Motors
         {
             public static CANSparkMax       LEFT_PRIMARY;
@@ -113,6 +167,8 @@ public final class Hardware
 
     public static class Pickup
     {
+        public static frc.robot.subsystems.Pickup instance;
+
         public static class Motors
         {
             public static CANSparkMax       PRIMARY;
@@ -134,6 +190,8 @@ public final class Hardware
 
     public static class Shooter
     {
+        public static frc.robot.subsystems.Shooter instance;
+
         public static class Motors
         {
             public static CANSparkMax       PRIMARY;
