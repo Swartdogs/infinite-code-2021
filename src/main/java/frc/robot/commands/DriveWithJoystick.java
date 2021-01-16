@@ -3,26 +3,26 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.Drive;
 
 public class DriveWithJoystick extends CommandBase 
 {
-    private DriveBase       m_driveBase;
-    private DoubleSupplier  m_drive;
-    private DoubleSupplier  m_rotate;
+    private Drive           m_drive;
+    private DoubleSupplier  m_driveValue;
+    private DoubleSupplier  m_rotateValue;
 
-    public DriveWithJoystick(DriveBase drivebase, DoubleSupplier drive, DoubleSupplier rotate) 
+    public DriveWithJoystick(Drive drive, DoubleSupplier driveValue, DoubleSupplier rotateValue) 
     {
-        m_driveBase     = drivebase;
-
         m_drive         = drive;
-        m_rotate        = rotate;
+
+        m_driveValue    = driveValue;
+        m_rotateValue   = rotateValue;
     }
 
     @Override
     public void execute() 
     {
-        m_driveBase.arcadeDrive(m_drive.getAsDouble(), m_rotate.getAsDouble());
+        m_drive.arcadeDrive(m_driveValue.getAsDouble(), m_rotateValue.getAsDouble());
     }
 
     @Override

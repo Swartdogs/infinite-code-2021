@@ -30,13 +30,6 @@ public class Shooter extends SubsystemBase
 
     public void setHood(SolenoidState desiredState)
     {
-        if (SolenoidState.Retracted == desiredState)
-        {
-            m_hoodSolenoid.set(true);
-        }
-        else
-        {
-            m_hoodSolenoid.set(false);
-        }
+        m_hoodSolenoid.set(desiredState == SolenoidState.Retracted);
     }
 }

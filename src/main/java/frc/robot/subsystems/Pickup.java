@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LightSensorState;
+import frc.robot.Constants.SolenoidState;
 
 public class Pickup extends SubsystemBase 
 {
@@ -19,7 +21,8 @@ public class Pickup extends SubsystemBase
 
     private Solenoid     m_deploySolenoid;
 
-    public Pickup(CANSparkMax primaryMotor, VictorSP leftMotor, VictorSP rightMotor, DigitalInput leftLightSensor, DigitalInput rightLightSensor, Solenoid deploySolenoid) 
+    public Pickup(CANSparkMax primaryMotor, VictorSP leftMotor, VictorSP rightMotor, 
+                  DigitalInput leftLightSensor, DigitalInput rightLightSensor, Solenoid deploySolenoid) 
     {
         m_primaryMotor     = primaryMotor;
 
@@ -47,18 +50,18 @@ public class Pickup extends SubsystemBase
         m_rightMotor.set(speed);
     }
 
-    public boolean getLeftLightSensor()
+    public LightSensorState getLeftLightSensor()
     {
-        return m_leftLightSensor.get();
+        return m_leftLightSensor.get() ? LightSensorState.NotDetected : LightSensorState.Detected;
     }
 
-    public boolean getRightLightSensor()
+    public LightSensorState getRightLightSensor()
     {
-        return m_rightLightSensor.get();
+        return m_rightLightSensor.get() ? LightSensorState.NotDetected : LightSensorState.Detected;
     }
 
-    public void setDeploySolenoid(boolean on)
+    public void setDeploySolenoid(SolenoidState desiredState)
     {
-        m_deploySolenoid.set(on);
+        m_deploySolenoid.set(desiredState == SolenoidState.Extended);
     }
 }

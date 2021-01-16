@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DriveBase extends SubsystemBase 
+public class Drive extends SubsystemBase 
 {
     // motors
     private CANSparkMax         m_driveLeftPrimary;
@@ -21,9 +21,9 @@ public class DriveBase extends SubsystemBase
     // gyro
     private ADXRS450_Gyro       m_gyro;
 
-    public DriveBase(CANSparkMax driveLeftPrimary, CANSparkMax driveLeftSecondary,
-                     CANSparkMax driveRightPrimary, CANSparkMax driveRightSecondary,
-                     DutyCycleEncoder leftEncoder, DutyCycleEncoder rightEncoder, ADXRS450_Gyro gyro) 
+    public Drive(CANSparkMax driveLeftPrimary, CANSparkMax driveLeftSecondary,
+                 CANSparkMax driveRightPrimary, CANSparkMax driveRightSecondary,
+                 DutyCycleEncoder leftEncoder, DutyCycleEncoder rightEncoder, ADXRS450_Gyro gyro) 
     {
         m_driveLeftPrimary      = driveLeftPrimary;
         m_driveLeftSecondary    = driveLeftSecondary;
@@ -36,16 +36,14 @@ public class DriveBase extends SubsystemBase
         m_gyro                  = gyro;
     }
 
-    public void arcadeDrive(double drive, double rotate) {
-        double left = 0;
-        double right = 0; 
+    public void arcadeDrive(double drive, double rotate) 
+    {
+        double left  = drive + rotate;
+        double right = drive - rotate;
+        double max   = Math.max(Math.abs(left), Math.abs(right));
 
-        left = drive + rotate;  
-        right = drive - rotate; 
-
-        double max = Math.max(Math.abs(left), Math.abs(right));
-
-        if (max > 1.0) {
+        if (max > 1.0) 
+        {
             left /= max;
             right /= max;
         }
@@ -56,24 +54,29 @@ public class DriveBase extends SubsystemBase
         m_driveRightSecondary.set(right);
     }
 
-    public double getHeading() {
+    public double getHeading() 
+    {
         return m_gyro.getAngle();
     }
 
-    public double getLeftDistance() {
+    public double getLeftDistance() 
+    {
         return m_leftEncoder.getDistance();
     }
 
-    public double getRightDistance() {
+    public double getRightDistance() 
+    {
         return m_rightEncoder.getDistance();
     }
 
-    public void resetEncoders() {
+    public void resetEncoders() 
+    {
         m_leftEncoder.reset();
         m_rightEncoder.reset();
     }
 
-    public void resetGyro() {
+    public void resetGyro() 
+    {
         m_gyro.reset();
     }
 
