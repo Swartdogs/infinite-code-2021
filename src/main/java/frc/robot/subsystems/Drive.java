@@ -115,7 +115,11 @@ public class Drive extends SubsystemBase
 
     public double getDistance(UseEncoder encoder) 
     {
-        if (encoder == UseEncoder.CurrentEncoder) encoder = m_useEncoder;
+        if (encoder == UseEncoder.CurrentEncoder) 
+        {
+            encoder = m_useEncoder;
+        }
+
         double distance = 0;
         double left = getLeftDistance();
         double right = getRightDistance();
@@ -152,5 +156,14 @@ public class Drive extends SubsystemBase
     {
         m_gyro.reset();
     }
+
+    public void rotateInit(double heading, double maxSpeed, boolean resetGyro, boolean usingVision) {
+        
+    }
+
+    public double rotateExec(boolean usingVision) {
+        return 0;
+    }
+
 
 }
