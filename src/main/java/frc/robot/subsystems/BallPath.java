@@ -9,15 +9,18 @@ import frc.robot.Constants.LightSensorState;
 
 public class BallPath extends SubsystemBase 
 {   
-    private static double   TRACK_SPEED_FORWARD     = 1.0;
-    private static double   TRACK_SPEED_BACKWARD    = -1.0;
-    private static double   TRACK_SPEED_STOP        = 0;
+    private static final double   TRACK_SPEED_FORWARD     = 1.0;
+    private static final double   TRACK_SPEED_BACKWARD    = -1.0;
+    private static final double   TRACK_SPEED_STOP        = 0;
 
     public enum TrackMotorState {
         Forward,
         Backward,
         Stop
     }
+
+    private TrackMotorState m_upperTrackMotorState;
+    private TrackMotorState m_lowerTrackMotorState;
 
     private CANSparkMax     m_upperTrackMotor;
     private CANSparkMax     m_lowerTrackMotor;
@@ -29,6 +32,9 @@ public class BallPath extends SubsystemBase
     public BallPath(CANSparkMax upperTrackMotor, CANSparkMax lowerTrackMotor, DigitalInput position1Sensor, 
                     DigitalInput position2Sensor, DigitalInput shooterSensor) 
     {
+        m_upperTrackMotorState  = TrackMotorState.Stop;
+        m_lowerTrackMotorState  = TrackMotorState.Stop;
+
         m_upperTrackMotor       = upperTrackMotor;
         m_lowerTrackMotor       = lowerTrackMotor;
 
@@ -57,13 +63,57 @@ public class BallPath extends SubsystemBase
         return m_shooterSensor.get() ? LightSensorState.NotDetected : LightSensorState.Detected;
     }
 
-    public void setUpperTrackMotorSpeed(double speed) 
+    public void setUpperTrackMotorSpeed(TrackMotorState motorState) 
     {
+        
+        if (m_upperTrackMotorState != motorState) {
+            m_upperTrackMotorState = motorState;
+        }
+
+        double speed = 0;
+
+        switch (m_trackMotorState) {
+            case Forward:
+                speed = TRACK_SPEED_FORWARD;
+                break;
+
+            case Backward:
+                speed = TRACK_SPEED_BACKWARD;
+                break;
+
+            case Stop:
+            default:
+                speed = TRACK_SPEED_STOP;
+                break;
+        }
+
         m_upperTrackMotor.set(speed);
     }
 
-    public void setLowerTrackMotorSpeed(double speed) 
+    public void setLowerTrackMotorSpeed(TrackMotorState motorState) 
     {
+                
+        if (m_lowerTrackMotorState != motorState) {
+            m_lowerTrackMotorState = motorState;
+        }
+
+        double speed = 0;
+
+        switch (m_lowerTrackMotorState) {
+            case Forward:
+                speed = TRACK_SPEED_FORWARD;
+                break;
+
+            case Backward:
+                speed = TRACK_SPEED_BACKWARD;
+                break;
+
+            case Stop:
+            default:
+                speed = TRACK_SPEED_STOP;
+                break;
+        }
+
         m_lowerTrackMotor.set(speed);
     }
 }
