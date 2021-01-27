@@ -8,7 +8,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LightSensorState;
 
 public class BallPath extends SubsystemBase 
-{
+{   
+    private static double   TRACK_SPEED_FORWARD     = 1.0;
+    private static double   TRACK_SPEED_BACKWARD    = -1.0;
+    private static double   TRACK_SPEED_STOP        = 0;
+
+    public enum TrackMotorState {
+        Forward,
+        Backward,
+        Stop
+    }
+
     private CANSparkMax     m_upperTrackMotor;
     private CANSparkMax     m_lowerTrackMotor;
 
