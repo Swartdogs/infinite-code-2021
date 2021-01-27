@@ -84,7 +84,7 @@ public class Drive extends SubsystemBase
         m_driveRight.set(right);
     }
 
-    public void driveInit(double distance, double heading, double maxSpeed, double minSpeed, boolean resetGyro, boolean resetEncoders) 
+    public void driveInit(double distance, double maxSpeed, double minSpeed, boolean resetGyro, boolean resetEncoders) 
     {
         maxSpeed = Math.abs(maxSpeed);
         minSpeed = Math.abs(minSpeed);
@@ -106,6 +106,10 @@ public class Drive extends SubsystemBase
     public double driveExec() 
     {
         return m_drivePID.calculate(getDistance(m_rightEncoder));
+    }
+
+    public boolean drivePIDFinished() {
+        return (Math.abs(m_drivePID.error() <= 1.0));   //1 inch is current threshold error
     }
 
     public double getHeading() 
@@ -159,6 +163,10 @@ public class Drive extends SubsystemBase
 
     public void rotateInit(double heading, double maxSpeed, boolean resetGyro, boolean usingVision) {
         
+    }
+
+    public void rotatePIDSetpoint(double setpoint) {
+        m_rotatePID.setSetpoint(setpoint);
     }
 
     public double rotateExec(boolean usingVision) {
