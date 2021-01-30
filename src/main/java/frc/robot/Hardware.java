@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public final class Hardware
 {
@@ -33,6 +34,8 @@ public final class Hardware
         // Controls
         Controls.Joysticks.DRIVE            = new Joystick(0);
         Controls.Joysticks.CO_DRIVE         = new Joystick(1);
+        
+        Controls.Buttons.PICKUP_BUTTON      = new JoystickButton(Controls.Joysticks.CO_DRIVE, 1);
 
         // Drive
         Drive.Motors.LEFT_PRIMARY           = new CANSparkMax(2, MotorType.kBrushless);
@@ -142,6 +145,11 @@ public final class Hardware
         {
             public static Joystick          DRIVE;
             public static Joystick          CO_DRIVE;
+        }
+
+        public static class Buttons
+        {
+            public static JoystickButton    PICKUP_BUTTON;
         }
     }
 
