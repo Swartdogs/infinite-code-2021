@@ -35,7 +35,8 @@ public final class Hardware
         Controls.Joysticks.DRIVE            = new Joystick(0);
         Controls.Joysticks.CO_DRIVE         = new Joystick(1);
         
-        Controls.Buttons.PICKUP_BUTTON      = new JoystickButton(Controls.Joysticks.CO_DRIVE, 1);
+        Controls.Buttons.CO_DRIVE_BUTTON_6  = new JoystickButton(Controls.Joysticks.CO_DRIVE, 6);
+        Controls.Buttons.CO_DRIVE_BUTTON_7  = new JoystickButton(Controls.Joysticks.CO_DRIVE, 7);
 
         // Drive
         Drive.Motors.LEFT_PRIMARY           = new CANSparkMax(2, MotorType.kBrushless);
@@ -149,7 +150,8 @@ public final class Hardware
 
         public static class Buttons
         {
-            public static JoystickButton    PICKUP_BUTTON;
+            public static JoystickButton    CO_DRIVE_BUTTON_6;
+            public static JoystickButton    CO_DRIVE_BUTTON_7;
         }
     }
 
