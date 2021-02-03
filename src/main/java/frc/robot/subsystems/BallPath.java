@@ -72,7 +72,7 @@ public class BallPath extends SubsystemBase
 
         double speed = 0;
 
-        switch (m_trackMotorState) {
+        switch (m_upperTrackMotorState) {
             case Forward:
                 speed = TRACK_SPEED_FORWARD;
                 break;
