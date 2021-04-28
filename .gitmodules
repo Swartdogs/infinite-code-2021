@@ -1,0 +1,3 @@
+[submodule "src/main/java/frc/robot/abstraction"]
+	path = src/main/java/frc/robot/abstraction
+	url = https://github.com/Swartdogs/Hardware-Abstraction.git
