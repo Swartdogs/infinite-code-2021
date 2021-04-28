@@ -1,67 +1,69 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
+import frc.robot.abstraction.Enumerations.ExtendState;
+import frc.robot.abstraction.Enumerations.State;
+import frc.robot.abstraction.Motor;
+import frc.robot.abstraction.Solenoid;
+import frc.robot.abstraction.SwartdogSubsystem;
+import frc.robot.abstraction.Switch;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.LightSensorState;
-import frc.robot.Constants.SolenoidState;
-
-public class Pickup extends SubsystemBase 
+public class Pickup extends SwartdogSubsystem 
 {
-    private CANSparkMax  m_primaryMotor;
+    private Motor     _primaryMotor;
 
-    private VictorSP     m_leftMotor;
-    private VictorSP     m_rightMotor;
+    private Motor     _leftMotor;
+    private Motor     _rightMotor;
 
-    private DigitalInput m_leftLightSensor;
-    private DigitalInput m_rightLightSensor;
+    private Switch    _leftLightSensor;
+    private Switch    _rightLightSensor;
 
-    private Solenoid     m_deploySolenoid;
+    private Solenoid  _deploySolenoid;
 
-    public Pickup(CANSparkMax primaryMotor, VictorSP leftMotor, VictorSP rightMotor, 
-                  DigitalInput leftLightSensor, DigitalInput rightLightSensor, Solenoid deploySolenoid) 
+    public Pickup(Motor    primaryMotor, 
+                  Motor    leftMotor, 
+                  Motor    rightMotor, 
+                  Switch   leftLightSensor, 
+                  Switch   rightLightSensor, 
+                  Solenoid deploySolenoid) 
     {
-        m_primaryMotor     = primaryMotor;
+        _primaryMotor     = primaryMotor;
 
-        m_leftMotor        = leftMotor;
-        m_rightMotor       = rightMotor;
+        _leftMotor        = leftMotor;
+        _rightMotor       = rightMotor;
 
-        m_leftLightSensor  = leftLightSensor;
-        m_rightLightSensor = rightLightSensor;
+        _leftLightSensor  = leftLightSensor;
+        _rightLightSensor = rightLightSensor;
 
-        m_deploySolenoid   = deploySolenoid;
+        _deploySolenoid   = deploySolenoid;
     }
 
     public void setPrimaryMotor(double speed)
     {
-        m_primaryMotor.set(speed);
+        _primaryMotor.set(speed);
     }
 
     public void setLeftMotor(double speed)
     {
-        m_leftMotor.set(speed);
+        _leftMotor.set(speed);
     }
 
     public void setRightMotor(double speed)
     {
-        m_rightMotor.set(speed);
+        _rightMotor.set(speed);
     }
 
-    public LightSensorState getLeftLightSensor()
+    public State getLeftLightSensor()
     {
-        return m_leftLightSensor.get() ? LightSensorState.NotDetected : LightSensorState.Detected;
+        return _leftLightSensor.getState();
     }
 
-    public LightSensorState getRightLightSensor()
+    public State getRightLightSensor()
     {
-        return m_rightLightSensor.get() ? LightSensorState.NotDetected : LightSensorState.Detected;
+        return _rightLightSensor.getState();
     }
 
-    public void setDeploySolenoid(SolenoidState desiredState)
+    public void setDeploySolenoid(ExtendState desiredState)
     {
-        m_deploySolenoid.set(desiredState == SolenoidState.Extended);
+        _deploySolenoid.setExtendState(desiredState);
     }
 }

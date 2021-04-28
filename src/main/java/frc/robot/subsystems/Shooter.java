@@ -1,32 +1,58 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
+import PIDControl.PIDControl;
+import frc.robot.abstraction.Motor;
+import frc.robot.abstraction.PositionSensor;
+import frc.robot.abstraction.SwartdogSubsystem;
 
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.SolenoidState;
-
-public class Shooter extends SubsystemBase 
+public class Shooter extends SwartdogSubsystem 
 {
-    private CANSparkMax m_shooterMotor;
-    
-    private Solenoid m_hoodSolenoid;
+    private Motor _shooterMotor;
+    private Motor _hoodMotor;
 
-    public Shooter(CANSparkMax shooterMotor, Solenoid hoodSolenoid) 
+    private PositionSensor _hoodSensor;
+
+    private PIDControl     _hoodPID;
+
+    public Shooter(Motor shooterMotor, Motor hoodMotor, PositionSensor hoodSensor, PIDControl hoodPID) 
     {
-        m_shooterMotor = shooterMotor;
+        _shooterMotor = shooterMotor;
+        _hoodMotor    = hoodMotor;
 
-        m_hoodSolenoid = hoodSolenoid;
+        _hoodSensor   = hoodSensor;
+
+        _hoodPID      = hoodPID;
+    }
+
+    public double getHoodPosition()
+    {
+        return _hoodSensor.get();
+    }
+
+    public boolean hoodAtSetpoint()
+    {
+        return _hoodPID.atSetpoint();
+    }
+
+    public double hoodExec()
+    {
+        return _hoodPID.calculate(getHoodPosition());
+    }
+
+    public void setHood(double speed)
+    {
+        _hoodMotor.set(speed);
+    }
+
+    public void setHoodSetpoint(double setpoint)
+    {
+        _hoodPID.setSetpoint(setpoint, getHoodPosition());
     }
 
     public void setShooter(double speed)
     {
-        m_shooterMotor.set(speed);
+        _shooterMotor.set(speed);
     }
 
-    public void setHood(SolenoidState desiredState)
-    {
-        m_hoodSolenoid.set(desiredState == SolenoidState.Retracted);
-    }
 }
