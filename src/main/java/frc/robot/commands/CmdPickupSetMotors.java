@@ -8,14 +8,14 @@ import frc.robot.subsystems.Pickup;
 
 public class CmdPickupSetMotors extends SwartdogCommand 
 {
-    private Pickup   _pickupSubsystem;
     private BallPath _ballPathSubsystem;
+    private Pickup   _pickupSubsystem;
     private State    _state;
 
-    public CmdPickupSetMotors(Pickup pickupSubsystem, BallPath ballPathSubsystem, State state) 
+    public CmdPickupSetMotors(BallPath ballPathSubsystem, Pickup pickupSubsystem, State state) 
     {
-        _pickupSubsystem   = pickupSubsystem;
         _ballPathSubsystem = ballPathSubsystem;
+        _pickupSubsystem   = pickupSubsystem;
         _state             = state;
     }
 

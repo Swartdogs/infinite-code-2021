@@ -16,6 +16,7 @@ public class BallPath extends SwartdogSubsystem
     private Switch    _shooterSensor;
 
     private int       _ballCount;
+    private boolean   _isJammed;
 
     public BallPath(Motor    trackMotor,  
                     Solenoid upperTrackSolenoid,
@@ -29,6 +30,8 @@ public class BallPath extends SwartdogSubsystem
         _position1Sensor       = position1Sensor;
         _position2Sensor       = position2Sensor;
         _shooterSensor         = shooterSensor;
+
+        _isJammed              = false;
     }
 
     public Motor getTrackMotor()
@@ -84,5 +87,15 @@ public class BallPath extends SwartdogSubsystem
     public void decrementBallCount()
     {
         incrementBallCount(-1);
+    }
+
+    public boolean isJammed()
+    {
+        return _isJammed;
+    }
+
+    public void setJammed(boolean jammed)
+    {
+        _isJammed = jammed;
     }
 }

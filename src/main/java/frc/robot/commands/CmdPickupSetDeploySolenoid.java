@@ -8,16 +8,16 @@ import frc.robot.subsystems.Pickup;
 
 public class CmdPickupSetDeploySolenoid extends SwartdogCommand 
 {
-    private Pickup      _pickupSubsystem;
     private BallPath    _ballPathSubsystem;
+    private Pickup      _pickupSubsystem;
     private ExtendState _state;
 
-    public CmdPickupSetDeploySolenoid(Pickup      pickupSubsystem, 
-                                      BallPath    ballPathSubsystem, 
+    public CmdPickupSetDeploySolenoid(BallPath    ballPathSubsystem,
+                                      Pickup      pickupSubsystem,  
                                       ExtendState state)
     {
-        _pickupSubsystem   = pickupSubsystem;
         _ballPathSubsystem = ballPathSubsystem;
+        _pickupSubsystem   = pickupSubsystem;
         _state             = state;
     }
 

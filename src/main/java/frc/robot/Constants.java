@@ -19,4 +19,9 @@ public final class Constants
 
     public static final double PICKUP_SPEED           = 1;
     public static final double PICKUP_CLOG_TIME       = 2;
+
+    public static final double BALLPATH_JAM_TIME      = 1.2;
+    public static final double BALLPATH_RAMP_MIN      = 0.02;
+    public static final double BALLPATH_RAMP_STEP     = 0.10;
+    public static final double BALLPATH_SPEED         = 0.7;
 }
