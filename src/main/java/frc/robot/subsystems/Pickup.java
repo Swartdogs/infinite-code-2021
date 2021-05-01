@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import frc.robot.abstraction.Enumerations.ExtendState;
-import frc.robot.abstraction.Enumerations.State;
 import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.SwartdogSubsystem;
@@ -14,56 +12,56 @@ public class Pickup extends SwartdogSubsystem
     private Motor     _leftMotor;
     private Motor     _rightMotor;
 
+    private Solenoid  _deploySolenoid;
+
     private Switch    _leftLightSensor;
     private Switch    _rightLightSensor;
-
-    private Solenoid  _deploySolenoid;
 
     public Pickup(Motor    primaryMotor, 
                   Motor    leftMotor, 
                   Motor    rightMotor, 
+                  Solenoid deploySolenoid,
                   Switch   leftLightSensor, 
-                  Switch   rightLightSensor, 
-                  Solenoid deploySolenoid) 
+                  Switch   rightLightSensor)
     {
         _primaryMotor     = primaryMotor;
 
         _leftMotor        = leftMotor;
         _rightMotor       = rightMotor;
 
+        _deploySolenoid   = deploySolenoid;
+
         _leftLightSensor  = leftLightSensor;
         _rightLightSensor = rightLightSensor;
-
-        _deploySolenoid   = deploySolenoid;
     }
 
-    public void setPrimaryMotor(double speed)
+    public Motor getPrimaryMotor()
     {
-        _primaryMotor.set(speed);
+        return _primaryMotor;
     }
 
-    public void setLeftMotor(double speed)
+    public Motor getLeftMotor()
     {
-        _leftMotor.set(speed);
+        return _leftMotor;
     }
 
-    public void setRightMotor(double speed)
+    public Motor getRightMotor()
     {
-        _rightMotor.set(speed);
+        return _rightMotor;
     }
 
-    public State getLeftLightSensor()
+    public Solenoid getDeploySolenoid()
     {
-        return _leftLightSensor.getState();
+        return _deploySolenoid;
     }
 
-    public State getRightLightSensor()
+    public Switch getLeftLightSensor()
     {
-        return _rightLightSensor.getState();
+        return _leftLightSensor;
     }
 
-    public void setDeploySolenoid(ExtendState desiredState)
+    public Switch getRightLightSensor()
     {
-        _deploySolenoid.setExtendState(desiredState);
+        return _rightLightSensor;
     }
 }

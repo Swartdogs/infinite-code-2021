@@ -30,8 +30,6 @@ public class Vision extends SwartdogSubsystem
         _ledMode.set(Constants.LIMELIGHT_LED_OFF);
     }
 
-    // target distance
-
     public void setLEDs(State state)
     {
         switch (state)

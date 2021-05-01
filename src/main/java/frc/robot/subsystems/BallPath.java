@@ -1,47 +1,88 @@
 package frc.robot.subsystems;
 
+import frc.robot.Constants;
 import frc.robot.abstraction.Motor;
+import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.SwartdogSubsystem;
 import frc.robot.abstraction.Switch;
-import frc.robot.abstraction.Enumerations.State;
 
 public class BallPath extends SwartdogSubsystem
 {   
     private Motor     _trackMotor;
+    private Solenoid  _upperTrackSolenoid;
 
     private Switch    _position1Sensor;
     private Switch    _position2Sensor;
     private Switch    _shooterSensor;
 
-    public BallPath(Motor  trackMotor,  
-                    Switch position1Sensor, 
-                    Switch position2Sensor, 
-                    Switch shooterSensor) 
+    private int       _ballCount;
+
+    public BallPath(Motor    trackMotor,  
+                    Solenoid upperTrackSolenoid,
+                    Switch   position1Sensor, 
+                    Switch   position2Sensor, 
+                    Switch   shooterSensor) 
     {
         _trackMotor            = trackMotor;
+        _upperTrackSolenoid    = upperTrackSolenoid;
 
         _position1Sensor       = position1Sensor;
         _position2Sensor       = position2Sensor;
         _shooterSensor         = shooterSensor;
     }
 
-    public State getPosition1Sensor() 
+    public Motor getTrackMotor()
     {
-        return _position1Sensor.getState();
+        return _trackMotor;
     }
 
-    public State getPosition2Sensor() 
+    public Solenoid getUpperTrackSolenoid()
     {
-        return _position2Sensor.getState();
+        return _upperTrackSolenoid;
     }
 
-    public State getShooterSensor() 
+    public Switch getPosition1Sensor()
     {
-        return _shooterSensor.getState();
+        return _position1Sensor;
     }
 
-    public void setTrackMotorSpeed(double speed) 
+    public Switch getPosition2Sensor()
     {
-        _trackMotor.set(speed);
+        return _position2Sensor;
+    }
+
+    public Switch getShooterSensor()
+    {
+        return _shooterSensor;
+    }
+
+    public int getBallCount()
+    {
+        return _ballCount;
+    }
+
+    public void incrementBallCount(int amount)
+    {
+        _ballCount += amount;
+        
+        if (_ballCount > Constants.MAX_BALL_COUNT)
+        {
+            _ballCount = Constants.MAX_BALL_COUNT;
+        }
+
+        if (_ballCount < 0) 
+        {
+            _ballCount = 0;
+        }
+    }
+
+    public void incrementBallCount()
+    {
+        incrementBallCount(1);
+    }
+
+    public void decrementBallCount()
+    {
+        incrementBallCount(-1);
     }
 }

@@ -15,7 +15,7 @@ public class CmdHangerRelease extends SwartdogCommand
     @Override
     public void initialize() 
     {
-        _hangerSubsystem.releaseHanger();
+        _hangerSubsystem.getReleaseSolenoid().retract();
     }
 
     @Override

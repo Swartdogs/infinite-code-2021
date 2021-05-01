@@ -25,13 +25,13 @@ public class CmdSpinnerToPosition extends SwartdogCommand
     @Override
     public void execute() 
     {
-        _spinnerSubsystem.setSpinnerMotor(_spinnerSubsystem.spinnerExec());
+        _spinnerSubsystem.getSpinnerMotor().set(_spinnerSubsystem.spinnerExec());
     }
 
     @Override
     public void end(boolean interrupted) 
     {
-        _spinnerSubsystem.setSpinnerMotor(0);
+        _spinnerSubsystem.getSpinnerMotor().set(0);
     }
 
     @Override
