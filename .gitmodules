@@ -4,3 +4,6 @@
 [submodule "src/main/java/PIDControl"]
 	path = src/main/java/PIDControl
 	url = https://github.com/Swartdogs/PIDControl.git
+[submodule "src\\main\\java\\frc\\robot\\subsystems\\drive"]
+	path = src\\main\\java\\frc\\robot\\subsystems\\drive
+	url = https://github.com/Swartdogs/SwerveDrive.git
