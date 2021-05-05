@@ -10,6 +10,8 @@ public class CmdHangerRelease extends SwartdogCommand
     public CmdHangerRelease(Hanger hangerSubsystem)
     {
         _hangerSubsystem = hangerSubsystem;
+
+        addRequirements(_hangerSubsystem);
     }
 
     @Override

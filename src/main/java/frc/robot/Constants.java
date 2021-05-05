@@ -11,7 +11,7 @@ public final class Constants
 
     public static final double LIMELIGHT_ANGLE        = 0;
 
-    public static final double HANGER_MOTOR_THRESHOLD = 0.02;
+    public static final double MOTOR_MOTION_THRESHOLD = 0.02;
     public static final double HANGER_MIN_POSITION    = 0;
     public static final double HANGER_MAX_POSITION    = 0;
 
@@ -19,6 +19,7 @@ public final class Constants
 
     public static final double PICKUP_SPEED           = 1;
     public static final double PICKUP_CLOG_TIME       = 2;
+    public static final double PICKUP_STOW_DELAY      = 1;
 
     public static final double BALLPATH_JAM_TIME      = 1.2;
     public static final double BALLPATH_RAMP_MIN      = 0.02;

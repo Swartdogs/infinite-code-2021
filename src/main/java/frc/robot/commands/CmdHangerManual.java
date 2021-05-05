@@ -26,7 +26,7 @@ public class CmdHangerManual extends SwartdogCommand
         double speed    = _manual.getAsDouble();
         double position = _hangerSubsystem.getHangerPositionSensor().get();
 
-        if ((Math.abs(speed) < Constants.HANGER_MOTOR_THRESHOLD) || 
+        if ((Math.abs(speed) < Constants.MOTOR_MOTION_THRESHOLD) || 
             (speed < 0 && position < Constants.HANGER_MIN_POSITION) ||
             (speed > 0 && position > Constants.HANGER_MAX_POSITION))
         {
