@@ -74,6 +74,12 @@ public class CmdBallPathLoad extends SwartdogCommand
 
             _ballPathSubsystem.getTrackMotor().set(_trackMotorSpeed);
         }
+
+        if (_ballPathSubsystem.getShooterSensor().transitionedTo(State.Off))
+        {
+            _ballPathSubsystem.decrementBallCount();
+        }
+
     }
 
     @Override

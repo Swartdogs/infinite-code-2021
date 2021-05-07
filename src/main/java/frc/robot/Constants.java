@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.function.DoubleUnaryOperator;
+
 public final class Constants 
 {
     public static final double LIMELIGHT_LED_OFF      = 1;
@@ -25,4 +27,9 @@ public final class Constants
     public static final double BALLPATH_RAMP_MIN      = 0.02;
     public static final double BALLPATH_RAMP_STEP     = 0.10;
     public static final double BALLPATH_SPEED         = 0.7;
+
+    public static final int SHOOTER_RPM_DEADBAND      = 50;
+
+    public static final DoubleUnaryOperator HOOD_LOOKUP = DoubleUnaryOperator.identity();
+    public static final DoubleUnaryOperator SHOOTER_LOOKUP = DoubleUnaryOperator.identity();
 }
