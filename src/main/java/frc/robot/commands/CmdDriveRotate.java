@@ -1,9 +1,9 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.subsystems.drive.Drive;
 
-public class CmdDriveRotate extends CommandBase 
+public class CmdDriveRotate extends SwartdogCommand 
 {
     private Drive    _driveSubsystem;
     private double   _heading;

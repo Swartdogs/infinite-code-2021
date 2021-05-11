@@ -2,11 +2,10 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
+import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.subsystems.drive.Drive;
 
-public class CmdDriveWithJoystick extends CommandBase 
+public class CmdDriveWithJoystick extends SwartdogCommand 
 {
     private Drive _driveSubsystem;
 

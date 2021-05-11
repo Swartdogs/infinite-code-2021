@@ -1,10 +1,10 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.Vector;
 
-public class CmdDriveDistance extends CommandBase 
+public class CmdDriveDistance extends SwartdogCommand 
 {
     private Drive   _driveSubsystem;
     private double  _distance;
