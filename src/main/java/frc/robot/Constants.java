@@ -4,6 +4,19 @@ import java.util.function.DoubleUnaryOperator;
 
 public final class Constants 
 {
+    public static final double FL_MODULE_X            = 0;
+    public static final double FL_MODULE_Y            = 0;
+    public static final double FL_MODULE_OFFSET       = 0;
+    public static final double FR_MODULE_X            = 0;
+    public static final double FR_MODULE_Y            = 0;
+    public static final double FR_MODULE_OFFSET       = 0;
+    public static final double BL_MODULE_X            = 0;
+    public static final double BL_MODULE_Y            = 0;
+    public static final double BL_MODULE_OFFSET       = 0;
+    public static final double BR_MODULE_X            = 0;
+    public static final double BR_MODULE_Y            = 0;
+    public static final double BR_MODULE_OFFSET       = 0;
+
     public static final double LIMELIGHT_LED_OFF      = 1;
     public static final double LIMELIGHT_LED_ON       = 3;
 
