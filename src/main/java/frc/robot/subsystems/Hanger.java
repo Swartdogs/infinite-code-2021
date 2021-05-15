@@ -4,6 +4,7 @@ import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.PositionSensor;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.SwartdogSubsystem;
+import frc.robot.abstraction.Enumerations.ExtendState;
 
 public class Hanger extends SwartdogSubsystem
 {
@@ -23,23 +24,33 @@ public class Hanger extends SwartdogSubsystem
         _hangerPositionSensor = hangerPositionSensor;
     }
 
-    public Motor getHangerMotor()
+    public void setHangerMotor(double speed)
     {
-        return _hangerMotor;
+        _hangerMotor.set(speed);
     }
 
-    public Solenoid getReleaseSolenoid()
+    public void releaseHanger()
     {
-        return _releaseSolenoid;
+        _releaseSolenoid.retract();
     }
 
-    public Solenoid getRatchetSolenoid()
+    public boolean isHangerReleased()
     {
-        return _ratchetSolenoid;
+        return _releaseSolenoid.get() == ExtendState.Retracted;
     }
 
-    public PositionSensor getHangerPositionSensor()
+    public void engageRatchet()
     {
-        return _hangerPositionSensor;
+        _ratchetSolenoid.retract();
+    }
+
+    public void disengageRatchet()
+    {
+        _ratchetSolenoid.extend();
+    }
+
+    public double getPosition()
+    {
+        return _hangerPositionSensor.get();
     }
 }

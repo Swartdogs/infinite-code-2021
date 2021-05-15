@@ -59,13 +59,13 @@ public class CmdShootMode extends SwartdogCommand
         _visionSubsystem.setLEDs(State.On);
         _visionSubsystem.rotateInit();
         
-        _pickupSubsystem.getLeftMotor().set(0);
-        _pickupSubsystem.getPrimaryMotor().set(0);
-        _pickupSubsystem.getRightMotor().set(0);
+        _pickupSubsystem.setLeftMotor(0);
+        _pickupSubsystem.setPrimaryMotor(0);
+        _pickupSubsystem.setRightMotor(0);
 
-        _pickupSubsystem.getDeploySolenoid().extend();
+        _pickupSubsystem.stowPickup();
 
-        _shooterSubsystem.setHoodSetpoint(_shooterSubsystem.getHoodPositionSensor().get());
+        _shooterSubsystem.setHoodSetpoint(_shooterSubsystem.getHoodPosition());
     }
 
     @Override
@@ -80,21 +80,21 @@ public class CmdShootMode extends SwartdogCommand
             
             _shooterSubsystem.setHoodSetpoint(Constants.HOOD_LOOKUP.applyAsDouble(targetDistance));
 
-            _shooterSubsystem.getShooterMotor().set(Constants.SHOOTER_LOOKUP.applyAsDouble(targetDistance));
+            _shooterSubsystem.setShooterMotor(Constants.SHOOTER_LOOKUP.applyAsDouble(targetDistance));
         }
 
         _driveSubsystem.drive(_drive.getAsDouble(), 
                               _strafe.getAsDouble(), 
                               rotate);
 
-        _shooterSubsystem.getHoodMotor().set(_shooterSubsystem.hoodExec());
+        _shooterSubsystem.setHoodMotor(_shooterSubsystem.hoodExec());
     }
 
     @Override
     public void end(boolean interrupted) 
     {
-        _shooterSubsystem.getHoodMotor().set(0);
-        _shooterSubsystem.getShooterMotor().set(0);
+        _shooterSubsystem.setHoodMotor(0);
+        _shooterSubsystem.setShooterMotor(0);
 
         _visionSubsystem.setLEDs(State.Off);
     }

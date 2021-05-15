@@ -1,6 +1,7 @@
 package frc.robot;
 
 import PIDControl.PIDControl;
+import frc.robot.abstraction.Joystick;
 import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.NetworkTableBoolean;
 import frc.robot.abstraction.NetworkTableDouble;
@@ -11,6 +12,10 @@ import frc.robot.subsystems.drive.SwerveModule;
 
 public interface RobotMap 
 {
+    public Joystick            getDriveJoy();
+    public Joystick            getCoDriveJoy();
+    public Joystick            getButtonBox();
+
     public PositionSensor      getDriveGyro();
     public PIDControl          getDriveDrivePID();
     public PIDControl          getDriveRotatePID();

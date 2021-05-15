@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import frc.robot.abstraction.SwartdogCommand;
-import frc.robot.abstraction.Enumerations.ExtendState;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Pickup;
 
@@ -21,13 +20,13 @@ public class CmdPickupStow extends SwartdogCommand
     @Override
     public void initialize() 
     {
-        if (_ballPathSubsystem.getUpperTrackSolenoid().get() == ExtendState.Retracted)
-        {
-            _pickupSubsystem.getLeftMotor().set(0);
-            _pickupSubsystem.getPrimaryMotor().set(0);
-            _pickupSubsystem.getRightMotor().set(0);
+        _pickupSubsystem.setLeftMotor(0);
+        _pickupSubsystem.setPrimaryMotor(0);
+        _pickupSubsystem.setRightMotor(0);
 
-            _pickupSubsystem.getDeploySolenoid().extend();
+        if (_ballPathSubsystem.isUpperTrackRaised())
+        {
+            _pickupSubsystem.stowPickup();
         }
     }
 

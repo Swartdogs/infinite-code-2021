@@ -5,6 +5,8 @@ import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.SwartdogSubsystem;
 import frc.robot.abstraction.Switch;
+import frc.robot.abstraction.Enumerations.ExtendState;
+import frc.robot.abstraction.Enumerations.State;
 
 public class BallPath extends SwartdogSubsystem
 {   
@@ -34,29 +36,39 @@ public class BallPath extends SwartdogSubsystem
         _isJammed              = false;
     }
 
-    public Motor getTrackMotor()
+    public void setTrackMotor(double speed)
     {
-        return _trackMotor;
+        _trackMotor.set(speed);
     }
 
-    public Solenoid getUpperTrackSolenoid()
+    public void raiseUpperTrack()
     {
-        return _upperTrackSolenoid;
+        _upperTrackSolenoid.retract();
     }
 
-    public Switch getPosition1Sensor()
+    public void lowerUpperTrack()
     {
-        return _position1Sensor;
+        _upperTrackSolenoid.extend();
     }
 
-    public Switch getPosition2Sensor()
+    public boolean isUpperTrackRaised()
     {
-        return _position2Sensor;
+        return _upperTrackSolenoid.get() == ExtendState.Retracted;
     }
 
-    public Switch getShooterSensor()
+    public boolean position1SensorTransitionedTo(State state)
     {
-        return _shooterSensor;
+        return _position1Sensor.transitionedTo(state);
+    }
+
+    public boolean position2SensorTransitionedTo(State state)
+    {
+        return _position2Sensor.transitionedTo(state);
+    }
+
+    public boolean shooterSensorTransitionedTo(State state)
+    {
+        return _shooterSensor.transitionedTo(state);
     }
 
     public int getBallCount()

@@ -1,6 +1,8 @@
 package frc.robot;
 
 import PIDControl.PIDControl;
+import frc.robot.abstraction.Joystick;
+import frc.robot.abstraction.MockJoystick;
 import frc.robot.abstraction.MockMotor;
 import frc.robot.abstraction.MockNetworkTableBoolean;
 import frc.robot.abstraction.MockNetworkTableDouble;
@@ -17,49 +19,57 @@ import frc.robot.subsystems.drive.SwerveModule;
 
 public class MockRobotMap implements RobotMap 
 {
-    private PositionSensor      _driveGyro;
-    private PIDControl          _driveDrivePID;
-    private PIDControl          _driveRotatePID;
-    private SwerveModule        _driveFLModule;
-    private SwerveModule        _driveFRModule;
-    private SwerveModule        _driveBLModule;
-    private SwerveModule        _driveBRModule;
+    private MockJoystick            _driveJoy;
+    private MockJoystick            _coDriveJoy;
+    private MockJoystick            _buttonBox;
 
-    private Motor               _ballPathTrackMotor;
-    private Solenoid            _ballPathUpperTrackSolenoid;
-    private Switch              _ballPathPosition1Sensor;
-    private Switch              _ballPathPosition2Sensor;
-    private Switch              _ballPathShooterSensor;
+    private MockPositionSensor      _driveGyro;
+    private PIDControl              _driveDrivePID;
+    private PIDControl              _driveRotatePID;
+    private SwerveModule            _driveFLModule;
+    private SwerveModule            _driveFRModule;
+    private SwerveModule            _driveBLModule;
+    private SwerveModule            _driveBRModule;
 
-    private Motor               _hangerHangerMotor;
-    private Solenoid            _hangerReleaseSolenoid;
-    private Solenoid            _hangerRatchetSolenoid;
-    private PositionSensor      _hangerHangerPositionSensor;
+    private MockMotor               _ballPathTrackMotor;
+    private MockSolenoid            _ballPathUpperTrackSolenoid;
+    private MockSwitch              _ballPathPosition1Sensor;
+    private MockSwitch              _ballPathPosition2Sensor;
+    private MockSwitch              _ballPathShooterSensor;
 
-    private Motor               _pickupPrimaryMotor;
-    private Motor               _pickupLeftMotor;
-    private Motor               _pickupRightMotor;
-    private Solenoid            _pickupDeploySolenoid;
-    private Switch              _pickupLeftLightSensor;
-    private Switch              _pickupRightLightSensor;
+    private MockMotor               _hangerHangerMotor;
+    private MockSolenoid            _hangerReleaseSolenoid;
+    private MockSolenoid            _hangerRatchetSolenoid;
+    private MockPositionSensor      _hangerHangerPositionSensor;
 
-    private Motor               _shooterShooterMotor;
-    private Motor               _shooterHoodMotor;
-    private PositionSensor      _shooterHoodSensor;
-    private PIDControl          _shooterHoodPID;
+    private MockMotor               _pickupPrimaryMotor;
+    private MockMotor               _pickupLeftMotor;
+    private MockMotor               _pickupRightMotor;
+    private MockSolenoid            _pickupDeploySolenoid;
+    private MockSwitch              _pickupLeftLightSensor;
+    private MockSwitch              _pickupRightLightSensor;
 
-    private NetworkTableDouble  _visionXPosition;
-    private NetworkTableDouble  _visionYPosition;
-    private NetworkTableBoolean _visionTargetFound;
-    private NetworkTableDouble  _visionLEDMode;
-    private PIDControl          _visionRotatePID;
+    private MockMotor               _shooterShooterMotor;
+    private MockMotor               _shooterHoodMotor;
+    private MockPositionSensor      _shooterHoodSensor;
+    private PIDControl              _shooterHoodPID;
 
-    private Motor               _spinnerSpinnerMotor;
-    private PositionSensor      _spinnerPositionSensor;
-    private PIDControl          _spinnerSpinnerPID;
+    private MockNetworkTableDouble  _visionXPosition;
+    private MockNetworkTableDouble  _visionYPosition;
+    private MockNetworkTableBoolean _visionTargetFound;
+    private MockNetworkTableDouble  _visionLEDMode;
+    private PIDControl              _visionRotatePID;
+
+    private MockMotor               _spinnerSpinnerMotor;
+    private MockPositionSensor      _spinnerPositionSensor;
+    private PIDControl              _spinnerSpinnerPID;
 
     public MockRobotMap()
     {
+        _driveJoy                   = new MockJoystick(12);
+        _coDriveJoy                 = new MockJoystick(11);
+        _buttonBox                  = new MockJoystick(12);
+
         _driveGyro                  = new MockPositionSensor();        
         _driveDrivePID              = new PIDControl();
         _driveRotatePID             = new PIDControl();
@@ -136,6 +146,24 @@ public class MockRobotMap implements RobotMap
         _spinnerSpinnerMotor        = new MockMotor();
         _spinnerPositionSensor      = new MockPositionSensor();
         _spinnerSpinnerPID          = new PIDControl();
+    }
+
+    @Override
+    public Joystick getDriveJoy()
+    {
+        return _driveJoy;
+    }
+
+    @Override
+    public Joystick getCoDriveJoy()
+    {
+        return _coDriveJoy;
+    }
+
+    @Override
+    public Joystick getButtonBox()
+    {
+        return _buttonBox;
     }
 
     @Override
@@ -340,5 +368,145 @@ public class MockRobotMap implements RobotMap
     public PIDControl getSpinnerSpinnerPID() 
     {
         return _spinnerSpinnerPID;
+    }
+
+    public MockJoystick getMockDriveJoy()
+    {
+        return _driveJoy;
+    }
+
+    public MockJoystick getMockCoDriveJoy()
+    {
+        return _coDriveJoy;
+    }
+
+    public MockJoystick getMockButtonBox()
+    {
+        return _buttonBox;
+    }
+
+    public MockPositionSensor getMockDriveGyro() 
+    {
+        return _driveGyro;
+    }
+
+    public MockMotor getMockBallPathTrackMotor() 
+    {
+        return _ballPathTrackMotor;
+    }
+
+    public MockSolenoid getMockBallPathUpperTrackSolenoid() 
+    {
+        return _ballPathUpperTrackSolenoid;
+    }
+
+    public MockSwitch getMockBallPathPosition1Sensor() 
+    {
+        return _ballPathPosition1Sensor;
+    }
+
+    public MockSwitch getMockBallPathPosition2Sensor() 
+    {
+        return _ballPathPosition2Sensor;
+    }
+
+    public MockSwitch getMockBallPathShooterSensor() 
+    {
+        return _ballPathShooterSensor;
+    }
+
+    public MockMotor getMockHangerHangerMotor() 
+    {
+        return _hangerHangerMotor;
+    }
+
+    public MockSolenoid getMockHangerReleaseSolenoid() 
+    {
+        return _hangerReleaseSolenoid;
+    }
+
+    public MockSolenoid getMockHangerRatchetSolenoid() 
+    {
+        return _hangerRatchetSolenoid;
+    }
+
+    public MockPositionSensor getMockHangerHangerPositionSensor() 
+    {
+        return _hangerHangerPositionSensor;
+    }
+
+    public MockMotor getMockPickupPrimaryMotor() 
+    {
+        return _pickupPrimaryMotor;
+    }
+
+    public MockMotor getMockPickupLeftMotor() 
+    {
+        return _pickupLeftMotor;
+    }
+
+    public MockMotor getMockPickupRightMotor() 
+    {
+        return _pickupRightMotor;
+    }
+
+    public MockSolenoid getMockPickupDeploySolenoid() 
+    {
+        return _pickupDeploySolenoid;
+    }
+
+    public MockSwitch getMockPickupLeftLightSensor() 
+    {
+        return _pickupLeftLightSensor;
+    }
+
+    public MockSwitch getMockPickupRightLightSensor() 
+    {
+        return _pickupRightLightSensor;
+    }
+
+    public MockMotor getMockShooterShooterMotor() 
+    {
+        return _shooterShooterMotor;
+    }
+
+    public MockMotor getMockShooterHoodMotor() 
+    {
+        return _shooterHoodMotor;
+    }
+
+    public MockPositionSensor getMockShooterHoodSensor() 
+    {
+        return _shooterHoodSensor;
+    }
+
+    public MockNetworkTableDouble getMockVisionXPosition() 
+    {
+        return _visionXPosition;
+    }
+
+    public MockNetworkTableDouble getMockVisionYPosition() 
+    {
+        return _visionYPosition;
+    }
+
+    public MockNetworkTableBoolean getMockVisionTargetFound() 
+    {
+        return _visionTargetFound;
+    }
+
+    public MockNetworkTableDouble getMockVisionLEDMode() 
+    {
+        return _visionLEDMode;
+    }
+
+    public MockMotor getMockSpinnerSpinnerMotor() 
+    {
+        return _spinnerSpinnerMotor;
+    }
+
+    public MockPositionSensor getMockSpinnerPositionSensor() 
+    {
+        return _spinnerPositionSensor;
     }
 }

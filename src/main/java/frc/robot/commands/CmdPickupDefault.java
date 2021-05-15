@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
-import frc.robot.abstraction.Enumerations.ExtendState;
 import frc.robot.abstraction.Enumerations.State;
 import frc.robot.subsystems.Pickup;
 
@@ -24,10 +23,10 @@ public class CmdPickupDefault extends SwartdogCommand
     @Override
     public void execute() 
     {
-        if (_pickupSubsystem.getDeploySolenoid().get() == ExtendState.Retracted)
+        if (_pickupSubsystem.isPickupDeployed())
         {
-            State leftState  = _pickupSubsystem.getLeftLightSensor().get();
-            State rightState = _pickupSubsystem.getRightLightSensor().get();
+            State leftState  = _pickupSubsystem.getLeftLightSensor();
+            State rightState = _pickupSubsystem.getRightLightSensor();
 
             if (leftState == State.On && rightState == State.On)
             {
@@ -42,10 +41,10 @@ public class CmdPickupDefault extends SwartdogCommand
 
                 if (_clogTimer == 0)
                 {
-                    speed = _pickupSubsystem.getRightMotor().get();
+                    speed = _pickupSubsystem.getRightMotor();
                 }
 
-                _pickupSubsystem.getLeftMotor().set(speed);   
+                _pickupSubsystem.setLeftMotor(speed);   
             }
         }
 

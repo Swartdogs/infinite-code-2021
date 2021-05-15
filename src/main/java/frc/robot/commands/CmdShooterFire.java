@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
-import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.Enumerations.State;
 import frc.robot.subsystems.BallPath;
@@ -16,8 +15,6 @@ public class CmdShooterFire extends SwartdogCommand
     private Shooter  _shooterSubsystem;
     private Vision   _visionSubsystem;
 
-    private Motor    _shooterMotor;
-
     public CmdShooterFire(BallPath ballPathSubsystem, 
                           Pickup   pickupSubsystem, 
                           Shooter  shooterSubsystem, 
@@ -27,8 +24,6 @@ public class CmdShooterFire extends SwartdogCommand
         _pickupSubsystem   = pickupSubsystem;
         _shooterSubsystem  = shooterSubsystem;
         _visionSubsystem   = visionSubsystem;
-
-        _shooterMotor      = _shooterSubsystem.getShooterMotor();
     }
 
     @Override
@@ -36,13 +31,13 @@ public class CmdShooterFire extends SwartdogCommand
     {
         if (_visionSubsystem.rotateIsFinished() &&
             _shooterSubsystem.hoodAtSetpoint() &&
-            Math.abs(_shooterMotor.get() - _shooterMotor.getVelocitySensor().get()) < Constants.SHOOTER_RPM_DEADBAND)
+            Math.abs(_shooterSubsystem.getShooterMotorSetpoint() - _shooterSubsystem.getShooterMotor()) < Constants.SHOOTER_RPM_DEADBAND)
         {
-            _ballPathSubsystem.getTrackMotor().set(Constants.BALLPATH_SPEED);
-            _pickupSubsystem.getPrimaryMotor().set(Constants.PICKUP_SPEED);
+            _ballPathSubsystem.setTrackMotor(Constants.BALLPATH_SPEED);
+            _pickupSubsystem.setPrimaryMotor(Constants.PICKUP_SPEED);
         }
 
-        if (_ballPathSubsystem.getShooterSensor().transitionedTo(State.Off))
+        if (_ballPathSubsystem.shooterSensorTransitionedTo(State.Off))
         {
             _ballPathSubsystem.decrementBallCount();
         }
@@ -51,8 +46,8 @@ public class CmdShooterFire extends SwartdogCommand
     @Override
     public void end(boolean interrupted) 
     {
-        _ballPathSubsystem.getTrackMotor().set(0);
-        _pickupSubsystem.getPrimaryMotor().set(0);
+        _ballPathSubsystem.setTrackMotor(0);
+        _pickupSubsystem.setPrimaryMotor(0);
     }
 
     @Override

@@ -1,6 +1,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.abstraction.Enumerations.State;
+import frc.robot.commands.CmdDriveWithJoystick;
+import frc.robot.commands.CmdHangerManual;
+import frc.robot.commands.CmdPickupDefault;
+import frc.robot.commands.CmdSpinnerManual;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.ControlPanelSpinner;
 import frc.robot.subsystems.Hanger;
@@ -26,6 +31,7 @@ public class RobotContainer
         _robotMap = robotMap;
 
         createSubsystems();
+        configureDefaultCommands();
         configureButtonBindings();
     }
 
@@ -91,6 +97,67 @@ public class RobotContainer
             _robotMap.getSpinnerSpinnerMotor(),
             _robotMap.getSpinnerPositionSensor(),
             _robotMap.getSpinnerSpinnerPID()
+        );
+    }
+
+    private void configureDefaultCommands()
+    {
+        _driveSubsystem.setDefaultCommand
+        (
+            new CmdDriveWithJoystick
+            (
+                _driveSubsystem, 
+                () -> _robotMap.getDriveJoy().getY(), 
+                () -> _robotMap.getDriveJoy().getX(), 
+                () -> _robotMap.getDriveJoy().getZ()
+            )
+        );
+
+        _hangerSubsystem.setDefaultCommand
+        (
+            new CmdHangerManual
+            (
+                _hangerSubsystem, 
+                () ->
+                {
+                    double manual = 0;
+
+                    if (_hangerSubsystem.isHangerReleased() &&
+                        _robotMap.getCoDriveJoy().getButton(2).get() == State.On)
+                    {
+                        manual = _robotMap.getCoDriveJoy().getY();
+                    }
+
+                    return manual;
+                }
+            )
+        );
+        
+        _pickupSubsystem.setDefaultCommand
+        (
+            new CmdPickupDefault
+            (
+                _pickupSubsystem
+            )
+        );
+
+        _spinnerSubsystem.setDefaultCommand
+        (
+            new CmdSpinnerManual
+            (
+                _spinnerSubsystem, 
+                () ->
+                {
+                    double manual = 0;
+
+                    if (_robotMap.getCoDriveJoy().getButton(2).get() == State.On)
+                    {
+                        manual = _robotMap.getCoDriveJoy().getX();
+                    }
+
+                    return manual;
+                }
+            )
         );
     }
 

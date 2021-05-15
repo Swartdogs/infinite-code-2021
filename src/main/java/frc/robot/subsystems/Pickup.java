@@ -4,6 +4,8 @@ import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.SwartdogSubsystem;
 import frc.robot.abstraction.Switch;
+import frc.robot.abstraction.Enumerations.ExtendState;
+import frc.robot.abstraction.Enumerations.State;
 
 public class Pickup extends SwartdogSubsystem 
 {
@@ -35,33 +37,53 @@ public class Pickup extends SwartdogSubsystem
         _rightLightSensor = rightLightSensor;
     }
 
-    public Motor getPrimaryMotor()
+    public void setPrimaryMotor(double speed)
     {
-        return _primaryMotor;
+        _primaryMotor.set(speed);
     }
 
-    public Motor getLeftMotor()
+    public double getPrimaryMotor()
     {
-        return _leftMotor;
+        return _primaryMotor.get();
     }
 
-    public Motor getRightMotor()
+    public void setLeftMotor(double speed)
     {
-        return _rightMotor;
+        _leftMotor.set(speed);
     }
 
-    public Solenoid getDeploySolenoid()
+    public void setRightMotor(double speed)
     {
-        return _deploySolenoid;
+        _rightMotor.set(speed);
     }
 
-    public Switch getLeftLightSensor()
+    public double getRightMotor()
     {
-        return _leftLightSensor;
+        return _rightMotor.get();
     }
 
-    public Switch getRightLightSensor()
+    public void deployPickup()
     {
-        return _rightLightSensor;
+        _deploySolenoid.retract();
+    }
+
+    public void stowPickup()
+    {
+        _deploySolenoid.extend();
+    }
+
+    public boolean isPickupDeployed()
+    {
+        return _deploySolenoid.get() == ExtendState.Retracted;
+    }
+
+    public State getLeftLightSensor()
+    {
+        return _leftLightSensor.get();
+    }
+
+    public State getRightLightSensor()
+    {
+        return _rightLightSensor.get();
     }
 }

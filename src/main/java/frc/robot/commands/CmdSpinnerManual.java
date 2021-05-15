@@ -21,7 +21,7 @@ public class CmdSpinnerManual extends SwartdogCommand
     @Override
     public void execute() 
     {
-        _spinnerSubsystem.getSpinnerMotor().set(_manual.getAsDouble());
+        _spinnerSubsystem.setSpinnerMotor(_manual.getAsDouble());
     }
 
     @Override
