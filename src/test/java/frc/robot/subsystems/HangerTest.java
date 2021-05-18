@@ -33,9 +33,9 @@ public class HangerTest
     public void initialize()
     {
         _hangerMotor            = new MockMotor();
-        _releaseSolenoid        = new MockSolenoid();
-        _ratchetSolenoid        = new MockSolenoid();
-        _hangerPositionSensor   = new MockPositionSensor();
+        _releaseSolenoid        = new MockSolenoid(ExtendState.Extended);
+        _ratchetSolenoid        = new MockSolenoid(ExtendState.Retracted);
+        _hangerPositionSensor   = new MockPositionSensor(0);
 
         _hangerSubsystem = new Hanger
         (
