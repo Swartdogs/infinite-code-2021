@@ -150,9 +150,10 @@ public class RobotLog extends SwartdogSubsystem
             lineMap.put(key, "");
         }
 
+        ArrayList keys = new ArrayList<String>(_keys);
         for (Map.Entry<String, String> kvp : params.entrySet())
             {
-                if (new ArrayList<String>(_keys).indexOf(kvp.getKey()) >= 0)
+                if (keys.indexOf(kvp.getKey()) >= 0)
                 {
                     lineMap.put(kvp.getKey(), kvp.getValue());
                 }
