@@ -27,8 +27,8 @@ public class CmdBallPathRaise extends SwartdogCommand
     @Override
     public void initialize() 
     {
-        _ballPathSubsystem.getUpperTrackSolenoid().retract();
-        if (Math.abs(_pickupSubsystem.getPrimaryMotor().get()) < Constants.MOTOR_MOTION_THRESHOLD)
+        _ballPathSubsystem.raiseUpperTrack();
+        if (Math.abs(_pickupSubsystem.getPrimaryMotor()) < Constants.MOTOR_MOTION_THRESHOLD)
         {
             _pickupStowTimer = Math.max(0, (int)(50 * Constants.PICKUP_STOW_DELAY));
             _stowPickup      = true;
@@ -52,7 +52,7 @@ public class CmdBallPathRaise extends SwartdogCommand
     {
         if (_stowPickup)
         {
-            _pickupSubsystem.getDeploySolenoid().extend();
+            _pickupSubsystem.stowPickup();
         }
     }
 

@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import frc.robot.abstraction.SwartdogCommand;
-import frc.robot.abstraction.Enumerations.ExtendState;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.Pickup;
@@ -24,10 +23,10 @@ public class CmdBallPathLower extends SwartdogCommand
     @Override
     public void initialize() 
     {
-        if (_hangerSubsystem.getReleaseSolenoid().get() == ExtendState.Extended)
+        if (!_hangerSubsystem.isHangerReleased())
         {
-            _pickupSubsystem.getDeploySolenoid().retract();
-            _ballPathSubsystem.getUpperTrackSolenoid().extend();
+            _pickupSubsystem.deployPickup();
+            _ballPathSubsystem.lowerUpperTrack();
         }
     }
 

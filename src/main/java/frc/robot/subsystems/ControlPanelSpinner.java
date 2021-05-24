@@ -20,14 +20,14 @@ public class ControlPanelSpinner extends SwartdogSubsystem
         _spinnerPID     = spinnerPID;
     }
 
-    public Motor getSpinnerMotor()
+    public void setSpinnerMotor(double speed)
     {
-        return _spinnerMotor;
+        _spinnerMotor.set(speed);
     }
 
-    public PositionSensor getPositionSensor()
+    public double getPosition()
     {
-        return _positionSensor;
+        return _positionSensor.get();
     }
 
     public void spinnerInit(double setpoint)

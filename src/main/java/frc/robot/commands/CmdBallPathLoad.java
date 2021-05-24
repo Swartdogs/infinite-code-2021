@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
-import frc.robot.abstraction.Enumerations.ExtendState;
 import frc.robot.abstraction.Enumerations.State;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Pickup;
@@ -29,9 +28,9 @@ public class CmdBallPathLoad extends SwartdogCommand
     @Override
     public void initialize() 
     {
-        _pickupSubsystem.getLeftMotor().set(0);
-        _pickupSubsystem.getPrimaryMotor().set(0);
-        _pickupSubsystem.getRightMotor().set(0);
+        _pickupSubsystem.setLeftMotor(0);
+        _pickupSubsystem.setPrimaryMotor(0);
+        _pickupSubsystem.setRightMotor(0);
 
         if (!_ballPathSubsystem.isJammed() && 
             _ballPathSubsystem.getBallCount() < Constants.MAX_BALL_COUNT)
@@ -72,10 +71,10 @@ public class CmdBallPathLoad extends SwartdogCommand
                 _ballPathSubsystem.setJammed(true);
             }
 
-            _ballPathSubsystem.getTrackMotor().set(_trackMotorSpeed);
+            _ballPathSubsystem.setTrackMotor(_trackMotorSpeed);
         }
 
-        if (_ballPathSubsystem.getShooterSensor().transitionedTo(State.Off))
+        if (_ballPathSubsystem.shooterSensorTransitionedTo(State.Off))
         {
             _ballPathSubsystem.decrementBallCount();
         }
@@ -85,19 +84,19 @@ public class CmdBallPathLoad extends SwartdogCommand
     @Override
     public void end(boolean interrupted) 
     {
-        _ballPathSubsystem.getTrackMotor().set(0);
+        _ballPathSubsystem.setTrackMotor(0);
 
         if (!_ballPathSubsystem.isJammed() && 
             _ballPathSubsystem.getBallCount() < Constants.MAX_BALL_COUNT)
         {
-            _pickupSubsystem.getLeftMotor().set(Constants.PICKUP_SPEED);
-            _pickupSubsystem.getPrimaryMotor().set(Constants.PICKUP_SPEED);
-            _pickupSubsystem.getRightMotor().set(Constants.PICKUP_SPEED);
+            _pickupSubsystem.setLeftMotor(Constants.PICKUP_SPEED);
+            _pickupSubsystem.setPrimaryMotor(Constants.PICKUP_SPEED);
+            _pickupSubsystem.setRightMotor(Constants.PICKUP_SPEED);
         }
 
-        else if (_ballPathSubsystem.getUpperTrackSolenoid().get() == ExtendState.Retracted)
+        else if (_ballPathSubsystem.isUpperTrackRaised())
         {
-            _pickupSubsystem.getDeploySolenoid().set(ExtendState.Extended);
+            _pickupSubsystem.stowPickup();
         }
     }
 
@@ -105,6 +104,6 @@ public class CmdBallPathLoad extends SwartdogCommand
     public boolean isFinished() 
     {
         return _ballPathSubsystem.isJammed() || 
-               _ballPathSubsystem.getPosition2Sensor().transitionedTo(State.On);
+               _ballPathSubsystem.position2SensorTransitionedTo(State.On);
     }
 }

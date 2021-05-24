@@ -24,11 +24,11 @@ public class CmdPickupDeploy extends SwartdogCommand
         if (!_ballPathSubsystem.isJammed() &&
             _ballPathSubsystem.getBallCount() < Constants.MAX_BALL_COUNT)
         {
-            _pickupSubsystem.getLeftMotor().set(Constants.PICKUP_SPEED);
-            _pickupSubsystem.getPrimaryMotor().set(Constants.PICKUP_SPEED);
-            _pickupSubsystem.getRightMotor().set(Constants.PICKUP_SPEED);
+            _pickupSubsystem.setLeftMotor(Constants.PICKUP_SPEED);
+            _pickupSubsystem.setPrimaryMotor(Constants.PICKUP_SPEED);
+            _pickupSubsystem.setRightMotor(Constants.PICKUP_SPEED);
 
-            _pickupSubsystem.getDeploySolenoid().retract();
+            _pickupSubsystem.deployPickup();
         }
     }
 
