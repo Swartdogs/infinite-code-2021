@@ -39,7 +39,7 @@ public class CmdPickupDefault extends SwartdogCommand
                 
                 _clogTimer--;
 
-                if (_clogTimer == 0)
+                if (_clogTimer <= 0)
                 {
                     speed = _pickupSubsystem.getRightMotor();
                 }

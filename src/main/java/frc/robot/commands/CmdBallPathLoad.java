@@ -51,7 +51,8 @@ public class CmdBallPathLoad extends SwartdogCommand
     @Override
     public void execute() 
     {
-        if (!_ballPathSubsystem.isJammed())
+        if (!_ballPathSubsystem.isJammed() && 
+             _ballPathSubsystem.getBallCount() < Constants.MAX_BALL_COUNT)
         {
             _loadTimer--;
 
@@ -104,6 +105,7 @@ public class CmdBallPathLoad extends SwartdogCommand
     public boolean isFinished() 
     {
         return _ballPathSubsystem.isJammed() || 
-               _ballPathSubsystem.position2SensorTransitionedTo(State.On);
+               _ballPathSubsystem.position2SensorTransitionedTo(State.On) ||
+               _ballPathSubsystem.getBallCount() >= Constants.MAX_BALL_COUNT; 
     }
 }

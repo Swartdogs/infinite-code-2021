@@ -22,7 +22,7 @@ public class CmdPickupDeploy extends SwartdogCommand
     public void initialize() 
     {
         if (!_ballPathSubsystem.isJammed() &&
-            _ballPathSubsystem.getBallCount() < Constants.MAX_BALL_COUNT)
+             _ballPathSubsystem.getBallCount() < Constants.MAX_BALL_COUNT)
         {
             _pickupSubsystem.setLeftMotor(Constants.PICKUP_SPEED);
             _pickupSubsystem.setPrimaryMotor(Constants.PICKUP_SPEED);
