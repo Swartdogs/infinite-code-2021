@@ -7,13 +7,10 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.function.DoubleSupplier;
-import java.util.stream.Collectors;
 
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.SwartdogSubsystem;
@@ -150,7 +147,7 @@ public class RobotLog extends SwartdogSubsystem
             lineMap.put(key, "");
         }
 
-        ArrayList keys = new ArrayList<String>(_keys);
+        ArrayList<String> keys = new ArrayList<String>(_keys);
         for (Map.Entry<String, String> kvp : params.entrySet())
             {
                 if (keys.indexOf(kvp.getKey()) >= 0)
