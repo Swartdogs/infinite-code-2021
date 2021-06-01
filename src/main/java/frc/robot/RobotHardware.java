@@ -1,6 +1,7 @@
 package frc.robot;
 
 import PIDControl.PIDControl;
+import PIDControl.PIDControl.Coefficient;
 import frc.robot.abstraction.Hardware;
 import frc.robot.abstraction.Joystick;
 import frc.robot.abstraction.Motor;
@@ -63,39 +64,39 @@ public class RobotHardware implements RobotMap
     {
         _hardware                   = new Hardware();
 
-        _driveJoy                   = null;
-        _coDriveJoy                 = null;
-        _buttonBox                  = null;
+        _driveJoy                   = Hardware.Controls.joystick(0);
+        _coDriveJoy                 = Hardware.Controls.joystick(1);
+        _buttonBox                  = Hardware.Controls.joystick(2);
 
-        _driveLeftMotor             = null;
-        _driveRightMotor            = null;
-        _driveLeftEncoder           = null;
-        _driveRightEncoder          = null;
-        _driveGyro                  = null;
-        _driveDrivePID              = null;
-        _driveRotatePID             = null;
+        _driveLeftMotor             = Motor.compose(Hardware.Actuators.neo(2), Hardware.Actuators.neo(1));
+        _driveRightMotor            = Motor.compose(Hardware.Actuators.neo(4), Hardware.Actuators.neo(3));
+        _driveLeftEncoder           = Hardware.Sensors.dutyCycleEncoder(0);
+        _driveRightEncoder          = Hardware.Sensors.dutyCycleEncoder(1);
+        _driveGyro                  = Hardware.Sensors.gyro();
+        _driveDrivePID              = new PIDControl();
+        _driveRotatePID             = new PIDControl();
 
-        _ballPathTrackMotor         = null;
-        _ballPathUpperTrackSolenoid = null;
-        _ballPathPosition1Sensor    = null;
-        _ballPathPosition2Sensor    = null;
-        _ballPathShooterSensor      = null;
+        _ballPathTrackMotor         = Motor.compose(Motor.invert(Hardware.Actuators.neo(5)), Hardware.Actuators.neo(6));
+        _ballPathUpperTrackSolenoid = Hardware.Actuators.solenoid(1);
+        _ballPathPosition1Sensor    = Hardware.Sensors.lightSensor(4);
+        _ballPathPosition2Sensor    = Hardware.Sensors.lightSensor(2);
+        _ballPathShooterSensor      = Hardware.Sensors.lightSensor(3);
 
-        _hangerHangerMotor          = null;
-        _hangerReleaseSolenoid      = null;
-        _hangerRatchetSolenoid      = null;
-        _hangerHangerPositionSensor = null;
+        _hangerHangerMotor          = Hardware.Actuators.victorSPX(11);
+        _hangerReleaseSolenoid      = Solenoid.invert(Hardware.Actuators.solenoid((3)));
+        _hangerRatchetSolenoid      = Hardware.Actuators.solenoid(2);
+        _hangerHangerPositionSensor = Hardware.Sensors.analogInput(0);
 
-        _pickupPrimaryMotor         = null;
-        _pickupLeftMotor            = null;
-        _pickupRightMotor           = null;
-        _pickupDeploySolenoid       = null;
-        _pickupLeftLightSensor      = null;
-        _pickupRightLightSensor     = null;
+        _pickupPrimaryMotor         = Hardware.Actuators.neo(10);
+        _pickupLeftMotor            = Hardware.Actuators.victorSP(8);
+        _pickupRightMotor           = Hardware.Actuators.victorSP(9);
+        _pickupDeploySolenoid       = Solenoid.invert(Hardware.Actuators.solenoid((0)));
+        _pickupLeftLightSensor      = Hardware.Sensors.lightSensor(6);
+        _pickupRightLightSensor     = Hardware.Sensors.lightSensor(5);
 
-        _shooterShooterMotor        = null;
-        _shooterHoodMotor           = null;
-        _shooterHoodSensor          = null;
+        _shooterShooterMotor        = Motor.compose(Hardware.Actuators.neoFlywheel(7, 5500), Hardware.Actuators.neoFlywheel(8, 5500));
+        _shooterHoodMotor           = Hardware.Actuators.victorSPX(9);
+        _shooterHoodSensor          = Hardware.Sensors.analogInput(1);
         _shooterHoodPID             = new PIDControl();
 
         _visionXPosition            = Hardware.NetworkTable.networkTableDouble("limelight", "tx");
@@ -104,9 +105,46 @@ public class RobotHardware implements RobotMap
         _visionLEDMode              = Hardware.NetworkTable.networkTableDouble("limelight", "ledMode");
         _visionRotatePID            = new PIDControl();
 
-        _spinnerSpinnerMotor        = null;
+        _spinnerSpinnerMotor        = Hardware.Actuators.neo(12);
         _spinnerPositionSensor      = _spinnerSpinnerMotor.getPositionSensor();
         _spinnerSpinnerPID          = new PIDControl();
+
+        _driveDrivePID.setCoefficient(Coefficient.P, 0,  0.0275, 0);
+        _driveDrivePID.setCoefficient(Coefficient.I, 0,  0,      0);
+        _driveDrivePID.setCoefficient(Coefficient.D, 0,  0.225,  0);
+        _driveDrivePID.setInputRange(-500, 500);
+        _driveDrivePID.setOutputRamp(0.05, 0.05);
+        _driveDrivePID.setSetpointDeadband(0.75);
+
+        _driveRotatePID.setCoefficient(Coefficient.P, 0, 0.01, 0);
+        _driveRotatePID.setCoefficient(Coefficient.I, 8, 0,    0.005);
+        _driveRotatePID.setCoefficient(Coefficient.D, 0, 0.04, 0);
+        _driveRotatePID.setInputRange(-360, 360);
+        _driveRotatePID.setOutputRamp(0.1, 0.1);
+        _driveRotatePID.setSetpointDeadband(2.0);
+
+        _hangerHangerPositionSensor.setScalingFunction(pos -> -pos);
+
+        _shooterHoodPID.setCoefficient(Coefficient.P, 0,   0.005, 0);
+        _shooterHoodPID.setCoefficient(Coefficient.I, 0,   0,     0);
+        _shooterHoodPID.setCoefficient(Coefficient.D, 400, 0,     0.001);
+        _shooterHoodPID.setInputRange(600, 3800);
+        _shooterHoodPID.setOutputRange(-1, 1);
+        _shooterHoodPID.setSetpointDeadband(50);
+
+        _visionRotatePID.setCoefficient(Coefficient.P, 0, 0.01, 0);
+        _visionRotatePID.setCoefficient(Coefficient.I, 8, 0,    0.005);
+        _visionRotatePID.setCoefficient(Coefficient.D, 0, 0.04, 0);
+        _visionRotatePID.setInputRange(-360, 360);
+        _visionRotatePID.setOutputRamp(0.1, 0.1);
+        _visionRotatePID.setSetpointDeadband(1.0);
+
+        _spinnerSpinnerPID.setCoefficient(Coefficient.P, 0, 0.02, 0);
+        _spinnerSpinnerPID.setCoefficient(Coefficient.I, 0, 0,    0);
+        _spinnerSpinnerPID.setCoefficient(Coefficient.D, 0, 0,    0);
+        _spinnerSpinnerPID.setInputRange(-1000, 1000);
+        _spinnerSpinnerPID.setOutputRange(-0.8, 0.8);
+        _spinnerSpinnerPID.setSetpointDeadband(10);
 
         _hardware.addHardware
         (
