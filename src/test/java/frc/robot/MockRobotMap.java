@@ -22,6 +22,10 @@ public class MockRobotMap implements RobotMap
     private MockJoystick            _coDriveJoy;
     private MockJoystick            _buttonBox;
 
+    private MockMotor               _driveLeftMotor;
+    private MockMotor               _driveRightMotor;
+    private MockPositionSensor      _driveLeftEncoder;
+    private MockPositionSensor      _driveRightEncoder;
     private MockPositionSensor      _driveGyro;
     private PIDControl              _driveDrivePID;
     private PIDControl              _driveRotatePID;
@@ -65,6 +69,10 @@ public class MockRobotMap implements RobotMap
         _coDriveJoy                 = new MockJoystick(11);
         _buttonBox                  = new MockJoystick(12);
 
+        _driveLeftMotor             = new MockMotor();
+        _driveRightMotor            = new MockMotor();
+        _driveLeftEncoder           = new MockPositionSensor();
+        _driveRightEncoder          = new MockPositionSensor();
         _driveGyro                  = new MockPositionSensor();        
         _driveDrivePID              = new PIDControl();
         _driveRotatePID             = new PIDControl();
@@ -119,6 +127,30 @@ public class MockRobotMap implements RobotMap
     public Joystick getButtonBox()
     {
         return _buttonBox;
+    }
+
+    @Override
+    public Motor getDriveLeftMotor()
+    {
+        return _driveLeftMotor;
+    }
+
+    @Override
+    public Motor getDriveRightMotor()
+    {
+        return _driveRightMotor;
+    }
+
+    @Override
+    public PositionSensor getDriveLeftEncoder()
+    {
+        return _driveLeftEncoder;
+    }
+
+    @Override
+    public PositionSensor getDriveRightEncoder()
+    {
+        return _driveRightEncoder;
     }
 
     @Override
@@ -314,6 +346,26 @@ public class MockRobotMap implements RobotMap
     public MockJoystick getMockButtonBox()
     {
         return _buttonBox;
+    }
+
+    public MockMotor getMockDriveLeftMotor()
+    {
+        return _driveLeftMotor;
+    }
+
+    public MockMotor getMockDriveRightMotor()
+    {
+        return _driveRightMotor;
+    }
+
+    public MockPositionSensor getMockDriveLeftEncoder()
+    {
+        return _driveLeftEncoder;
+    }
+
+    public MockPositionSensor getMockDriveRightEncoder()
+    {
+        return _driveRightEncoder;
     }
 
     public MockPositionSensor getMockDriveGyro() 

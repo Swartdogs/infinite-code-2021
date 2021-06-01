@@ -12,12 +12,16 @@ import frc.robot.abstraction.Switch;
 
 public class RobotHardware implements RobotMap
 {
-    private Hardware                _hardware;
+    private  Hardware               _hardware;
 
     private  Joystick               _driveJoy;
     private  Joystick               _coDriveJoy;
     private  Joystick               _buttonBox;
 
+    private  Motor                  _driveLeftMotor;
+    private  Motor                  _driveRightMotor;
+    private  PositionSensor         _driveLeftEncoder;
+    private  PositionSensor         _driveRightEncoder;
     private  PositionSensor         _driveGyro;
     private  PIDControl             _driveDrivePID;
     private  PIDControl             _driveRotatePID;
@@ -63,6 +67,10 @@ public class RobotHardware implements RobotMap
         _coDriveJoy                 = null;
         _buttonBox                  = null;
 
+        _driveLeftMotor             = null;
+        _driveRightMotor            = null;
+        _driveLeftEncoder           = null;
+        _driveRightEncoder          = null;
         _driveGyro                  = null;
         _driveDrivePID              = null;
         _driveRotatePID             = null;
@@ -106,6 +114,10 @@ public class RobotHardware implements RobotMap
             _coDriveJoy,
             _buttonBox,
 
+            _driveLeftMotor,
+            _driveRightMotor,
+            _driveLeftEncoder,
+            _driveRightEncoder,
             _driveGyro,
 
             _ballPathTrackMotor,
@@ -156,6 +168,30 @@ public class RobotHardware implements RobotMap
     public Joystick getButtonBox()
     {
         return _buttonBox;
+    }
+
+    @Override
+    public Motor getDriveLeftMotor()
+    {
+        return _driveLeftMotor;
+    }
+
+    @Override
+    public Motor getDriveRightMotor()
+    {
+        return _driveRightMotor;
+    }
+
+    @Override
+    public PositionSensor getDriveLeftEncoder()
+    {
+        return _driveLeftEncoder;
+    }
+
+    @Override
+    public PositionSensor getDriveRightEncoder()
+    {
+        return _driveRightEncoder;
     }
 
     @Override

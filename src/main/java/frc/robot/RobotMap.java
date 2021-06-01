@@ -15,6 +15,10 @@ public interface RobotMap
     public Joystick             getCoDriveJoy();
     public Joystick             getButtonBox();
 
+    public Motor                getDriveLeftMotor();
+    public Motor                getDriveRightMotor();
+    public PositionSensor       getDriveLeftEncoder();
+    public PositionSensor       getDriveRightEncoder();
     public PositionSensor       getDriveGyro();
     public PIDControl           getDriveDrivePID();
     public PIDControl           getDriveRotatePID();

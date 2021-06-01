@@ -15,6 +15,7 @@ import frc.robot.commands.CmdPickupStow;
 import frc.robot.commands.CmdSpinnerManual;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.ControlPanelSpinner;
+import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
@@ -24,6 +25,7 @@ public class RobotContainer
 {
     private RobotMap            _robotMap;
 
+    private Drive               _driveSubsystem;
     private BallPath            _ballPathSubsystem;
     private Hanger              _hangerSubsystem;
     private Pickup              _pickupSubsystem;
@@ -74,6 +76,17 @@ public class RobotContainer
 
     private void createSubsystems()
     {
+        _driveSubsystem = new Drive
+        (
+            _robotMap.getDriveLeftMotor(),
+            _robotMap.getDriveRightMotor(),
+            _robotMap.getDriveLeftEncoder(),
+            _robotMap.getDriveRightEncoder(),
+            _robotMap.getDriveGyro(),
+            _robotMap.getDriveDrivePID(),
+            _robotMap.getDriveRotatePID()
+        );
+
         _ballPathSubsystem = new BallPath
         (
             _robotMap.getBallPathTrackMotor(), 
