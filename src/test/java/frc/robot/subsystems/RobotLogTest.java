@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.SwartdogSubsystem;
-import frc.robot.subsystems.RobotLog;
 import frc.robot.subsystems.RobotLog.CommandMode;
 import frc.robot.subsystems.RobotLog.GameMode;
 
