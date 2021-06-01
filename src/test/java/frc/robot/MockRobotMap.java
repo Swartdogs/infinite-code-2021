@@ -15,22 +15,16 @@ import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.PositionSensor;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.Switch;
-import frc.robot.subsystems.drive.SwerveModule;
 
 public class MockRobotMap implements RobotMap 
 {
     private MockJoystick            _driveJoy;
     private MockJoystick            _coDriveJoy;
     private MockJoystick            _buttonBox;
-    private MockSwitch              _hangerReleaseMultiButton;
 
     private MockPositionSensor      _driveGyro;
     private PIDControl              _driveDrivePID;
     private PIDControl              _driveRotatePID;
-    private SwerveModule            _driveFLModule;
-    private SwerveModule            _driveFRModule;
-    private SwerveModule            _driveBLModule;
-    private SwerveModule            _driveBRModule;
 
     private MockMotor               _ballPathTrackMotor;
     private MockSolenoid            _ballPathUpperTrackSolenoid;
@@ -70,51 +64,10 @@ public class MockRobotMap implements RobotMap
         _driveJoy                   = new MockJoystick(12);
         _coDriveJoy                 = new MockJoystick(11);
         _buttonBox                  = new MockJoystick(12);
-        _hangerReleaseMultiButton   = new MockSwitch();
 
         _driveGyro                  = new MockPositionSensor();        
         _driveDrivePID              = new PIDControl();
         _driveRotatePID             = new PIDControl();
-        _driveFLModule              = new SwerveModule
-        (
-            new MockMotor(), 
-            new MockMotor(), 
-            new MockPositionSensor(), 
-            new PIDControl(), 
-            Constants.FL_MODULE_OFFSET, 
-            Constants.FL_MODULE_X, 
-            Constants.FL_MODULE_Y
-        );
-        _driveFRModule              = new SwerveModule
-        (
-            new MockMotor(), 
-            new MockMotor(), 
-            new MockPositionSensor(), 
-            new PIDControl(), 
-            Constants.FR_MODULE_OFFSET, 
-            Constants.FR_MODULE_X, 
-            Constants.FR_MODULE_Y
-        );
-        _driveBLModule              = new SwerveModule
-        (
-            new MockMotor(), 
-            new MockMotor(), 
-            new MockPositionSensor(), 
-            new PIDControl(), 
-            Constants.BL_MODULE_OFFSET, 
-            Constants.BL_MODULE_X, 
-            Constants.BL_MODULE_Y
-        );
-        _driveBRModule              = new SwerveModule
-        (
-            new MockMotor(), 
-            new MockMotor(), 
-            new MockPositionSensor(), 
-            new PIDControl(), 
-            Constants.FL_MODULE_OFFSET, 
-            Constants.FL_MODULE_X, 
-            Constants.FL_MODULE_Y
-        );
 
         _ballPathTrackMotor         = new MockMotor();
         _ballPathUpperTrackSolenoid = new MockSolenoid();
@@ -169,12 +122,6 @@ public class MockRobotMap implements RobotMap
     }
 
     @Override
-    public Switch getHangerReleaseMultiButton()
-    {
-        return _hangerReleaseMultiButton;
-    }
-
-    @Override
     public PositionSensor getDriveGyro() 
     {
         return _driveGyro;
@@ -190,30 +137,6 @@ public class MockRobotMap implements RobotMap
     public PIDControl getDriveRotatePID() 
     {
         return _driveRotatePID;
-    }
-
-    @Override
-    public SwerveModule getDriveFLModule() 
-    {
-        return _driveFLModule;
-    }
-
-    @Override
-    public SwerveModule getDriveFRModule() 
-    {
-        return _driveFRModule;
-    }
-
-    @Override
-    public SwerveModule getDriveBLModule() 
-    {
-        return _driveBLModule;
-    }
-
-    @Override
-    public SwerveModule getDriveBRModule() 
-    {
-        return _driveBRModule;
     }
 
     @Override
@@ -391,11 +314,6 @@ public class MockRobotMap implements RobotMap
     public MockJoystick getMockButtonBox()
     {
         return _buttonBox;
-    }
-
-    public MockSwitch getMockHangerReleaseMultiButton()
-    {
-        return _hangerReleaseMultiButton;
     }
 
     public MockPositionSensor getMockDriveGyro() 

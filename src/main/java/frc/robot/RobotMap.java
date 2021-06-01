@@ -8,22 +8,16 @@ import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.PositionSensor;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.Switch;
-import frc.robot.subsystems.drive.SwerveModule;
 
 public interface RobotMap
 {
     public Joystick             getDriveJoy();
     public Joystick             getCoDriveJoy();
     public Joystick             getButtonBox();
-    public Switch               getHangerReleaseMultiButton();
 
     public PositionSensor       getDriveGyro();
     public PIDControl           getDriveDrivePID();
     public PIDControl           getDriveRotatePID();
-    public SwerveModule         getDriveFLModule();
-    public SwerveModule         getDriveFRModule();
-    public SwerveModule         getDriveBLModule();
-    public SwerveModule         getDriveBRModule();
 
     public Motor                getBallPathTrackMotor();
     public Solenoid             getBallPathUpperTrackSolenoid();
