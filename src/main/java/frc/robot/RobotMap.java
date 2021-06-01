@@ -15,7 +15,6 @@ public interface RobotMap
     public Joystick             getDriveJoy();
     public Joystick             getCoDriveJoy();
     public Joystick             getButtonBox();
-    public Switch               getHangerReleaseMultiButton();
 
     public PositionSensor       getDriveGyro();
     public PIDControl           getDriveDrivePID();

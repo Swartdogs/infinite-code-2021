@@ -22,7 +22,6 @@ public class MockRobotMap implements RobotMap
     private MockJoystick            _driveJoy;
     private MockJoystick            _coDriveJoy;
     private MockJoystick            _buttonBox;
-    private MockSwitch              _hangerReleaseMultiButton;
 
     private MockPositionSensor      _driveGyro;
     private PIDControl              _driveDrivePID;
@@ -70,7 +69,6 @@ public class MockRobotMap implements RobotMap
         _driveJoy                   = new MockJoystick(12);
         _coDriveJoy                 = new MockJoystick(11);
         _buttonBox                  = new MockJoystick(12);
-        _hangerReleaseMultiButton   = new MockSwitch();
 
         _driveGyro                  = new MockPositionSensor();        
         _driveDrivePID              = new PIDControl();
@@ -166,12 +164,6 @@ public class MockRobotMap implements RobotMap
     public Joystick getButtonBox()
     {
         return _buttonBox;
-    }
-
-    @Override
-    public Switch getHangerReleaseMultiButton()
-    {
-        return _hangerReleaseMultiButton;
     }
 
     @Override
@@ -391,11 +383,6 @@ public class MockRobotMap implements RobotMap
     public MockJoystick getMockButtonBox()
     {
         return _buttonBox;
-    }
-
-    public MockSwitch getMockHangerReleaseMultiButton()
-    {
-        return _hangerReleaseMultiButton;
     }
 
     public MockPositionSensor getMockDriveGyro() 

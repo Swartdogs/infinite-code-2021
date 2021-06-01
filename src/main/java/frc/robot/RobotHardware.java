@@ -9,10 +9,11 @@ import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.PositionSensor;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.Switch;
+import frc.robot.subsystems.drive.SwerveModule;
 
 public class RobotHardware implements RobotMap
 {
-    private Hardware                _hardware;
+    private  Hardware               _hardware;
 
     private  Joystick               _driveJoy;
     private  Joystick               _coDriveJoy;
@@ -21,6 +22,10 @@ public class RobotHardware implements RobotMap
     private  PositionSensor         _driveGyro;
     private  PIDControl             _driveDrivePID;
     private  PIDControl             _driveRotatePID;
+    private  SwerveModule           _driveFLModule;
+    private  SwerveModule           _driveFRModule;
+    private  SwerveModule           _driveBLModule;
+    private  SwerveModule           _driveBRModule;
 
     private  Motor                  _ballPathTrackMotor;
     private  Solenoid               _ballPathUpperTrackSolenoid;
@@ -57,6 +62,26 @@ public class RobotHardware implements RobotMap
 
     public RobotHardware()
     {
+        Motor          driveFLDrive    = null;
+        Motor          driveFLRotate   = null;
+        PositionSensor driveFLPosition = null;
+        PIDControl     driveFLPID      = new PIDControl();
+
+        Motor          driveFRDrive    = null;
+        Motor          driveFRRotate   = null;
+        PositionSensor driveFRPosition = null;
+        PIDControl     driveFRPID      = new PIDControl();
+
+        Motor          driveBLDrive    = null;
+        Motor          driveBLRotate   = null;
+        PositionSensor driveBLPosition = null;
+        PIDControl     driveBLPID      = new PIDControl();
+
+        Motor          driveBRDrive    = null;
+        Motor          driveBRRotate   = null;
+        PositionSensor driveBRPosition = null;
+        PIDControl     driveBRPID      = new PIDControl();
+
         _hardware                   = new Hardware();
 
         _driveJoy                   = null;
@@ -66,6 +91,10 @@ public class RobotHardware implements RobotMap
         _driveGyro                  = null;
         _driveDrivePID              = null;
         _driveRotatePID             = null;
+        _driveFLModule              = new SwerveModule(driveFLDrive, driveFLRotate, driveFLPosition, driveFLPID, Constants.FL_MODULE_OFFSET, Constants.FL_MODULE_X, Constants.FL_MODULE_Y);
+        _driveFRModule              = new SwerveModule(driveFRDrive, driveFRRotate, driveFRPosition, driveFRPID, Constants.FR_MODULE_OFFSET, Constants.FR_MODULE_X, Constants.FR_MODULE_Y);
+        _driveBLModule              = new SwerveModule(driveBLDrive, driveBLRotate, driveBLPosition, driveBLPID, Constants.BL_MODULE_OFFSET, Constants.BL_MODULE_X, Constants.BL_MODULE_Y);
+        _driveBRModule              = new SwerveModule(driveBRDrive, driveBRRotate, driveBRPosition, driveBRPID, Constants.BR_MODULE_OFFSET, Constants.BR_MODULE_X, Constants.BR_MODULE_Y);
 
         _ballPathTrackMotor         = null;
         _ballPathUpperTrackSolenoid = null;
@@ -107,6 +136,18 @@ public class RobotHardware implements RobotMap
             _buttonBox,
 
             _driveGyro,
+            driveFLDrive,
+            driveFLRotate,
+            driveFLPosition,
+            driveFRDrive,
+            driveFRRotate,
+            driveFRPosition,
+            driveBLDrive,
+            driveBLRotate,
+            driveBLPosition,
+            driveBRDrive,
+            driveBRRotate,
+            driveBRPosition,
 
             _ballPathTrackMotor,
             _ballPathUpperTrackSolenoid,
@@ -174,6 +215,30 @@ public class RobotHardware implements RobotMap
     public PIDControl getDriveRotatePID()
     {
         return _driveRotatePID;
+    }
+
+    @Override
+    public SwerveModule getDriveFLModule()
+    {
+        return _driveFLModule;
+    }
+
+    @Override
+    public SwerveModule getDriveFRModule()
+    {
+        return _driveFRModule;
+    }
+
+    @Override
+    public SwerveModule getDriveBLModule()
+    {
+        return _driveBLModule;
+    }
+
+    @Override
+    public SwerveModule getDriveBRModule()
+    {
+        return _driveBRModule;
     }
 
     @Override

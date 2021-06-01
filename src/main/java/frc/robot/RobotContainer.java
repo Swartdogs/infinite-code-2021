@@ -7,6 +7,7 @@ import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.commands.CmdBallPathLoad;
 import frc.robot.commands.CmdBallPathLower;
 import frc.robot.commands.CmdBallPathRaise;
+import frc.robot.commands.CmdDriveWithJoystick;
 import frc.robot.commands.CmdHangerManual;
 import frc.robot.commands.CmdHangerRelease;
 import frc.robot.commands.CmdPickupDefault;
@@ -19,11 +20,13 @@ import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.drive.Drive;
 
 public class RobotContainer 
 {
     private RobotMap            _robotMap;
 
+    private Drive               _driveSubsystem;
     private BallPath            _ballPathSubsystem;
     private Hanger              _hangerSubsystem;
     private Pickup              _pickupSubsystem;
@@ -74,6 +77,17 @@ public class RobotContainer
 
     private void createSubsystems()
     {
+        _driveSubsystem = new Drive
+        (
+            _robotMap.getDriveGyro(),
+            _robotMap.getDriveDrivePID(),
+            _robotMap.getDriveRotatePID(),
+            _robotMap.getDriveFLModule(),
+            _robotMap.getDriveFRModule(),
+            _robotMap.getDriveBLModule(),
+            _robotMap.getDriveBRModule()
+        );
+
         _ballPathSubsystem = new BallPath
         (
             _robotMap.getBallPathTrackMotor(), 
@@ -128,6 +142,17 @@ public class RobotContainer
 
     private void configureDefaultCommands()
     {
+        _driveSubsystem.setDefaultCommand
+        (
+            new CmdDriveWithJoystick
+            (
+                _driveSubsystem, 
+                () -> _robotMap.getDriveJoy().getY(), 
+                () -> _robotMap.getDriveJoy().getX(), 
+                () -> _robotMap.getDriveJoy().getZ()
+            )
+        );
+
         _hangerSubsystem.setDefaultCommand
         (
             new CmdHangerManual
