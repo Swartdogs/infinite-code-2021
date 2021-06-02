@@ -32,4 +32,6 @@ public final class Constants
 
     public static final DoubleUnaryOperator HOOD_LOOKUP             = DoubleUnaryOperator.identity();
     public static final DoubleUnaryOperator SHOOTER_LOOKUP          = DoubleUnaryOperator.identity();
+
+    public static final double              ROTATE_DEADBAND         = 2.0;
 }

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import PIDControl.PIDControl;
+import frc.robot.Constants;
 import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.PositionSensor;
 import frc.robot.abstraction.SwartdogSubsystem;
@@ -34,71 +35,97 @@ public class Drive extends SwartdogSubsystem
 
     public void drive(double drive, double rotate)
     {
+        double left  = drive + rotate;
+        double right = -drive + rotate;
+        double max   = Math.max(Math.abs(left), Math.abs(right));
 
+        if (max > 1.0)
+        {
+            left  /= max;
+            right /= max;
+        }
+
+        _leftMotor.set(left);
+        _rightMotor.set(right);
     }
 
     public void setLeftMotor(double speed)
     {
-
+        _leftMotor.set(speed);
     }
 
     public void setRightMotor(double speed)
     {
-
+        _rightMotor.set(speed);
     }
 
     public double getLeftEncoderPosition()
     {
-        return 0;
+        return _leftEncoder.get();
     }
 
     public double getRightEncoderPosition()
     {
-        return 0;
+        return _rightEncoder.get();
     }
 
     public double getHeading()
     {
-        return 0;
+        return _gyro.get();
     }
 
-    public void driveInit()
+    public void driveInit(double distance, double heading, double maxSpeed, double minSpeed, boolean resetEncoder)
     {
+        maxSpeed = Math.abs(maxSpeed);
+        minSpeed = Math.abs(minSpeed);
+        
+        maxSpeed = Math.max(maxSpeed, minSpeed);
+        minSpeed = Math.min(maxSpeed, minSpeed);
 
+        _drivePID.setSetpoint(distance, getLeftEncoderPosition());// needs work (using only left encoder rn)
+        _drivePID.setOutputRange(-maxSpeed, maxSpeed, minSpeed);
+    
+        rotateInit(getHeading(), 0.75);
     }
 
     public double driveExec()
     {
-        return 0;
+        return _drivePID.calculate(getLeftEncoderPosition());
     }
 
     public boolean driveIsFinished()
     {
-        return false;
+        return _drivePID.atSetpoint();
     }
 
-    public void rotateInit()
+    public void rotateInit(double heading, double maxSpeed/*, boolean usingVision*/) // vision PID in vision subsystem?
     {
-        
+        maxSpeed = Math.abs(maxSpeed);
+
+        _rotatePID.setSetpoint(heading, getHeading());
+
+        _rotatePID.setSetpointDeadband(Constants.ROTATE_DEADBAND);
+        _rotatePID.setOutputRange(-maxSpeed, maxSpeed);
     }
 
     public double rotateExec()
     {
-        return 0;
+        return _rotatePID.calculate(getHeading());
     }
 
     public boolean rotateIsFinished()
     {
-        return false;
+        return _rotatePID.atSetpoint();
     }
 
     public void resetEncoders()
     {
-
+        _leftEncoder.reset();
+        _rightEncoder.reset();
     }
 
     public void resetGyro()
     {
-        
+        _gyro.reset();
     }
 }
