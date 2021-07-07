@@ -28,6 +28,7 @@ public class CmdBallPathRaise extends SwartdogCommand
     public void initialize() 
     {
         _ballPathSubsystem.raiseUpperTrack();
+
         if (Math.abs(_pickupSubsystem.getPrimaryMotor()) < Constants.MOTOR_MOTION_THRESHOLD)
         {
             _pickupStowTimer = Math.max(0, (int)(50 * Constants.PICKUP_STOW_DELAY));

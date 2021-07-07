@@ -1,6 +1,12 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import PIDControl.PIDControl;
+import PIDControl.PIDControl.Coefficient;
 import frc.robot.abstraction.Hardware;
 import frc.robot.abstraction.Joystick;
 import frc.robot.abstraction.Motor;
@@ -9,6 +15,7 @@ import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.PositionSensor;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.Switch;
+import frc.robot.abstraction.VelocitySensor;
 import frc.robot.subsystems.drive.SwerveModule;
 
 public class RobotHardware implements RobotMap
@@ -62,33 +69,39 @@ public class RobotHardware implements RobotMap
 
     public RobotHardware()
     {
-        Motor          driveFLDrive    = null;
-        Motor          driveFLRotate   = null;
-        PositionSensor driveFLPosition = null;
+        Motor rightAndPrimaryPickupMotor = createDoubleMotor(new TalonSRX(15));
+        Motor leftPickupAndControlPanel  = createDoubleMotor(new VictorSPX(12));
+
+        Motor          driveFLDrive    = Hardware.Actuators.falcon(1);
+        Motor          driveFLRotate   = Hardware.Actuators.neo(2);
+        PositionSensor driveFLPosition = Hardware.Sensors.potentiometer(0, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
         PIDControl     driveFLPID      = new PIDControl();
 
-        Motor          driveFRDrive    = null;
-        Motor          driveFRRotate   = null;
-        PositionSensor driveFRPosition = null;
+        Motor          driveFRDrive    = Hardware.Actuators.falcon(5);
+        Motor          driveFRRotate   = Hardware.Actuators.neo(6);
+        PositionSensor driveFRPosition = Hardware.Sensors.potentiometer(3, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
         PIDControl     driveFRPID      = new PIDControl();
 
-        Motor          driveBLDrive    = null;
-        Motor          driveBLRotate   = null;
-        PositionSensor driveBLPosition = null;
+        Motor          driveBLDrive    = Hardware.Actuators.falcon(3);
+        Motor          driveBLRotate   = Hardware.Actuators.neo(4);
+        PositionSensor driveBLPosition = Hardware.Sensors.potentiometer(1, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
         PIDControl     driveBLPID      = new PIDControl();
 
-        Motor          driveBRDrive    = null;
-        Motor          driveBRRotate   = null;
-        PositionSensor driveBRPosition = null;
+        Motor          driveBRDrive    = Hardware.Actuators.falcon(7);
+        Motor          driveBRRotate   = Hardware.Actuators.neo(8);
+        PositionSensor driveBRPosition = Hardware.Sensors.potentiometer(2, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
         PIDControl     driveBRPID      = new PIDControl();
+
+        driveBLDrive                   = Motor.invert(driveBLDrive);
+        driveBRDrive                   = Motor.invert(driveBRDrive);
 
         _hardware                   = new Hardware();
 
-        _driveJoy                   = null;
-        _coDriveJoy                 = null;
-        _buttonBox                  = null;
+        _driveJoy                   = Hardware.Controls.joystick(0);
+        _coDriveJoy                 = Hardware.Controls.joystick(1);
+        _buttonBox                  = Hardware.Controls.joystick(2);
 
-        _driveGyro                  = null;
+        _driveGyro                  = Hardware.Sensors.imu();
         _driveDrivePID              = null;
         _driveRotatePID             = null;
         _driveFLModule              = new SwerveModule(driveFLDrive, driveFLRotate, driveFLPosition, driveFLPID, Constants.FL_MODULE_OFFSET, Constants.FL_MODULE_X, Constants.FL_MODULE_Y);
@@ -96,27 +109,27 @@ public class RobotHardware implements RobotMap
         _driveBLModule              = new SwerveModule(driveBLDrive, driveBLRotate, driveBLPosition, driveBLPID, Constants.BL_MODULE_OFFSET, Constants.BL_MODULE_X, Constants.BL_MODULE_Y);
         _driveBRModule              = new SwerveModule(driveBRDrive, driveBRRotate, driveBRPosition, driveBRPID, Constants.BR_MODULE_OFFSET, Constants.BR_MODULE_X, Constants.BR_MODULE_Y);
 
-        _ballPathTrackMotor         = null;
-        _ballPathUpperTrackSolenoid = null;
-        _ballPathPosition1Sensor    = null;
-        _ballPathPosition2Sensor    = null;
-        _ballPathShooterSensor      = null;
+        _ballPathTrackMotor         = Hardware.Actuators.victorSPX(13);
+        _ballPathUpperTrackSolenoid = Hardware.Actuators.solenoid(7);
+        _ballPathPosition1Sensor    = Hardware.Sensors.lightSensor(0);
+        _ballPathPosition2Sensor    = Hardware.Sensors.lightSensor(1);
+        _ballPathShooterSensor      = Hardware.Sensors.lightSensor(2);
 
         _hangerHangerMotor          = null;
         _hangerReleaseSolenoid      = null;
         _hangerRatchetSolenoid      = null;
         _hangerHangerPositionSensor = null;
 
-        _pickupPrimaryMotor         = null;
-        _pickupLeftMotor            = null;
-        _pickupRightMotor           = null;
-        _pickupDeploySolenoid       = null;
+        _pickupPrimaryMotor         = rightAndPrimaryPickupMotor;
+        _pickupLeftMotor            = leftPickupAndControlPanel;
+        _pickupRightMotor           = rightAndPrimaryPickupMotor;
+        _pickupDeploySolenoid       = Solenoid.invert(Hardware.Actuators.solenoid(4));
         _pickupLeftLightSensor      = null;
         _pickupRightLightSensor     = null;
 
-        _shooterShooterMotor        = null;
-        _shooterHoodMotor           = null;
-        _shooterHoodSensor          = null;
+        _shooterShooterMotor        = Motor.compose(Hardware.Actuators.falconFlywheel(9, 6300), Hardware.Actuators.falconFlywheel(10, 6300));
+        _shooterHoodMotor           = Hardware.Actuators.victorSPX(14);
+        _shooterHoodSensor          = Hardware.Sensors.analogInput(5);
         _shooterHoodPID             = new PIDControl();
 
         _visionXPosition            = Hardware.NetworkTable.networkTableDouble("limelight", "tx");
@@ -125,9 +138,25 @@ public class RobotHardware implements RobotMap
         _visionLEDMode              = Hardware.NetworkTable.networkTableDouble("limelight", "ledMode");
         _visionRotatePID            = new PIDControl();
 
-        _spinnerSpinnerMotor        = null;
+        _spinnerSpinnerMotor        = leftPickupAndControlPanel;
         _spinnerPositionSensor      = _spinnerSpinnerMotor.getPositionSensor();
         _spinnerSpinnerPID          = new PIDControl();
+
+        _driveJoy.setXDeadband(0.05);
+        _driveJoy.setYDeadband(0.05);
+        _driveJoy.setZDeadband(0.10);
+
+        PIDControl[] rotatePIDs = new PIDControl[] { driveFLPID, driveFRPID, driveBLPID, driveBRPID };
+
+        for (PIDControl rotatePID : rotatePIDs)
+        {
+            rotatePID.setCoefficient(Coefficient.P, 0, 0.01, 0);
+            rotatePID.setCoefficient(Coefficient.I, 0, 0,    0);
+            rotatePID.setCoefficient(Coefficient.D, 0, 0,    0);
+            rotatePID.setInputRange(0, 360);
+            rotatePID.setOutputRange(-1, 1);
+            rotatePID.setSetpointDeadband(0.25);
+        }
 
         _hardware.addHardware
         (
@@ -155,17 +184,17 @@ public class RobotHardware implements RobotMap
             _ballPathPosition2Sensor,
             _ballPathShooterSensor,
 
-            _hangerHangerMotor,
-            _hangerReleaseSolenoid,
-            _hangerRatchetSolenoid,
-            _hangerHangerPositionSensor,
+            // _hangerHangerMotor,
+            // _hangerReleaseSolenoid,
+            // _hangerRatchetSolenoid,
+            // _hangerHangerPositionSensor,
 
             _pickupPrimaryMotor,
             _pickupLeftMotor,
             _pickupRightMotor,
             _pickupDeploySolenoid,
-            _pickupLeftLightSensor,
-            _pickupRightLightSensor,
+            // _pickupLeftLightSensor,
+            // _pickupRightLightSensor,
 
             _shooterShooterMotor,
             _shooterHoodMotor,
@@ -176,8 +205,8 @@ public class RobotHardware implements RobotMap
             _visionTargetFound,
             _visionLEDMode,
 
-            _spinnerSpinnerMotor,
-            _spinnerPositionSensor
+            _spinnerSpinnerMotor
+            // _spinnerPositionSensor
         );
     }
 
@@ -401,5 +430,48 @@ public class RobotHardware implements RobotMap
     public PIDControl getSpinnerSpinnerPID()
     {
         return _spinnerSpinnerPID;
+    }
+
+    private Motor createDoubleMotor(BaseMotorController motor)
+    {
+        return new Motor()
+        {
+            private double _speed;
+
+			@Override
+            protected double getRaw() 
+            {
+				return _speed;
+			}
+
+			@Override
+            public PositionSensor getPositionSensor() 
+            {
+				return null;
+			}
+
+			@Override
+            public VelocitySensor getVelocitySensor() 
+            {
+				return null;
+			}
+
+			@Override
+            public void set(double speed) 
+            {
+                if (Math.abs(speed) > Math.abs(_speed))
+                {
+                    _speed = speed;
+                }
+            }
+            
+            @Override
+            public void cache()
+            {
+                motor.set(ControlMode.PercentOutput, _speed);
+
+                _speed = 0;
+            }
+        };
     }
 }

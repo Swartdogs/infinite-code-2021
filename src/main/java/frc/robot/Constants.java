@@ -4,18 +4,24 @@ import java.util.function.DoubleUnaryOperator;
 
 public final class Constants
 {
-    public static final double              FL_MODULE_X             = 0;
-    public static final double              FL_MODULE_Y             = 0;
-    public static final double              FL_MODULE_OFFSET        = 0;
-    public static final double              FR_MODULE_X             = 0;
-    public static final double              FR_MODULE_Y             = 0;
-    public static final double              FR_MODULE_OFFSET        = 0;
-    public static final double              BL_MODULE_X             = 0;
-    public static final double              BL_MODULE_Y             = 0;
-    public static final double              BL_MODULE_OFFSET        = 0;
-    public static final double              BR_MODULE_X             = 0;
-    public static final double              BR_MODULE_Y             = 0;
-    public static final double              BR_MODULE_OFFSET        = 0;
+    public static final double              SWERVE_MODULE_SCALE     = 360 / 0.92;
+    public static final double              SWERVE_MODULE_OFFSET    = (360 - SWERVE_MODULE_SCALE) / 2.0;
+
+    public static final double              ROBOT_LENGTH            = 28.75;
+    public static final double              ROBOT_WIDTH             = 20;
+
+    public static final double              FL_MODULE_X             = -ROBOT_WIDTH / 2;
+    public static final double              FL_MODULE_Y             = ROBOT_LENGTH / 2;
+    public static final double              FL_MODULE_OFFSET        = 17;
+    public static final double              FR_MODULE_X             = ROBOT_WIDTH / 2;
+    public static final double              FR_MODULE_Y             = ROBOT_LENGTH / 2;
+    public static final double              FR_MODULE_OFFSET        = 194;
+    public static final double              BL_MODULE_X             = -ROBOT_WIDTH / 2;
+    public static final double              BL_MODULE_Y             = -ROBOT_LENGTH / 2;
+    public static final double              BL_MODULE_OFFSET        = 30;
+    public static final double              BR_MODULE_X             = ROBOT_WIDTH / 2;
+    public static final double              BR_MODULE_Y             = -ROBOT_LENGTH / 2;
+    public static final double              BR_MODULE_OFFSET        = 176;
 
     public static final double              LIMELIGHT_LED_OFF       = 1;
     public static final double              LIMELIGHT_LED_ON        = 3;

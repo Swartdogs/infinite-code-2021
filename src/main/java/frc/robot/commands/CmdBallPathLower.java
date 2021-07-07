@@ -23,7 +23,7 @@ public class CmdBallPathLower extends SwartdogCommand
     @Override
     public void initialize() 
     {
-        if (!_hangerSubsystem.isHangerReleased())
+        //if (!_hangerSubsystem.isHangerReleased())
         {
             _pickupSubsystem.deployPickup();
             _ballPathSubsystem.lowerUpperTrack();
