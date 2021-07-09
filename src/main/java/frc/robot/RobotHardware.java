@@ -127,7 +127,7 @@ public class RobotHardware implements RobotMap
         _pickupLeftLightSensor      = null;
         _pickupRightLightSensor     = null;
 
-        _shooterShooterMotor        = Motor.compose(Hardware.Actuators.falconFlywheel(9, 6300), Hardware.Actuators.falconFlywheel(10, 6300));
+        _shooterShooterMotor        = Motor.compose(Hardware.Actuators.falconFlywheel(9, 0.1, 0.001, 5, 1023.0/20660.0), Hardware.Actuators.falconFlywheel(10, 0.1, 0.001, 5, 1023.0/20660.0));
         _shooterHoodMotor           = Hardware.Actuators.victorSPX(14);
         _shooterHoodSensor          = Hardware.Sensors.analogInput(5);
         _shooterHoodPID             = new PIDControl();
