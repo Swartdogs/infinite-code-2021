@@ -8,12 +8,14 @@ import frc.robot.abstraction.SwartdogSubsystem;
 
 public class Shooter extends SwartdogSubsystem 
 {
-    private Motor _shooterMotor;
-    private Motor _hoodMotor;
+    private Motor           _shooterMotor;
+    private Motor           _hoodMotor;
 
-    private PositionSensor _hoodSensor;
+    private PositionSensor  _hoodSensor;
+    private PIDControl      _hoodPID;
 
-    private PIDControl     _hoodPID;
+    private boolean         _shooterOn;
+    private double          _targetDistance;
 
     public Shooter(Motor shooterMotor, Motor hoodMotor, PositionSensor hoodSensor, PIDControl hoodPID) 
     {
@@ -21,8 +23,22 @@ public class Shooter extends SwartdogSubsystem
         _hoodMotor    = hoodMotor;
 
         _hoodSensor   = hoodSensor;
-
         _hoodPID      = hoodPID;
+    }
+
+    public void startShooter()
+    {
+        _shooterOn = true;
+    }
+
+    public void stopShooter()
+    {
+        _shooterOn = false;
+    }
+
+    public void setTargetDistance(double distance)
+    {
+        _targetDistance = distance;
     }
 
     public void setShooterMotor(double speed)

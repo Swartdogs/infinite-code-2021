@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import PIDControl.PIDControl;
 import PIDControl.PIDControl.Coefficient;
+import frc.robot.abstraction.Abstraction;
 import frc.robot.abstraction.Hardware;
 import frc.robot.abstraction.Joystick;
 import frc.robot.abstraction.Motor;
@@ -69,8 +70,8 @@ public class RobotHardware implements RobotMap
 
     public RobotHardware()
     {
-        Motor rightAndPrimaryPickupMotor = createDoubleMotor(new TalonSRX(15));
-        Motor leftPickupAndControlPanel  = createDoubleMotor(new VictorSPX(12));
+        DoubleMotor rightAndPrimaryPickupMotor = new DoubleMotor(new TalonSRX(15));
+        DoubleMotor leftPickupAndControlPanel  = new DoubleMotor(new VictorSPX(12));
 
         Motor          driveFLDrive    = Hardware.Actuators.falcon(1);
         Motor          driveFLRotate   = Hardware.Actuators.neo(2);
@@ -109,7 +110,7 @@ public class RobotHardware implements RobotMap
         _driveBLModule              = new SwerveModule(driveBLDrive, driveBLRotate, driveBLPosition, driveBLPID, Constants.BL_MODULE_OFFSET, Constants.BL_MODULE_X, Constants.BL_MODULE_Y);
         _driveBRModule              = new SwerveModule(driveBRDrive, driveBRRotate, driveBRPosition, driveBRPID, Constants.BR_MODULE_OFFSET, Constants.BR_MODULE_X, Constants.BR_MODULE_Y);
 
-        _ballPathTrackMotor         = Hardware.Actuators.victorSPX(13);
+        _ballPathTrackMotor         = Motor.invert(Hardware.Actuators.victorSPX(13));
         _ballPathUpperTrackSolenoid = Hardware.Actuators.solenoid(7);
         _ballPathPosition1Sensor    = Hardware.Sensors.lightSensor(0);
         _ballPathPosition2Sensor    = Hardware.Sensors.lightSensor(1);
@@ -120,14 +121,14 @@ public class RobotHardware implements RobotMap
         _hangerRatchetSolenoid      = null;
         _hangerHangerPositionSensor = null;
 
-        _pickupPrimaryMotor         = rightAndPrimaryPickupMotor;
-        _pickupLeftMotor            = leftPickupAndControlPanel;
-        _pickupRightMotor           = rightAndPrimaryPickupMotor;
+        _pickupPrimaryMotor         = Motor.invert(rightAndPrimaryPickupMotor.getMotor1());
+        _pickupLeftMotor            = leftPickupAndControlPanel.getMotor1();
+        _pickupRightMotor           = Motor.invert(rightAndPrimaryPickupMotor.getMotor2());
         _pickupDeploySolenoid       = Solenoid.invert(Hardware.Actuators.solenoid(4));
         _pickupLeftLightSensor      = null;
         _pickupRightLightSensor     = null;
 
-        _shooterShooterMotor        = Motor.compose(Hardware.Actuators.falconFlywheel(9, 0.1, 0.001, 5, 1023.0/20660.0), Hardware.Actuators.falconFlywheel(10, 0.1, 0.001, 5, 1023.0/20660.0));
+        _shooterShooterMotor        = Motor.compose(Hardware.Actuators.falconFlywheel(9, 6300), Hardware.Actuators.falconFlywheel(10, 6300));
         _shooterHoodMotor           = Hardware.Actuators.victorSPX(14);
         _shooterHoodSensor          = Hardware.Sensors.analogInput(5);
         _shooterHoodPID             = new PIDControl();
@@ -138,7 +139,7 @@ public class RobotHardware implements RobotMap
         _visionLEDMode              = Hardware.NetworkTable.networkTableDouble("limelight", "ledMode");
         _visionRotatePID            = new PIDControl();
 
-        _spinnerSpinnerMotor        = leftPickupAndControlPanel;
+        _spinnerSpinnerMotor        = leftPickupAndControlPanel.getMotor2();
         _spinnerPositionSensor      = _spinnerSpinnerMotor.getPositionSensor();
         _spinnerSpinnerPID          = new PIDControl();
 
@@ -205,8 +206,11 @@ public class RobotHardware implements RobotMap
             _visionTargetFound,
             _visionLEDMode,
 
-            _spinnerSpinnerMotor
+            _spinnerSpinnerMotor,
             // _spinnerPositionSensor
+
+            rightAndPrimaryPickupMotor,
+            leftPickupAndControlPanel
         );
     }
 
@@ -432,46 +436,99 @@ public class RobotHardware implements RobotMap
         return _spinnerSpinnerPID;
     }
 
-    private Motor createDoubleMotor(BaseMotorController motor)
+    private class DoubleMotor implements Abstraction
     {
-        return new Motor()
+        private Motor  _motor1;
+        private Motor  _motor2;
+
+        private double _speed1;
+        private double _speed2;
+        private double _finalSpeed;
+
+        private BaseMotorController _motor;
+
+        public DoubleMotor(BaseMotorController motor)
         {
-            private double _speed;
+            _speed1     = 0;
+            _speed2     = 0;
+            _finalSpeed = 0;
 
-			@Override
-            protected double getRaw() 
-            {
-				return _speed;
-			}
+            _motor = motor;
 
-			@Override
-            public PositionSensor getPositionSensor() 
+            _motor1 = new Motor()
             {
-				return null;
-			}
-
-			@Override
-            public VelocitySensor getVelocitySensor() 
-            {
-				return null;
-			}
-
-			@Override
-            public void set(double speed) 
-            {
-                if (Math.abs(speed) > Math.abs(_speed))
+                @Override
+                protected double getRaw() 
                 {
-                    _speed = speed;
+                    return _finalSpeed;
                 }
-            }
-            
-            @Override
-            public void cache()
-            {
-                motor.set(ControlMode.PercentOutput, _speed);
 
-                _speed = 0;
-            }
-        };
+                @Override
+                public PositionSensor getPositionSensor() 
+                {
+                    return null;
+                }
+
+                @Override
+                public VelocitySensor getVelocitySensor() 
+                {
+                    return null;
+                }
+
+                @Override
+                public void set(double speed) 
+                {
+                    _speed1 = speed;
+                }
+            };
+
+            _motor2 = new Motor()
+            {
+                @Override
+                protected double getRaw() 
+                {
+                    return _finalSpeed;
+                }
+
+                @Override
+                public PositionSensor getPositionSensor() 
+                {
+                    return null;
+                }
+
+                @Override
+                public VelocitySensor getVelocitySensor() 
+                {
+                    return null;
+                }
+
+                @Override
+                public void set(double speed) 
+                {
+                    _speed2 = speed;
+                }
+            };
+        }
+
+        public Motor getMotor1()
+        {
+            return _motor1;
+        }
+
+        public Motor getMotor2()
+        {
+            return _motor2;
+        }
+
+        @Override
+        public void cache()
+        {
+            _finalSpeed = Math.abs(_speed1) > Math.abs(_speed2) ? _speed1 : _speed2;
+
+            _motor.set(ControlMode.PercentOutput, _finalSpeed);
+
+            _motor1.cache();
+            _motor2.cache();
+        }
     }
 }

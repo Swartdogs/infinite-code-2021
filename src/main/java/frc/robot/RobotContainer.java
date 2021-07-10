@@ -205,19 +205,19 @@ public class RobotContainer
     {
         _robotMap.getDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetGyro()));
 
-        _robotMap.getDriveJoy().getButton(4).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem));
-        _robotMap.getDriveJoy().getButton(3).whenActivated(new CmdBallPathRaise(_ballPathSubsystem, _pickupSubsystem));
+        _robotMap.getDriveJoy().getButton(3).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem));
+        _robotMap.getDriveJoy().getButton(4).whenActivated(new CmdBallPathRaise(_ballPathSubsystem, _pickupSubsystem));
 
         _robotMap.getDriveJoy().getButton(5).whenActivated(new CmdPickupDeploy(_ballPathSubsystem, _pickupSubsystem));
         _robotMap.getDriveJoy().getButton(6).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
 
-        // _robotMap.getCoDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
+        _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
         // _robotMap.getCoDriveJoy().getButton(4).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.decrementBallCount()));
         // _robotMap.getCoDriveJoy().getButton(5).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.incrementBallCount()));
         // _robotMap.getCoDriveJoy().getButton(6).whenActivated(new CmdPickupDeploy(_ballPathSubsystem, _pickupSubsystem));
         // _robotMap.getCoDriveJoy().getButton(7).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
 
-        // _robotMap.getBallPathPosition1Sensor().whenActivated(new CmdBallPathLoad(_ballPathSubsystem, _pickupSubsystem));
+        _robotMap.getBallPathPosition1Sensor().whenActivated(new CmdBallPathLoad(_ballPathSubsystem, _pickupSubsystem));
 
         // _hangerReleaseMultiButton.whenActivated(new CmdHangerRelease(_ballPathSubsystem, _hangerSubsystem));
     }
