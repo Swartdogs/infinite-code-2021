@@ -129,7 +129,7 @@ public class RobotHardware implements RobotMap
         _pickupRightLightSensor     = null;
 
         _shooterShooterMotor        = Motor.compose(Hardware.Actuators.falconFlywheel(9, 6300), Hardware.Actuators.falconFlywheel(10, 6300));
-        _shooterHoodMotor           = Hardware.Actuators.victorSPX(14);
+        _shooterHoodMotor           = Motor.invert(Hardware.Actuators.victorSPX(14));
         _shooterHoodSensor          = Hardware.Sensors.analogInput(5);
         _shooterHoodPID             = new PIDControl();
 
@@ -158,6 +158,13 @@ public class RobotHardware implements RobotMap
             rotatePID.setOutputRange(-1, 1);
             rotatePID.setSetpointDeadband(0.25);
         }
+
+        _shooterHoodPID.setCoefficient(Coefficient.P, 0, 0.005, 0);
+        _shooterHoodPID.setCoefficient(Coefficient.I, 0, 0, 0);
+        _shooterHoodPID.setCoefficient(Coefficient.D, 400, 0, 0.001);
+        _shooterHoodPID.setInputRange(Constants.HOOD_MAX, Constants.HOOD_ZERO);
+        _shooterHoodPID.setOutputRange(-1, 1);
+        _shooterHoodPID.setSetpointDeadband(50);
 
         _hardware.addHardware
         (

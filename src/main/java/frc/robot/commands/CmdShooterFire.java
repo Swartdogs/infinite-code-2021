@@ -6,40 +6,35 @@ import frc.robot.abstraction.Enumerations.State;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision;
 
 public class CmdShooterFire extends SwartdogCommand 
 {
     private BallPath _ballPathSubsystem;
     private Pickup   _pickupSubsystem;
     private Shooter  _shooterSubsystem;
-    private Vision   _visionSubsystem;
 
     public CmdShooterFire(BallPath ballPathSubsystem, 
                           Pickup   pickupSubsystem, 
-                          Shooter  shooterSubsystem, 
-                          Vision   visionSubsystem) 
+                          Shooter  shooterSubsystem) 
     {
         _ballPathSubsystem = ballPathSubsystem;
         _pickupSubsystem   = pickupSubsystem;
         _shooterSubsystem  = shooterSubsystem;
-        _visionSubsystem   = visionSubsystem;
+
+        addRequirements(_ballPathSubsystem, _pickupSubsystem, _shooterSubsystem);
     }
 
     @Override
     public void execute() 
     {
-        if (_visionSubsystem.rotateIsFinished() &&
-            _shooterSubsystem.hoodAtSetpoint() &&
-            Math.abs(_shooterSubsystem.getShooterMotorSetpoint() - _shooterSubsystem.getShooterMotor()) < Constants.SHOOTER_RPM_DEADBAND)
+        if (_shooterSubsystem.isShooterOn()) 
         {
             _ballPathSubsystem.setTrackMotor(Constants.BALLPATH_SPEED);
             _pickupSubsystem.setPrimaryMotor(Constants.PICKUP_SPEED);
-        }
 
-        if (_ballPathSubsystem.shooterSensorTransitionedTo(State.Off))
-        {
-            _ballPathSubsystem.decrementBallCount();
+            if (_ballPathSubsystem.shooterSensorTransitionedTo(State.Off)) {
+                _ballPathSubsystem.decrementBallCount();
+            }
         }
     }
 
@@ -47,12 +42,16 @@ public class CmdShooterFire extends SwartdogCommand
     public void end(boolean interrupted) 
     {
         _ballPathSubsystem.setTrackMotor(0);
-        _pickupSubsystem.setPrimaryMotor(0);
+        
+        if (_shooterSubsystem.isShooterOn()) _pickupSubsystem.setPrimaryMotor(0);
+
+        if (!interrupted) _shooterSubsystem.stopShooter();
     }
 
     @Override
     public boolean isFinished() 
     {
-        return _ballPathSubsystem.getBallCount() <= 0;
+        return (_ballPathSubsystem.getBallCount() <= 0) || 
+               (!_shooterSubsystem.isShooterOn());
     }
 }

@@ -13,6 +13,9 @@ import frc.robot.commands.CmdHangerRelease;
 import frc.robot.commands.CmdPickupDefault;
 import frc.robot.commands.CmdPickupDeploy;
 import frc.robot.commands.CmdPickupStow;
+import frc.robot.commands.CmdShooterDefault;
+import frc.robot.commands.CmdShooterFire;
+import frc.robot.commands.CmdShooterStart;
 import frc.robot.commands.CmdSpinnerManual;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.ControlPanelSpinner;
@@ -115,13 +118,13 @@ public class RobotContainer
             _robotMap.getPickupRightLightSensor()
         );
 
-        // _shooterSubsystem = new Shooter
-        // (
-        //     _robotMap.getShooterShooterMotor(),
-        //     _robotMap.getShooterHoodMotor(),
-        //     _robotMap.getShooterHoodSensor(),
-        //     _robotMap.getShooterHoodPID()
-        // );
+        _shooterSubsystem = new Shooter
+        (
+            _robotMap.getShooterShooterMotor(),
+            _robotMap.getShooterHoodMotor(),
+            _robotMap.getShooterHoodSensor(),
+            _robotMap.getShooterHoodPID()
+        );
 
         // _visionSubsystem = new Vision
         // (
@@ -181,6 +184,15 @@ public class RobotContainer
         //     )
         // );
 
+        _shooterSubsystem.setDefaultCommand
+        (
+            new CmdShooterDefault
+            (
+                _shooterSubsystem, 
+                _ballPathSubsystem
+            )
+        );
+
         // _spinnerSubsystem.setDefaultCommand
         // (
         //     new CmdSpinnerManual
@@ -205,17 +217,24 @@ public class RobotContainer
     {
         _robotMap.getDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetGyro()));
 
-        _robotMap.getDriveJoy().getButton(3).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem));
+        _robotMap.getDriveJoy().getButton(3).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(4).whenActivated(new CmdBallPathRaise(_ballPathSubsystem, _pickupSubsystem));
 
-        _robotMap.getDriveJoy().getButton(5).whenActivated(new CmdPickupDeploy(_ballPathSubsystem, _pickupSubsystem));
+        _robotMap.getDriveJoy().getButton(5).whenActivated(new CmdPickupDeploy(_ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(6).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
 
         _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
-        // _robotMap.getCoDriveJoy().getButton(4).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.decrementBallCount()));
-        // _robotMap.getCoDriveJoy().getButton(5).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.incrementBallCount()));
+        _robotMap.getCoDriveJoy().getButton(4).whenActivated(SwartdogCommand.run(() -> {_ballPathSubsystem.decrementBallCount(); System.out.println("Ball Count: " + _ballPathSubsystem.getBallCount());}));
+        _robotMap.getCoDriveJoy().getButton(5).whenActivated(SwartdogCommand.run(() -> {_ballPathSubsystem.incrementBallCount(); System.out.println("Ball Count: " + _ballPathSubsystem.getBallCount());}));
         // _robotMap.getCoDriveJoy().getButton(6).whenActivated(new CmdPickupDeploy(_ballPathSubsystem, _pickupSubsystem));
         // _robotMap.getCoDriveJoy().getButton(7).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
+
+        _robotMap.getDriveJoy().getButton(7).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(Constants.SHOOTER_NEAR_DISTANCE)));
+        _robotMap.getDriveJoy().getButton(8).whenActivated(new CmdShooterStart(_ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(9).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(Constants.SHOOTER_FAR_DISTANCE)));
+        _robotMap.getDriveJoy().getButton(10).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.stopShooter()));
+
+        _robotMap.getCoDriveJoy().getButton(1).whileActive(new CmdShooterFire(_ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));;
 
         _robotMap.getBallPathPosition1Sensor().whenActivated(new CmdBallPathLoad(_ballPathSubsystem, _pickupSubsystem));
 

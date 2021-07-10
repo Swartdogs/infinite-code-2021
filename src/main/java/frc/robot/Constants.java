@@ -48,7 +48,46 @@ public final class Constants
     public static final double              BALLPATH_SPEED          = 0.55;
 
     public static final int                 SHOOTER_RPM_DEADBAND    = 50;
+    public static final double              SHOOTER_NEAR_DISTANCE   = 10;
+    public static final double              SHOOTER_FAR_DISTANCE    = 300;
+    public static final double              HOOD_ZERO               = 1220;
+    public static final double              HOOD_NEAR_TARGET        = HOOD_ZERO - 291;
+    public static final double              HOOD_FAR_TARGET         = HOOD_ZERO - 504;
+    public static final double              HOOD_MAX                = HOOD_ZERO - 700;
+    public static final double              SHOOTER_NEAR_SPEED      = 3525;
+    public static final double              SHOOTER_FAR_SPEED       = 5500;
 
-    public static final DoubleUnaryOperator HOOD_LOOKUP             = DoubleUnaryOperator.identity();
-    public static final DoubleUnaryOperator SHOOTER_LOOKUP          = DoubleUnaryOperator.identity();
+    public static final DoubleUnaryOperator HOOD_LOOKUP             = (distance) -> 
+    { 
+        double target = HOOD_ZERO;
+
+        if (distance == SHOOTER_NEAR_DISTANCE)
+        {
+            target = HOOD_NEAR_TARGET;
+        }
+
+        else if (distance == SHOOTER_FAR_DISTANCE)
+        {
+            target = HOOD_FAR_TARGET;
+        }
+
+        return target;
+    };
+
+    public static final DoubleUnaryOperator SHOOTER_LOOKUP          = (distance) ->
+    {
+        double target = 0;
+
+        if (distance == SHOOTER_NEAR_DISTANCE)
+        {
+            target = SHOOTER_NEAR_SPEED;
+        }
+
+        else if (distance == SHOOTER_FAR_DISTANCE)
+        {
+            target = SHOOTER_FAR_SPEED;
+        }
+
+        return target;
+    };
 }

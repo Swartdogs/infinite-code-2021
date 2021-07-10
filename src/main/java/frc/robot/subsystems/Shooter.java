@@ -19,13 +19,20 @@ public class Shooter extends SwartdogSubsystem
 
     public Shooter(Motor shooterMotor, Motor hoodMotor, PositionSensor hoodSensor, PIDControl hoodPID) 
     {
-        _shooterMotor = shooterMotor;
-        _hoodMotor    = hoodMotor;
+        _shooterMotor   = shooterMotor;
+        _hoodMotor      = hoodMotor;
 
-        _hoodSensor   = hoodSensor;
-        _hoodPID      = hoodPID;
+        _hoodSensor     = hoodSensor;
+        _hoodPID        = hoodPID;
+
+        _targetDistance = 0;
     }
 
+    public boolean isShooterOn()
+    {
+        return _shooterOn;
+    }
+   
     public void startShooter()
     {
         _shooterOn = true;
@@ -34,6 +41,11 @@ public class Shooter extends SwartdogSubsystem
     public void stopShooter()
     {
         _shooterOn = false;
+    }
+
+    public double getTargetDistance()
+    {
+        return _targetDistance;
     }
 
     public void setTargetDistance(double distance)
