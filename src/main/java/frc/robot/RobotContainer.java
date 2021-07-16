@@ -7,6 +7,7 @@ import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.commands.CmdBallPathLoad;
 import frc.robot.commands.CmdBallPathLower;
 import frc.robot.commands.CmdBallPathRaise;
+import frc.robot.commands.CmdDashboardUpdate;
 import frc.robot.commands.CmdDriveWithJoystick;
 import frc.robot.commands.CmdHangerManual;
 import frc.robot.commands.CmdHangerRelease;
@@ -19,22 +20,23 @@ import frc.robot.commands.CmdShooterStart;
 import frc.robot.commands.CmdSpinnerManual;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.ControlPanelSpinner;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.SwerveModule;
 
 public class RobotContainer 
 {
     private RobotMap            _robotMap;
 
+    private Dashboard           _dashboardSubsystem;
     private Drive               _driveSubsystem;
     private BallPath            _ballPathSubsystem;
     private Hanger              _hangerSubsystem;
     private Pickup              _pickupSubsystem;
     private Shooter             _shooterSubsystem;
-    private Vision              _visionSubsystem;
     private ControlPanelSpinner _spinnerSubsystem;
 
     private Switch              _hangerReleaseMultiButton;
@@ -80,15 +82,26 @@ public class RobotContainer
 
     private void createSubsystems()
     {
+        _dashboardSubsystem = new Dashboard
+        (
+            _robotMap.getDashboardTab(), 
+            _robotMap.getSettingsTab()
+        );
+
+        SwerveModule driveFLModule = new SwerveModule(_robotMap.getDriveFLModuleDriveMotor(), _robotMap.getDriveFLModuleRotateMotor(), _robotMap.getDriveFLModulePositionSensor(), _robotMap.getDriveFLModulePIDControl(), Constants.FL_MODULE_X, Constants.FL_MODULE_Y, _dashboardSubsystem::getDriveFLModuleOffset);
+        SwerveModule driveFRModule = new SwerveModule(_robotMap.getDriveFRModuleDriveMotor(), _robotMap.getDriveFRModuleRotateMotor(), _robotMap.getDriveFRModulePositionSensor(), _robotMap.getDriveFRModulePIDControl(), Constants.FR_MODULE_X, Constants.FR_MODULE_Y, _dashboardSubsystem::getDriveFRModuleOffset);
+        SwerveModule driveBLModule = new SwerveModule(_robotMap.getDriveBLModuleDriveMotor(), _robotMap.getDriveBLModuleRotateMotor(), _robotMap.getDriveBLModulePositionSensor(), _robotMap.getDriveBLModulePIDControl(), Constants.BL_MODULE_X, Constants.BL_MODULE_Y, _dashboardSubsystem::getDriveBLModuleOffset);
+        SwerveModule driveBRModule = new SwerveModule(_robotMap.getDriveBRModuleDriveMotor(), _robotMap.getDriveBRModuleRotateMotor(), _robotMap.getDriveBRModulePositionSensor(), _robotMap.getDriveBRModulePIDControl(), Constants.BR_MODULE_X, Constants.BR_MODULE_Y, _dashboardSubsystem::getDriveBRModuleOffset);
+
         _driveSubsystem = new Drive
         (
             _robotMap.getDriveGyro(),
             _robotMap.getDriveDrivePID(),
             _robotMap.getDriveRotatePID(),
-            _robotMap.getDriveFLModule(),
-            _robotMap.getDriveFRModule(),
-            _robotMap.getDriveBLModule(),
-            _robotMap.getDriveBRModule()
+            driveFLModule,
+            driveFRModule,
+            driveBLModule,
+            driveBRModule
         );
 
         _ballPathSubsystem = new BallPath
@@ -100,13 +113,13 @@ public class RobotContainer
             _robotMap.getBallPathShooterSensor()
         );
 
-        // _hangerSubsystem = new Hanger
-        // (
-        //     _robotMap.getHangerHangerMotor(), 
-        //     _robotMap.getHangerReleaseSolenoid(), 
-        //     _robotMap.getHangerRatchetSolenoid(), 
-        //     _robotMap.getHangerHangerPositionSensor()
-        // );
+        _hangerSubsystem = new Hanger
+        (
+            _robotMap.getHangerHangerMotor(), 
+            _robotMap.getHangerReleaseSolenoid(), 
+            _robotMap.getHangerRatchetSolenoid(), 
+            _robotMap.getHangerHangerPositionSensor()
+        );
 
         _pickupSubsystem = new Pickup
         (
@@ -126,25 +139,29 @@ public class RobotContainer
             _robotMap.getShooterHoodPID()
         );
 
-        // _visionSubsystem = new Vision
-        // (
-        //     _robotMap.getVisionXPosition(),
-        //     _robotMap.getVisionYPosition(),
-        //     _robotMap.getVisionTargetFound(),
-        //     _robotMap.getVisionLEDMode(),
-        //     _robotMap.getVisionRotatePID()
-        // );
-
-        // _spinnerSubsystem = new ControlPanelSpinner
-        // (
-        //     _robotMap.getSpinnerSpinnerMotor(),
-        //     _robotMap.getSpinnerPositionSensor(),
-        //     _robotMap.getSpinnerSpinnerPID()
-        // );
+        _spinnerSubsystem = new ControlPanelSpinner
+        (
+            _robotMap.getSpinnerSpinnerMotor(),
+            _robotMap.getSpinnerPositionSensor(),
+            _robotMap.getSpinnerSpinnerPID()
+        );
     }
 
     private void configureDefaultCommands()
     {
+        _dashboardSubsystem.setDefaultCommand
+        (
+            new CmdDashboardUpdate
+            (
+                _dashboardSubsystem, 
+                _driveSubsystem, 
+                _ballPathSubsystem, 
+                _hangerSubsystem, 
+                _pickupSubsystem, 
+                _shooterSubsystem
+            )
+        );
+
         _driveSubsystem.setDefaultCommand
         (
             new CmdDriveWithJoystick
@@ -156,25 +173,26 @@ public class RobotContainer
             )
         );
 
-        // _hangerSubsystem.setDefaultCommand
-        // (
-        //     new CmdHangerManual
-        //     (
-        //         _hangerSubsystem, 
-        //         () ->
-        //         {
-        //             double manual = 0;
+        _hangerSubsystem.setDefaultCommand
+        (
+            new CmdHangerManual
+            (
+                _dashboardSubsystem,
+                _hangerSubsystem, 
+                () ->
+                {
+                    double manual = 0;
 
-        //             if (_hangerSubsystem.isHangerReleased() &&
-        //                 _robotMap.getDriveJoy().getButton(2).get() == State.On)
-        //             {
-        //                 manual = _robotMap.getDriveJoy().getY();
-        //             }
+                    if (_hangerSubsystem.isHangerReleased() &&
+                        _robotMap.getDriveJoy().getButton(2).get() == State.On)
+                    {
+                        manual = _robotMap.getDriveJoy().getY();
+                    }
 
-        //             return manual;
-        //         }
-        //     )
-        // );
+                    return manual;
+                }
+            )
+        );
         
         // _pickupSubsystem.setDefaultCommand
         // (
@@ -188,6 +206,7 @@ public class RobotContainer
         (
             new CmdShooterDefault
             (
+                _dashboardSubsystem,
                 _shooterSubsystem, 
                 _ballPathSubsystem
             )
@@ -218,25 +237,26 @@ public class RobotContainer
         _robotMap.getDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetGyro()));
 
         _robotMap.getDriveJoy().getButton(3).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem, _shooterSubsystem));
-        _robotMap.getDriveJoy().getButton(4).whenActivated(new CmdBallPathRaise(_ballPathSubsystem, _pickupSubsystem));
+        _robotMap.getDriveJoy().getButton(4).whenActivated(new CmdBallPathRaise(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
 
-        _robotMap.getDriveJoy().getButton(5).whenActivated(new CmdPickupDeploy(_ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(5).whenActivated(new CmdPickupDeploy(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(6).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
 
-        _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
+        // _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
+        _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetEncoders()));
         _robotMap.getCoDriveJoy().getButton(4).whenActivated(SwartdogCommand.run(() -> {_ballPathSubsystem.decrementBallCount(); System.out.println("Ball Count: " + _ballPathSubsystem.getBallCount());}));
-        _robotMap.getCoDriveJoy().getButton(5).whenActivated(SwartdogCommand.run(() -> {_ballPathSubsystem.incrementBallCount(); System.out.println("Ball Count: " + _ballPathSubsystem.getBallCount());}));
+        _robotMap.getCoDriveJoy().getButton(5).whenActivated(SwartdogCommand.run(() -> {_ballPathSubsystem.incrementBallCount(_dashboardSubsystem.getMaxBallCount()); System.out.println("Ball Count: " + _ballPathSubsystem.getBallCount());}));
         // _robotMap.getCoDriveJoy().getButton(6).whenActivated(new CmdPickupDeploy(_ballPathSubsystem, _pickupSubsystem));
         // _robotMap.getCoDriveJoy().getButton(7).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
 
-        _robotMap.getDriveJoy().getButton(7).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(Constants.SHOOTER_NEAR_DISTANCE)));
+        _robotMap.getDriveJoy().getButton(7).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(_dashboardSubsystem.getShooterNearDistance())));
         _robotMap.getDriveJoy().getButton(8).whenActivated(new CmdShooterStart(_ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
-        _robotMap.getDriveJoy().getButton(9).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(Constants.SHOOTER_FAR_DISTANCE)));
+        _robotMap.getDriveJoy().getButton(9).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(_dashboardSubsystem.getShooterFarDistance())));
         _robotMap.getDriveJoy().getButton(10).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.stopShooter()));
 
-        _robotMap.getCoDriveJoy().getButton(1).whileActive(new CmdShooterFire(_ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));;
+        _robotMap.getCoDriveJoy().getButton(1).whileActive(new CmdShooterFire(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));;
 
-        _robotMap.getBallPathPosition1Sensor().whenActivated(new CmdBallPathLoad(_ballPathSubsystem, _pickupSubsystem));
+        _robotMap.getBallPathPosition1Sensor().whenActivated(new CmdBallPathLoad(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
 
         // _hangerReleaseMultiButton.whenActivated(new CmdHangerRelease(_ballPathSubsystem, _hangerSubsystem));
     }

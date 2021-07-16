@@ -5,12 +5,14 @@ import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
 
-public class CmdShooterStart extends SwartdogCommand {
+public class CmdShooterStart extends SwartdogCommand 
+{
     private BallPath    _ballPathSubsystem;
     private Pickup      _pickupSubsystem;
     private Shooter     _shooterSubsystem;
 
-    public CmdShooterStart(BallPath ballPathSubsystem, Pickup pickupSubsystem, Shooter shooterSubsystem) {
+    public CmdShooterStart(BallPath ballPathSubsystem, Pickup pickupSubsystem, Shooter shooterSubsystem) 
+    {
         _ballPathSubsystem  = ballPathSubsystem;
         _pickupSubsystem    = pickupSubsystem;
         _shooterSubsystem   = shooterSubsystem;
@@ -19,7 +21,8 @@ public class CmdShooterStart extends SwartdogCommand {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() 
+    {
         if ((_ballPathSubsystem.getBallCount() > 0) &&
             (!_pickupSubsystem.isPickupDeployed()) &&
             (_ballPathSubsystem.isUpperTrackRaised()))
@@ -29,7 +32,8 @@ public class CmdShooterStart extends SwartdogCommand {
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean isFinished() 
+    {
         return true;
     }
 }

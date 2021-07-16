@@ -4,17 +4,20 @@ import java.util.function.DoubleSupplier;
 
 import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.Hanger;
 
 public class CmdHangerManual extends SwartdogCommand 
 {
+    private Dashboard      _dashboardSubsystem;
     private Hanger         _hangerSubsystem;
     private DoubleSupplier _manual;
 
-    public CmdHangerManual(Hanger hangerSubsystem, DoubleSupplier manual) 
+    public CmdHangerManual(Dashboard dashboardSubsystem, Hanger hangerSubsystem, DoubleSupplier manual) 
     {
-        _hangerSubsystem = hangerSubsystem;
-        _manual          = manual;
+        _dashboardSubsystem = dashboardSubsystem;
+        _hangerSubsystem    = hangerSubsystem;
+        _manual             = manual;
 
         addRequirements(_hangerSubsystem);
     }
@@ -26,8 +29,8 @@ public class CmdHangerManual extends SwartdogCommand
         double position = _hangerSubsystem.getPosition();
 
         if ((Math.abs(speed) < Constants.MOTOR_MOTION_THRESHOLD) || 
-            (speed < 0 && position < Constants.HANGER_MIN_POSITION) ||
-            (speed > 0 && position > Constants.HANGER_MAX_POSITION))
+            (speed < 0 && position < _dashboardSubsystem.getHangerMinPosition()) ||
+            (speed > 0 && position > _dashboardSubsystem.getHangerMaxPosition()))
         {
             _hangerSubsystem.engageRatchet();
             _hangerSubsystem.setHangerMotor(0);

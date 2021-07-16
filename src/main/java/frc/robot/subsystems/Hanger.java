@@ -8,10 +8,10 @@ import frc.robot.abstraction.Enumerations.ExtendState;
 
 public class Hanger extends SwartdogSubsystem
 {
-    Motor          _hangerMotor;
-    Solenoid       _releaseSolenoid;
-    Solenoid       _ratchetSolenoid;
-    PositionSensor _hangerPositionSensor;
+    private Motor          _hangerMotor;
+    private Solenoid       _releaseSolenoid;
+    private Solenoid       _ratchetSolenoid;
+    private PositionSensor _hangerPositionSensor;
 
     public Hanger(Motor          hangerMotor, 
                   Solenoid       releaseSolenoid, 
@@ -37,6 +37,11 @@ public class Hanger extends SwartdogSubsystem
     public boolean isHangerReleased()
     {
         return _releaseSolenoid.get() == ExtendState.Retracted;
+    }
+
+    public boolean isHangerLatched()
+    {
+        return _ratchetSolenoid.get() == ExtendState.Retracted;
     }
 
     public void engageRatchet()

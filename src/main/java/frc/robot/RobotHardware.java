@@ -14,10 +14,10 @@ import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.NetworkTableBoolean;
 import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.PositionSensor;
+import frc.robot.abstraction.ShuffleboardTab;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.Switch;
 import frc.robot.abstraction.VelocitySensor;
-import frc.robot.subsystems.drive.SwerveModule;
 
 public class RobotHardware implements RobotMap
 {
@@ -30,10 +30,22 @@ public class RobotHardware implements RobotMap
     private  PositionSensor         _driveGyro;
     private  PIDControl             _driveDrivePID;
     private  PIDControl             _driveRotatePID;
-    private  SwerveModule           _driveFLModule;
-    private  SwerveModule           _driveFRModule;
-    private  SwerveModule           _driveBLModule;
-    private  SwerveModule           _driveBRModule;
+    private  Motor                  _driveFLDriveMotor;
+    private  Motor                  _driveFLRotateMotor;
+    private  PositionSensor         _driveFLPositionSensor;
+    private  PIDControl             _driveFLPIDControl;
+    private  Motor                  _driveFRDriveMotor;
+    private  Motor                  _driveFRRotateMotor;
+    private  PositionSensor         _driveFRPositionSensor;
+    private  PIDControl             _driveFRPIDControl;
+    private  Motor                  _driveBLDriveMotor;
+    private  Motor                  _driveBLRotateMotor;
+    private  PositionSensor         _driveBLPositionSensor;
+    private  PIDControl             _driveBLPIDControl;
+    private  Motor                  _driveBRDriveMotor;
+    private  Motor                  _driveBRRotateMotor;
+    private  PositionSensor         _driveBRPositionSensor;
+    private  PIDControl             _driveBRPIDControl;
 
     private  Motor                  _ballPathTrackMotor;
     private  Solenoid               _ballPathUpperTrackSolenoid;
@@ -68,86 +80,100 @@ public class RobotHardware implements RobotMap
     private  PositionSensor         _spinnerPositionSensor;
     private  PIDControl             _spinnerSpinnerPID;
 
+    private ShuffleboardTab         _dashboardTab;
+    private ShuffleboardTab         _settingsTab;
+
     public RobotHardware()
     {
         DoubleMotor rightAndPrimaryPickupMotor = new DoubleMotor(new TalonSRX(15));
         DoubleMotor leftPickupAndControlPanel  = new DoubleMotor(new VictorSPX(12));
 
-        Motor          driveFLDrive    = Hardware.Actuators.falcon(1);
-        Motor          driveFLRotate   = Hardware.Actuators.neo(2);
-        PositionSensor driveFLPosition = Hardware.Sensors.potentiometer(0, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
-        PIDControl     driveFLPID      = new PIDControl();
+        _hardware = new Hardware();
 
-        Motor          driveFRDrive    = Hardware.Actuators.falcon(5);
-        Motor          driveFRRotate   = Hardware.Actuators.neo(6);
-        PositionSensor driveFRPosition = Hardware.Sensors.potentiometer(3, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
-        PIDControl     driveFRPID      = new PIDControl();
+        createAndConfigureControlsHardware();
+        createAndConfigureDriveSubsystemHardware();
+        createAndConfigureBallPathSubsystemHardware();
+        createAndConfigureHangerSubsystemHardware();
+        createAndConfigurePickupSubsystemHardware(rightAndPrimaryPickupMotor, leftPickupAndControlPanel);
+        createAndConfigureShooterSubsystemHardware();
+        createAndConfigureVisionSubsystemHardware();
+        createAndConfigureSpinnerSubsystemHardware(leftPickupAndControlPanel);
+        createAndConfigureDashboardSubsystemHardware();
 
-        Motor          driveBLDrive    = Hardware.Actuators.falcon(3);
-        Motor          driveBLRotate   = Hardware.Actuators.neo(4);
-        PositionSensor driveBLPosition = Hardware.Sensors.potentiometer(1, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
-        PIDControl     driveBLPID      = new PIDControl();
+        _hardware.addHardware
+        (
+            rightAndPrimaryPickupMotor,
+            leftPickupAndControlPanel
+        );
+    }
 
-        Motor          driveBRDrive    = Hardware.Actuators.falcon(7);
-        Motor          driveBRRotate   = Hardware.Actuators.neo(8);
-        PositionSensor driveBRPosition = Hardware.Sensors.potentiometer(2, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
-        PIDControl     driveBRPID      = new PIDControl();
+    private void createAndConfigureControlsHardware()
+    {
+        // Create
+        _driveJoy   = Hardware.Controls.joystick(0);
+        _coDriveJoy = Hardware.Controls.joystick(1);
+        _buttonBox  = Hardware.Controls.joystick(2);
 
-        driveBLDrive                   = Motor.invert(driveBLDrive);
-        driveBRDrive                   = Motor.invert(driveBRDrive);
-
-        _hardware                   = new Hardware();
-
-        _driveJoy                   = Hardware.Controls.joystick(0);
-        _coDriveJoy                 = Hardware.Controls.joystick(1);
-        _buttonBox                  = Hardware.Controls.joystick(2);
-
-        _driveGyro                  = Hardware.Sensors.imu();
-        _driveDrivePID              = null;
-        _driveRotatePID             = null;
-        _driveFLModule              = new SwerveModule(driveFLDrive, driveFLRotate, driveFLPosition, driveFLPID, Constants.FL_MODULE_OFFSET, Constants.FL_MODULE_X, Constants.FL_MODULE_Y);
-        _driveFRModule              = new SwerveModule(driveFRDrive, driveFRRotate, driveFRPosition, driveFRPID, Constants.FR_MODULE_OFFSET, Constants.FR_MODULE_X, Constants.FR_MODULE_Y);
-        _driveBLModule              = new SwerveModule(driveBLDrive, driveBLRotate, driveBLPosition, driveBLPID, Constants.BL_MODULE_OFFSET, Constants.BL_MODULE_X, Constants.BL_MODULE_Y);
-        _driveBRModule              = new SwerveModule(driveBRDrive, driveBRRotate, driveBRPosition, driveBRPID, Constants.BR_MODULE_OFFSET, Constants.BR_MODULE_X, Constants.BR_MODULE_Y);
-
-        _ballPathTrackMotor         = Motor.invert(Hardware.Actuators.victorSPX(13));
-        _ballPathUpperTrackSolenoid = Hardware.Actuators.solenoid(7);
-        _ballPathPosition1Sensor    = Hardware.Sensors.lightSensor(0);
-        _ballPathPosition2Sensor    = Hardware.Sensors.lightSensor(1);
-        _ballPathShooterSensor      = Hardware.Sensors.lightSensor(2);
-
-        _hangerHangerMotor          = null;
-        _hangerReleaseSolenoid      = null;
-        _hangerRatchetSolenoid      = null;
-        _hangerHangerPositionSensor = null;
-
-        _pickupPrimaryMotor         = Motor.invert(rightAndPrimaryPickupMotor.getMotor1());
-        _pickupLeftMotor            = leftPickupAndControlPanel.getMotor1();
-        _pickupRightMotor           = Motor.invert(rightAndPrimaryPickupMotor.getMotor2());
-        _pickupDeploySolenoid       = Solenoid.invert(Hardware.Actuators.solenoid(4));
-        _pickupLeftLightSensor      = null;
-        _pickupRightLightSensor     = null;
-
-        _shooterShooterMotor        = Motor.compose(Hardware.Actuators.falconFlywheel(9, 6300), Hardware.Actuators.falconFlywheel(10, 6300));
-        _shooterHoodMotor           = Motor.invert(Hardware.Actuators.victorSPX(14));
-        _shooterHoodSensor          = Hardware.Sensors.analogInput(5);
-        _shooterHoodPID             = new PIDControl();
-
-        _visionXPosition            = Hardware.NetworkTable.networkTableDouble("limelight", "tx");
-        _visionYPosition            = Hardware.NetworkTable.networkTableDouble("limelight", "ty");
-        _visionTargetFound          = Hardware.NetworkTable.networkTableBoolean("limelight", "ta");
-        _visionLEDMode              = Hardware.NetworkTable.networkTableDouble("limelight", "ledMode");
-        _visionRotatePID            = new PIDControl();
-
-        _spinnerSpinnerMotor        = leftPickupAndControlPanel.getMotor2();
-        _spinnerPositionSensor      = _spinnerSpinnerMotor.getPositionSensor();
-        _spinnerSpinnerPID          = new PIDControl();
-
+        // Configure
         _driveJoy.setXDeadband(0.05);
         _driveJoy.setYDeadband(0.05);
         _driveJoy.setZDeadband(0.10);
 
-        PIDControl[] rotatePIDs = new PIDControl[] { driveFLPID, driveFRPID, driveBLPID, driveBRPID };
+        _hardware.addHardware
+        (
+            _driveJoy,
+            _coDriveJoy,
+            _buttonBox
+        );
+    }
+
+    private void createAndConfigureDriveSubsystemHardware()
+    {
+        // Create
+        _driveGyro             = Hardware.Sensors.imu();
+        _driveDrivePID         = new PIDControl();
+        _driveRotatePID        = new PIDControl();
+        _driveFLDriveMotor     = Hardware.Actuators.falcon(1);
+        _driveFLRotateMotor    = Hardware.Actuators.neo(2);
+        _driveFLPositionSensor = Hardware.Sensors.potentiometer(0, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
+        _driveFLPIDControl     = new PIDControl();
+        _driveFRDriveMotor     = Hardware.Actuators.falcon(5);
+        _driveFRRotateMotor    = Hardware.Actuators.neo(6);
+        _driveFRPositionSensor = Hardware.Sensors.potentiometer(3, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
+        _driveFRPIDControl     = new PIDControl();
+        _driveBLDriveMotor     = Hardware.Actuators.falcon(3);
+        _driveBLRotateMotor    = Hardware.Actuators.neo(4);
+        _driveBLPositionSensor = Hardware.Sensors.potentiometer(1, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
+        _driveBLPIDControl     = new PIDControl();
+        _driveBRDriveMotor     = Hardware.Actuators.falcon(7);
+        _driveBRRotateMotor    = Hardware.Actuators.neo(8);
+        _driveBRPositionSensor = Hardware.Sensors.potentiometer(2, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
+        _driveBRPIDControl     = new PIDControl();
+
+        // Configure
+        _driveBLDriveMotor     = Motor.invert(_driveBLDriveMotor);
+        _driveBRDriveMotor     = Motor.invert(_driveBRDriveMotor);
+
+        _driveFLDriveMotor.getPositionSensor().setScalingFunction(raw -> raw * Constants.DRIVE_ENCODER_SCALE);
+        _driveFRDriveMotor.getPositionSensor().setScalingFunction(raw -> raw * Constants.DRIVE_ENCODER_SCALE);
+        _driveBLDriveMotor.getPositionSensor().setScalingFunction(raw -> raw * Constants.DRIVE_ENCODER_SCALE);
+        _driveBRDriveMotor.getPositionSensor().setScalingFunction(raw -> raw * Constants.DRIVE_ENCODER_SCALE);
+
+        _driveRotatePID.setCoefficient(Coefficient.P, 0, 0.010, 0);
+        _driveRotatePID.setCoefficient(Coefficient.I, 0, 0,    0);
+        _driveRotatePID.setCoefficient(Coefficient.D, 0, 0,    0);
+        _driveRotatePID.setInputRange(-360, 360);
+        _driveRotatePID.setOutputRamp(0.1, 0.05);
+        _driveRotatePID.setSetpointDeadband(2.0);
+
+        _driveDrivePID.setCoefficient(Coefficient.P, 0, 0.015, 0);
+        _driveDrivePID.setCoefficient(Coefficient.I, 0, 0,     0);
+        _driveDrivePID.setCoefficient(Coefficient.D, 0, 0,     0);
+        _driveDrivePID.setInputRange(0, 500);
+        _driveDrivePID.setOutputRamp(0.1, 0.05);
+        _driveDrivePID.setSetpointDeadband(2.0);
+
+        PIDControl[] rotatePIDs = new PIDControl[] { _driveFLPIDControl, _driveFRPIDControl, _driveBLPIDControl, _driveBRPIDControl };
 
         for (PIDControl rotatePID : rotatePIDs)
         {
@@ -159,65 +185,160 @@ public class RobotHardware implements RobotMap
             rotatePID.setSetpointDeadband(0.25);
         }
 
+        _hardware.addHardware
+        (
+            _driveGyro,
+            _driveFLDriveMotor,
+            _driveFLRotateMotor,
+            _driveFLPositionSensor,
+            _driveFRDriveMotor,
+            _driveFRRotateMotor,
+            _driveFRPositionSensor,
+            _driveBLDriveMotor,
+            _driveBLRotateMotor,
+            _driveBLPositionSensor,
+            _driveBRDriveMotor,
+            _driveBRRotateMotor,
+            _driveBRPositionSensor
+        );
+    }
+
+    private void createAndConfigureBallPathSubsystemHardware()
+    {
+        // Create
+        _ballPathTrackMotor         = Hardware.Actuators.victorSPX(13);
+        _ballPathUpperTrackSolenoid = Hardware.Actuators.solenoid(7);
+        _ballPathPosition1Sensor    = Hardware.Sensors.lightSensor(0);
+        _ballPathPosition2Sensor    = Hardware.Sensors.lightSensor(1);
+        _ballPathShooterSensor      = Hardware.Sensors.lightSensor(2);
+
+        // Configure
+        _ballPathTrackMotor = Motor.invert(_ballPathTrackMotor);
+
+        _hardware.addHardware
+        (
+            _ballPathTrackMotor,
+            _ballPathUpperTrackSolenoid,
+            _ballPathPosition1Sensor,
+            _ballPathPosition2Sensor,
+            _ballPathShooterSensor
+        );
+    }
+
+    private void createAndConfigureHangerSubsystemHardware()
+    {
+        // Create
+        _hangerHangerMotor          = null;
+        _hangerReleaseSolenoid      = null;
+        _hangerRatchetSolenoid      = null;
+        _hangerHangerPositionSensor = null;
+
+        // Configure
+        _hangerReleaseSolenoid = Solenoid.invert(_hangerReleaseSolenoid);
+
+        _hardware.addHardware
+        (
+            _hangerHangerMotor,
+            _hangerReleaseSolenoid,
+            _hangerRatchetSolenoid,
+            _hangerHangerPositionSensor
+        );
+    }
+
+    private void createAndConfigurePickupSubsystemHardware(DoubleMotor rightAndMidPickup, DoubleMotor leftPickupAndControlPanel)
+    {
+        // Create
+        _pickupPrimaryMotor         = rightAndMidPickup.getMotor1();
+        _pickupLeftMotor            = leftPickupAndControlPanel.getMotor1();
+        _pickupRightMotor           = rightAndMidPickup.getMotor2();
+        _pickupDeploySolenoid       = Hardware.Actuators.solenoid(4);
+        _pickupLeftLightSensor      = null;
+        _pickupRightLightSensor     = null;
+
+        // Configure
+        _pickupPrimaryMotor   = Motor.invert(_pickupPrimaryMotor);
+        _pickupRightMotor     = Motor.invert(_pickupRightMotor);
+        _pickupDeploySolenoid = Solenoid.invert(_pickupDeploySolenoid);
+
+        _hardware.addHardware
+        (
+            _pickupDeploySolenoid
+            // _pickupLeftLightSensor,
+            // _pickupRightLightSensor,
+        );
+    }
+
+    private void createAndConfigureShooterSubsystemHardware()
+    {
+        // Create
+        Motor primaryShooterMotor   = Hardware.Actuators.falconFlywheel(9,  6300);
+        Motor secondaryShooterMotor = Hardware.Actuators.falconFlywheel(10, 6300);
+
+        _shooterShooterMotor        = Motor.compose(primaryShooterMotor, secondaryShooterMotor);
+        _shooterHoodMotor           = Hardware.Actuators.victorSPX(14);
+        _shooterHoodSensor          = Hardware.Sensors.analogInput(5);
+        _shooterHoodPID             = new PIDControl();
+
+        // Configure
+        _shooterHoodMotor           = Motor.invert(_shooterHoodMotor);
+
         _shooterHoodPID.setCoefficient(Coefficient.P, 0, 0.005, 0);
         _shooterHoodPID.setCoefficient(Coefficient.I, 0, 0, 0);
         _shooterHoodPID.setCoefficient(Coefficient.D, 400, 0, 0.001);
-        _shooterHoodPID.setInputRange(Constants.HOOD_MAX, Constants.HOOD_ZERO);
+        _shooterHoodPID.setInputRange(Constants.DEFAULT_HOOD_MAX_POSITION, Constants.DEFAULT_HOOD_MIN_POSITION);
         _shooterHoodPID.setOutputRange(-1, 1);
         _shooterHoodPID.setSetpointDeadband(50);
 
         _hardware.addHardware
         (
-            _driveJoy,
-            _coDriveJoy,
-            _buttonBox,
-
-            _driveGyro,
-            driveFLDrive,
-            driveFLRotate,
-            driveFLPosition,
-            driveFRDrive,
-            driveFRRotate,
-            driveFRPosition,
-            driveBLDrive,
-            driveBLRotate,
-            driveBLPosition,
-            driveBRDrive,
-            driveBRRotate,
-            driveBRPosition,
-
-            _ballPathTrackMotor,
-            _ballPathUpperTrackSolenoid,
-            _ballPathPosition1Sensor,
-            _ballPathPosition2Sensor,
-            _ballPathShooterSensor,
-
-            // _hangerHangerMotor,
-            // _hangerReleaseSolenoid,
-            // _hangerRatchetSolenoid,
-            // _hangerHangerPositionSensor,
-
-            _pickupPrimaryMotor,
-            _pickupLeftMotor,
-            _pickupRightMotor,
-            _pickupDeploySolenoid,
-            // _pickupLeftLightSensor,
-            // _pickupRightLightSensor,
-
             _shooterShooterMotor,
             _shooterHoodMotor,
-            _shooterHoodSensor,
+            _shooterHoodSensor
+        );
+    }
 
+    private void createAndConfigureSpinnerSubsystemHardware(DoubleMotor leftPickupAndControlPanel)
+    {
+        // Create
+        _spinnerSpinnerMotor   = leftPickupAndControlPanel.getMotor2();
+        _spinnerPositionSensor = _spinnerSpinnerMotor.getPositionSensor();
+        _spinnerSpinnerPID     = new PIDControl();
+
+        // Configure
+
+    }
+
+    private void createAndConfigureVisionSubsystemHardware()
+    {
+        // Create
+        _visionXPosition   = Hardware.NetworkTable.networkTableDouble("limelight", "tx");
+        _visionYPosition   = Hardware.NetworkTable.networkTableDouble("limelight", "ty");
+        _visionTargetFound = Hardware.NetworkTable.networkTableBoolean("limelight", "ta");
+        _visionLEDMode     = Hardware.NetworkTable.networkTableDouble("limelight", "ledMode");
+        _visionRotatePID   = new PIDControl();
+
+        // Configure
+        _hardware.addHardware
+        (
             _visionXPosition,
             _visionYPosition,
             _visionTargetFound,
-            _visionLEDMode,
+            _visionLEDMode
+        );
+    }
 
-            _spinnerSpinnerMotor,
-            // _spinnerPositionSensor
+    private void createAndConfigureDashboardSubsystemHardware()
+    {
+        // Create
+        _dashboardTab = Hardware.NetworkTable.shuffleboardTab("Dashboard");
+        _settingsTab  = Hardware.NetworkTable.shuffleboardTab("Settings");
 
-            rightAndPrimaryPickupMotor,
-            leftPickupAndControlPanel
+        // Configure
+
+        _hardware.addHardware
+        (
+            _dashboardTab,
+            _settingsTab
         );
     }
 
@@ -258,27 +379,99 @@ public class RobotHardware implements RobotMap
     }
 
     @Override
-    public SwerveModule getDriveFLModule()
+    public Motor getDriveFLModuleDriveMotor()
     {
-        return _driveFLModule;
+        return _driveFLDriveMotor;
     }
 
     @Override
-    public SwerveModule getDriveFRModule()
+    public Motor getDriveFLModuleRotateMotor()
     {
-        return _driveFRModule;
+        return _driveFLRotateMotor;
     }
 
     @Override
-    public SwerveModule getDriveBLModule()
+    public PositionSensor getDriveFLModulePositionSensor()
     {
-        return _driveBLModule;
+        return _driveFLPositionSensor;
     }
 
     @Override
-    public SwerveModule getDriveBRModule()
+    public PIDControl getDriveFLModulePIDControl()
     {
-        return _driveBRModule;
+        return _driveFLPIDControl;
+    }
+
+    @Override
+    public Motor getDriveFRModuleDriveMotor()
+    {
+        return _driveFRDriveMotor;
+    }
+
+    @Override
+    public Motor getDriveFRModuleRotateMotor()
+    {
+        return _driveFRRotateMotor;
+    }
+
+    @Override
+    public PositionSensor getDriveFRModulePositionSensor()
+    {
+        return _driveFRPositionSensor;
+    }
+
+    @Override
+    public PIDControl getDriveFRModulePIDControl()
+    {
+        return _driveFRPIDControl;
+    }
+
+    @Override
+    public Motor getDriveBLModuleDriveMotor()
+    {
+        return _driveBLDriveMotor;
+    }
+
+    @Override
+    public Motor getDriveBLModuleRotateMotor()
+    {
+        return _driveBLRotateMotor;
+    }
+
+    @Override
+    public PositionSensor getDriveBLModulePositionSensor()
+    {
+        return _driveBLPositionSensor;
+    }
+
+    @Override
+    public PIDControl getDriveBLModulePIDControl()
+    {
+        return _driveBLPIDControl;
+    }
+
+    @Override
+    public Motor getDriveBRModuleDriveMotor()
+    {
+        return _driveBRDriveMotor;
+    }
+
+    @Override
+    public Motor getDriveBRModuleRotateMotor()
+    {
+        return _driveBRRotateMotor;
+    }
+
+    @Override
+    public PositionSensor getDriveBRModulePositionSensor()
+    {
+        return _driveBRPositionSensor;
+    }
+
+    @Override
+    public PIDControl getDriveBRModulePIDControl()
+    {
+        return _driveBRPIDControl;
     }
 
     @Override
@@ -441,6 +634,18 @@ public class RobotHardware implements RobotMap
     public PIDControl getSpinnerSpinnerPID()
     {
         return _spinnerSpinnerPID;
+    }
+
+    @Override
+    public ShuffleboardTab getDashboardTab()
+    {
+        return _dashboardTab;
+    }
+
+    @Override
+    public ShuffleboardTab getSettingsTab()
+    {
+        return _settingsTab;
     }
 
     private class DoubleMotor implements Abstraction

@@ -6,9 +6,9 @@ import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.NetworkTableBoolean;
 import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.PositionSensor;
+import frc.robot.abstraction.ShuffleboardTab;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.Switch;
-import frc.robot.subsystems.drive.SwerveModule;
 
 public interface RobotMap
 {
@@ -19,10 +19,22 @@ public interface RobotMap
     public PositionSensor       getDriveGyro();
     public PIDControl           getDriveDrivePID();
     public PIDControl           getDriveRotatePID();
-    public SwerveModule         getDriveFLModule();
-    public SwerveModule         getDriveFRModule();
-    public SwerveModule         getDriveBLModule();
-    public SwerveModule         getDriveBRModule();
+    public Motor                getDriveFLModuleDriveMotor();
+    public Motor                getDriveFLModuleRotateMotor();
+    public PositionSensor       getDriveFLModulePositionSensor();
+    public PIDControl           getDriveFLModulePIDControl();
+    public Motor                getDriveFRModuleDriveMotor();
+    public Motor                getDriveFRModuleRotateMotor();
+    public PositionSensor       getDriveFRModulePositionSensor();
+    public PIDControl           getDriveFRModulePIDControl();
+    public Motor                getDriveBLModuleDriveMotor();
+    public Motor                getDriveBLModuleRotateMotor();
+    public PositionSensor       getDriveBLModulePositionSensor();
+    public PIDControl           getDriveBLModulePIDControl();
+    public Motor                getDriveBRModuleDriveMotor();
+    public Motor                getDriveBRModuleRotateMotor();
+    public PositionSensor       getDriveBRModulePositionSensor();
+    public PIDControl           getDriveBRModulePIDControl();
 
     public Motor                getBallPathTrackMotor();
     public Solenoid             getBallPathUpperTrackSolenoid();
@@ -56,4 +68,7 @@ public interface RobotMap
     public Motor                getSpinnerSpinnerMotor();
     public PositionSensor       getSpinnerPositionSensor();
     public PIDControl           getSpinnerSpinnerPID();
+
+    public ShuffleboardTab      getDashboardTab();
+    public ShuffleboardTab      getSettingsTab();
 }

@@ -7,15 +7,16 @@ import frc.robot.abstraction.MockMotor;
 import frc.robot.abstraction.MockNetworkTableBoolean;
 import frc.robot.abstraction.MockNetworkTableDouble;
 import frc.robot.abstraction.MockPositionSensor;
+import frc.robot.abstraction.MockShuffleboardTab;
 import frc.robot.abstraction.MockSolenoid;
 import frc.robot.abstraction.MockSwitch;
 import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.NetworkTableBoolean;
 import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.PositionSensor;
+import frc.robot.abstraction.ShuffleboardTab;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.Switch;
-import frc.robot.subsystems.drive.SwerveModule;
 
 public class MockRobotMap implements RobotMap 
 {
@@ -26,10 +27,22 @@ public class MockRobotMap implements RobotMap
     private MockPositionSensor      _driveGyro;
     private PIDControl              _driveDrivePID;
     private PIDControl              _driveRotatePID;
-    private SwerveModule            _driveFLModule;
-    private SwerveModule            _driveFRModule;
-    private SwerveModule            _driveBLModule;
-    private SwerveModule            _driveBRModule;
+    private MockMotor               _driveFLDriveMotor;
+    private MockMotor               _driveFLRotateMotor;
+    private MockPositionSensor      _driveFLPositionSensor;
+    private PIDControl              _driveFLPIDControl;
+    private MockMotor               _driveFRDriveMotor;
+    private MockMotor               _driveFRRotateMotor;
+    private MockPositionSensor      _driveFRPositionSensor;
+    private PIDControl              _driveFRPIDControl;
+    private MockMotor               _driveBLDriveMotor;
+    private MockMotor               _driveBLRotateMotor;
+    private MockPositionSensor      _driveBLPositionSensor;
+    private PIDControl              _driveBLPIDControl;
+    private MockMotor               _driveBRDriveMotor;
+    private MockMotor               _driveBRRotateMotor;
+    private MockPositionSensor      _driveBRPositionSensor;
+    private PIDControl              _driveBRPIDControl;
 
     private MockMotor               _ballPathTrackMotor;
     private MockSolenoid            _ballPathUpperTrackSolenoid;
@@ -64,6 +77,9 @@ public class MockRobotMap implements RobotMap
     private MockPositionSensor      _spinnerPositionSensor;
     private PIDControl              _spinnerSpinnerPID;
 
+    private MockShuffleboardTab     _dashboardTab;
+    private MockShuffleboardTab     _settingsTab;
+
     public MockRobotMap()
     {
         _driveJoy                   = new MockJoystick(12);
@@ -73,46 +89,22 @@ public class MockRobotMap implements RobotMap
         _driveGyro                  = new MockPositionSensor();        
         _driveDrivePID              = new PIDControl();
         _driveRotatePID             = new PIDControl();
-        _driveFLModule              = new SwerveModule
-        (
-            new MockMotor(), 
-            new MockMotor(), 
-            new MockPositionSensor(), 
-            new PIDControl(), 
-            Constants.FL_MODULE_OFFSET, 
-            Constants.FL_MODULE_X, 
-            Constants.FL_MODULE_Y
-        );
-        _driveFRModule              = new SwerveModule
-        (
-            new MockMotor(), 
-            new MockMotor(), 
-            new MockPositionSensor(), 
-            new PIDControl(), 
-            Constants.FR_MODULE_OFFSET, 
-            Constants.FR_MODULE_X, 
-            Constants.FR_MODULE_Y
-        );
-        _driveBLModule              = new SwerveModule
-        (
-            new MockMotor(), 
-            new MockMotor(), 
-            new MockPositionSensor(), 
-            new PIDControl(), 
-            Constants.BL_MODULE_OFFSET, 
-            Constants.BL_MODULE_X, 
-            Constants.BL_MODULE_Y
-        );
-        _driveBRModule              = new SwerveModule
-        (
-            new MockMotor(), 
-            new MockMotor(), 
-            new MockPositionSensor(), 
-            new PIDControl(), 
-            Constants.FL_MODULE_OFFSET, 
-            Constants.FL_MODULE_X, 
-            Constants.FL_MODULE_Y
-        );
+        _driveFLDriveMotor          = new MockMotor();
+        _driveFLRotateMotor         = new MockMotor();
+        _driveFLPositionSensor      = new MockPositionSensor();
+        _driveFLPIDControl          = new PIDControl();
+        _driveFRDriveMotor          = new MockMotor();
+        _driveFRRotateMotor         = new MockMotor();
+        _driveFRPositionSensor      = new MockPositionSensor();
+        _driveFRPIDControl          = new PIDControl();
+        _driveBLDriveMotor          = new MockMotor();
+        _driveBLRotateMotor         = new MockMotor();
+        _driveBLPositionSensor      = new MockPositionSensor();
+        _driveBLPIDControl          = new PIDControl();
+        _driveBRDriveMotor          = new MockMotor();
+        _driveBRRotateMotor         = new MockMotor();
+        _driveBRPositionSensor      = new MockPositionSensor();
+        _driveBRPIDControl          = new PIDControl();
 
         _ballPathTrackMotor         = new MockMotor();
         _ballPathUpperTrackSolenoid = new MockSolenoid();
@@ -146,6 +138,9 @@ public class MockRobotMap implements RobotMap
         _spinnerSpinnerMotor        = new MockMotor();
         _spinnerPositionSensor      = new MockPositionSensor();
         _spinnerSpinnerPID          = new PIDControl();
+
+        _dashboardTab               = new MockShuffleboardTab();
+        _settingsTab                = new MockShuffleboardTab();
     }
 
     @Override
@@ -185,27 +180,99 @@ public class MockRobotMap implements RobotMap
     }
 
     @Override
-    public SwerveModule getDriveFLModule() 
+    public Motor getDriveFLModuleDriveMotor()
     {
-        return _driveFLModule;
+        return _driveFLDriveMotor;
     }
 
     @Override
-    public SwerveModule getDriveFRModule() 
+    public Motor getDriveFLModuleRotateMotor()
     {
-        return _driveFRModule;
+        return _driveFLRotateMotor;
     }
 
     @Override
-    public SwerveModule getDriveBLModule() 
+    public PositionSensor getDriveFLModulePositionSensor()
     {
-        return _driveBLModule;
+        return _driveFLPositionSensor;
     }
 
     @Override
-    public SwerveModule getDriveBRModule() 
+    public PIDControl getDriveFLModulePIDControl()
     {
-        return _driveBRModule;
+        return _driveFLPIDControl;
+    }
+
+    @Override
+    public Motor getDriveFRModuleDriveMotor()
+    {
+        return _driveFRDriveMotor;
+    }
+
+    @Override
+    public Motor getDriveFRModuleRotateMotor()
+    {
+        return _driveFRRotateMotor;
+    }
+
+    @Override
+    public PositionSensor getDriveFRModulePositionSensor()
+    {
+        return _driveFRPositionSensor;
+    }
+
+    @Override
+    public PIDControl getDriveFRModulePIDControl()
+    {
+        return _driveFRPIDControl;
+    }
+
+    @Override
+    public Motor getDriveBLModuleDriveMotor()
+    {
+        return _driveBLDriveMotor;
+    }
+
+    @Override
+    public Motor getDriveBLModuleRotateMotor()
+    {
+        return _driveBLRotateMotor;
+    }
+
+    @Override
+    public PositionSensor getDriveBLModulePositionSensor()
+    {
+        return _driveBLPositionSensor;
+    }
+
+    @Override
+    public PIDControl getDriveBLModulePIDControl()
+    {
+        return _driveBLPIDControl;
+    }
+
+    @Override
+    public Motor getDriveBRModuleDriveMotor()
+    {
+        return _driveBRDriveMotor;
+    }
+
+    @Override
+    public Motor getDriveBRModuleRotateMotor()
+    {
+        return _driveBRRotateMotor;
+    }
+
+    @Override
+    public PositionSensor getDriveBRModulePositionSensor()
+    {
+        return _driveBRPositionSensor;
+    }
+
+    @Override
+    public PIDControl getDriveBRModulePIDControl()
+    {
+        return _driveBRPIDControl;
     }
 
     @Override
@@ -370,143 +437,15 @@ public class MockRobotMap implements RobotMap
         return _spinnerSpinnerPID;
     }
 
-    public MockJoystick getMockDriveJoy()
+    @Override
+    public ShuffleboardTab getDashboardTab()
     {
-        return _driveJoy;
+        return _dashboardTab;
     }
 
-    public MockJoystick getMockCoDriveJoy()
+    @Override
+    public ShuffleboardTab getSettingsTab()
     {
-        return _coDriveJoy;
-    }
-
-    public MockJoystick getMockButtonBox()
-    {
-        return _buttonBox;
-    }
-
-    public MockPositionSensor getMockDriveGyro() 
-    {
-        return _driveGyro;
-    }
-
-    public MockMotor getMockBallPathTrackMotor() 
-    {
-        return _ballPathTrackMotor;
-    }
-
-    public MockSolenoid getMockBallPathUpperTrackSolenoid() 
-    {
-        return _ballPathUpperTrackSolenoid;
-    }
-
-    public MockSwitch getMockBallPathPosition1Sensor() 
-    {
-        return _ballPathPosition1Sensor;
-    }
-
-    public MockSwitch getMockBallPathPosition2Sensor() 
-    {
-        return _ballPathPosition2Sensor;
-    }
-
-    public MockSwitch getMockBallPathShooterSensor() 
-    {
-        return _ballPathShooterSensor;
-    }
-
-    public MockMotor getMockHangerHangerMotor() 
-    {
-        return _hangerHangerMotor;
-    }
-
-    public MockSolenoid getMockHangerReleaseSolenoid() 
-    {
-        return _hangerReleaseSolenoid;
-    }
-
-    public MockSolenoid getMockHangerRatchetSolenoid() 
-    {
-        return _hangerRatchetSolenoid;
-    }
-
-    public MockPositionSensor getMockHangerHangerPositionSensor() 
-    {
-        return _hangerHangerPositionSensor;
-    }
-
-    public MockMotor getMockPickupPrimaryMotor() 
-    {
-        return _pickupPrimaryMotor;
-    }
-
-    public MockMotor getMockPickupLeftMotor() 
-    {
-        return _pickupLeftMotor;
-    }
-
-    public MockMotor getMockPickupRightMotor() 
-    {
-        return _pickupRightMotor;
-    }
-
-    public MockSolenoid getMockPickupDeploySolenoid() 
-    {
-        return _pickupDeploySolenoid;
-    }
-
-    public MockSwitch getMockPickupLeftLightSensor() 
-    {
-        return _pickupLeftLightSensor;
-    }
-
-    public MockSwitch getMockPickupRightLightSensor() 
-    {
-        return _pickupRightLightSensor;
-    }
-
-    public MockMotor getMockShooterShooterMotor() 
-    {
-        return _shooterShooterMotor;
-    }
-
-    public MockMotor getMockShooterHoodMotor() 
-    {
-        return _shooterHoodMotor;
-    }
-
-    public MockPositionSensor getMockShooterHoodSensor() 
-    {
-        return _shooterHoodSensor;
-    }
-
-    public MockNetworkTableDouble getMockVisionXPosition() 
-    {
-        return _visionXPosition;
-    }
-
-    public MockNetworkTableDouble getMockVisionYPosition() 
-    {
-        return _visionYPosition;
-    }
-
-    public MockNetworkTableBoolean getMockVisionTargetFound() 
-    {
-        return _visionTargetFound;
-    }
-
-    public MockNetworkTableDouble getMockVisionLEDMode() 
-    {
-        return _visionLEDMode;
-    }
-
-    public MockMotor getMockSpinnerSpinnerMotor() 
-    {
-        return _spinnerSpinnerMotor;
-    }
-
-    public MockPositionSensor getMockSpinnerPositionSensor() 
-    {
-        return _spinnerPositionSensor;
+        return _settingsTab;
     }
 }

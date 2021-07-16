@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
 import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.SwartdogSubsystem;
@@ -34,6 +33,11 @@ public class BallPath extends SwartdogSubsystem
         _shooterSensor         = shooterSensor;
 
         _isJammed              = false;
+    }
+
+    public double getTrackMotor()
+    {
+        return _trackMotor.get();
     }
 
     public void setTrackMotor(double speed)
@@ -76,13 +80,13 @@ public class BallPath extends SwartdogSubsystem
         return _ballCount;
     }
 
-    public void incrementBallCount(int amount)
+    public void incrementBallCount(int amount, int maxBallCount)
     {
         _ballCount += amount;
         
-        if (_ballCount > Constants.MAX_BALL_COUNT)
+        if (_ballCount > maxBallCount)
         {
-            _ballCount = Constants.MAX_BALL_COUNT;
+            _ballCount = maxBallCount;
         }
 
         if (_ballCount < 0) 
@@ -91,7 +95,7 @@ public class BallPath extends SwartdogSubsystem
         }
     }
 
-    public void incrementBallCount()
+    public void incrementBallCount(int maxBallCount)
     {
         incrementBallCount(1);
     }

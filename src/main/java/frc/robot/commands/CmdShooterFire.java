@@ -1,25 +1,28 @@
 package frc.robot.commands;
 
-import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.Enumerations.State;
 import frc.robot.subsystems.BallPath;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
 
 public class CmdShooterFire extends SwartdogCommand 
 {
-    private BallPath _ballPathSubsystem;
-    private Pickup   _pickupSubsystem;
-    private Shooter  _shooterSubsystem;
+    private Dashboard _dashboardSubsystem;
+    private BallPath  _ballPathSubsystem;
+    private Pickup    _pickupSubsystem;
+    private Shooter   _shooterSubsystem;
 
-    public CmdShooterFire(BallPath ballPathSubsystem, 
-                          Pickup   pickupSubsystem, 
-                          Shooter  shooterSubsystem) 
+    public CmdShooterFire(Dashboard dashboardSubsystem,
+                          BallPath  ballPathSubsystem, 
+                          Pickup    pickupSubsystem, 
+                          Shooter   shooterSubsystem) 
     {
-        _ballPathSubsystem = ballPathSubsystem;
-        _pickupSubsystem   = pickupSubsystem;
-        _shooterSubsystem  = shooterSubsystem;
+        _dashboardSubsystem = dashboardSubsystem;
+        _ballPathSubsystem  = ballPathSubsystem;
+        _pickupSubsystem    = pickupSubsystem;
+        _shooterSubsystem   = shooterSubsystem;
 
         addRequirements(_ballPathSubsystem, _pickupSubsystem, _shooterSubsystem);
     }
@@ -29,8 +32,8 @@ public class CmdShooterFire extends SwartdogCommand
     {
         if (_shooterSubsystem.isShooterOn()) 
         {
-            _ballPathSubsystem.setTrackMotor(Constants.BALLPATH_SPEED);
-            _pickupSubsystem.setPrimaryMotor(Constants.PICKUP_SPEED);
+            _ballPathSubsystem.setTrackMotor(_dashboardSubsystem.getBallPathSpeed());
+            _pickupSubsystem.setPrimaryMotor(_dashboardSubsystem.getPickupSpeed());
 
             if (_ballPathSubsystem.shooterSensorTransitionedTo(State.Off)) {
                 _ballPathSubsystem.decrementBallCount();

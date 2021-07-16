@@ -1,26 +1,28 @@
 package frc.robot.commands;
 
-import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.Enumerations.State;
 import frc.robot.subsystems.BallPath;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.Pickup;
 
 public class CmdBallPathLoad extends SwartdogCommand 
 {
-    private BallPath _ballPathSubsystem;
-    private Pickup   _pickupSubsystem;
+    private Dashboard _dashboardSubsystem;
+    private BallPath  _ballPathSubsystem;
+    private Pickup    _pickupSubsystem;
 
-    private int      _loadTimer;
-    private double   _trackMotorSpeed;
+    private int       _loadTimer;
+    private double    _trackMotorSpeed;
 
-    public CmdBallPathLoad(BallPath ballPathSubsystem, Pickup pickupSubsystem) 
+    public CmdBallPathLoad(Dashboard dashboardSubsystem, BallPath ballPathSubsystem, Pickup pickupSubsystem) 
     {
-        _ballPathSubsystem = ballPathSubsystem;
-        _pickupSubsystem   = pickupSubsystem;
+        _dashboardSubsystem = dashboardSubsystem;
+        _ballPathSubsystem  = ballPathSubsystem;
+        _pickupSubsystem    = pickupSubsystem;
 
-        _loadTimer         = 0;
-        _trackMotorSpeed   = 0;
+        _loadTimer          = 0;
+        _trackMotorSpeed    = 0;
 
         addRequirements(_ballPathSubsystem, _pickupSubsystem);
     }
@@ -33,12 +35,12 @@ public class CmdBallPathLoad extends SwartdogCommand
         _pickupSubsystem.setRightMotor(0);
 
         if (!_ballPathSubsystem.isJammed() && 
-            _ballPathSubsystem.getBallCount() < Constants.MAX_BALL_COUNT)
+            _ballPathSubsystem.getBallCount() < _dashboardSubsystem.getMaxBallCount())
         {
-            _ballPathSubsystem.incrementBallCount();
+            _ballPathSubsystem.incrementBallCount(_dashboardSubsystem.getMaxBallCount());
 
-            _loadTimer       = Math.max(0, (int)(50 * Constants.BALLPATH_JAM_TIME));
-            _trackMotorSpeed = Constants.BALLPATH_RAMP_MIN;
+            _loadTimer       = Math.max(0, (int)(50 * _dashboardSubsystem.getBallPathJamTime()));
+            _trackMotorSpeed = _dashboardSubsystem.getBallPathRampMin();
         }
 
         else
@@ -52,17 +54,17 @@ public class CmdBallPathLoad extends SwartdogCommand
     public void execute() 
     {
         if (!_ballPathSubsystem.isJammed() && 
-             _ballPathSubsystem.getBallCount() < Constants.MAX_BALL_COUNT)
+             _ballPathSubsystem.getBallCount() < _dashboardSubsystem.getMaxBallCount())
         {
             _loadTimer--;
 
             if (_loadTimer > 0)
             {
-                _trackMotorSpeed += Constants.BALLPATH_RAMP_STEP;
+                _trackMotorSpeed += _dashboardSubsystem.getBallPathRampStep();
                 
-                if (_trackMotorSpeed > Constants.BALLPATH_SPEED)
+                if (_trackMotorSpeed > _dashboardSubsystem.getBallPathSpeed())
                 {
-                    _trackMotorSpeed = Constants.BALLPATH_SPEED;
+                    _trackMotorSpeed = _dashboardSubsystem.getBallPathSpeed();
                 }
             }
 
@@ -88,11 +90,11 @@ public class CmdBallPathLoad extends SwartdogCommand
         _ballPathSubsystem.setTrackMotor(0);
 
         if (!_ballPathSubsystem.isJammed() && 
-            _ballPathSubsystem.getBallCount() < Constants.MAX_BALL_COUNT)
+            _ballPathSubsystem.getBallCount() < _dashboardSubsystem.getMaxBallCount())
         {
-            _pickupSubsystem.setLeftMotor(Constants.PICKUP_SPEED);
-            _pickupSubsystem.setPrimaryMotor(Constants.PICKUP_SPEED);
-            _pickupSubsystem.setRightMotor(Constants.PICKUP_SPEED);
+            _pickupSubsystem.setLeftMotor(_dashboardSubsystem.getPickupSpeed());
+            _pickupSubsystem.setPrimaryMotor(_dashboardSubsystem.getPickupSpeed());
+            _pickupSubsystem.setRightMotor(_dashboardSubsystem.getPickupSpeed());
         }
 
         else if (_ballPathSubsystem.isUpperTrackRaised())
@@ -106,6 +108,6 @@ public class CmdBallPathLoad extends SwartdogCommand
     {
         return _ballPathSubsystem.isJammed() || 
                _ballPathSubsystem.position2SensorTransitionedTo(State.On) ||
-               _ballPathSubsystem.getBallCount() >= Constants.MAX_BALL_COUNT; 
+               _ballPathSubsystem.getBallCount() >= _dashboardSubsystem.getMaxBallCount(); 
     }
 }

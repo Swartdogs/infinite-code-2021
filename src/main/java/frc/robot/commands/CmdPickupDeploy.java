@@ -1,22 +1,24 @@
 package frc.robot.commands;
 
-import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.subsystems.BallPath;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
 
 public class CmdPickupDeploy extends SwartdogCommand 
 {
-    private BallPath _ballPathSubsystem;
-    private Pickup   _pickupSubsystem;
-    private Shooter  _shooterSubsystem;
+    private Dashboard _dashboardSubsystem;
+    private BallPath  _ballPathSubsystem;
+    private Pickup    _pickupSubsystem;
+    private Shooter   _shooterSubsystem;
 
-    public CmdPickupDeploy(BallPath ballPathSubsystem, Pickup pickupSubsystem, Shooter shooterSubsystem) 
+    public CmdPickupDeploy(Dashboard dashboardSubsystem, BallPath ballPathSubsystem, Pickup pickupSubsystem, Shooter shooterSubsystem) 
     {
-        _ballPathSubsystem = ballPathSubsystem;
-        _pickupSubsystem   = pickupSubsystem;
-        _shooterSubsystem  = shooterSubsystem;
+        _dashboardSubsystem = dashboardSubsystem;
+        _ballPathSubsystem  = ballPathSubsystem;
+        _pickupSubsystem    = pickupSubsystem;
+        _shooterSubsystem   = shooterSubsystem;
 
         addRequirements(_pickupSubsystem);
     }
@@ -25,12 +27,12 @@ public class CmdPickupDeploy extends SwartdogCommand
     public void initialize() 
     {
         if (!_ballPathSubsystem.isJammed() &&
-             _ballPathSubsystem.getBallCount() < Constants.MAX_BALL_COUNT &&
+             _ballPathSubsystem.getBallCount() < _dashboardSubsystem.getMaxBallCount() &&
              !_shooterSubsystem.isShooterOn())
         {
-            _pickupSubsystem.setLeftMotor(Constants.PICKUP_SPEED);
-            _pickupSubsystem.setPrimaryMotor(Constants.PICKUP_SPEED);
-            _pickupSubsystem.setRightMotor(Constants.PICKUP_SPEED);
+            _pickupSubsystem.setLeftMotor(_dashboardSubsystem.getPickupSpeed());
+            _pickupSubsystem.setPrimaryMotor(_dashboardSubsystem.getPickupSpeed());
+            _pickupSubsystem.setRightMotor(_dashboardSubsystem.getPickupSpeed());
 
             _pickupSubsystem.deployPickup();
         }

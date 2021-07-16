@@ -7,12 +7,12 @@ import frc.robot.subsystems.Hanger;
 public class CmdHangerRelease extends SwartdogCommand 
 {
     private BallPath _ballPathSubsystem;
-    private Hanger _hangerSubsystem;
+    private Hanger   _hangerSubsystem;
 
     public CmdHangerRelease(BallPath ballPathSubsystem, Hanger hangerSubsystem)
     {
         _ballPathSubsystem = ballPathSubsystem;
-        _hangerSubsystem = hangerSubsystem;
+        _hangerSubsystem   = hangerSubsystem;
 
         addRequirements(_hangerSubsystem);
     }
