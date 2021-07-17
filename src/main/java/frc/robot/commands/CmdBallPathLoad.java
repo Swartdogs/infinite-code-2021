@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.Enumerations.State;
 import frc.robot.subsystems.BallPath;
@@ -35,9 +36,9 @@ public class CmdBallPathLoad extends SwartdogCommand
         _pickupSubsystem.setRightMotor(0);
 
         if (!_ballPathSubsystem.isJammed() && 
-            _ballPathSubsystem.getBallCount() < _dashboardSubsystem.getMaxBallCount())
+            _ballPathSubsystem.getBallCount() < Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT)
         {
-            _ballPathSubsystem.incrementBallCount(_dashboardSubsystem.getMaxBallCount());
+            _ballPathSubsystem.incrementBallCount(Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT);
 
             _loadTimer       = Math.max(0, (int)(50 * _dashboardSubsystem.getBallPathJamTime()));
             _trackMotorSpeed = _dashboardSubsystem.getBallPathRampMin();
@@ -54,7 +55,7 @@ public class CmdBallPathLoad extends SwartdogCommand
     public void execute() 
     {
         if (!_ballPathSubsystem.isJammed() && 
-             _ballPathSubsystem.getBallCount() < _dashboardSubsystem.getMaxBallCount())
+             _ballPathSubsystem.getBallCount() < Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT)
         {
             _loadTimer--;
 
@@ -90,7 +91,7 @@ public class CmdBallPathLoad extends SwartdogCommand
         _ballPathSubsystem.setTrackMotor(0);
 
         if (!_ballPathSubsystem.isJammed() && 
-            _ballPathSubsystem.getBallCount() < _dashboardSubsystem.getMaxBallCount())
+            _ballPathSubsystem.getBallCount() < Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT)
         {
             _pickupSubsystem.setLeftMotor(_dashboardSubsystem.getPickupSpeed());
             _pickupSubsystem.setPrimaryMotor(_dashboardSubsystem.getPickupSpeed());
@@ -108,6 +109,6 @@ public class CmdBallPathLoad extends SwartdogCommand
     {
         return _ballPathSubsystem.isJammed() || 
                _ballPathSubsystem.position2SensorTransitionedTo(State.On) ||
-               _ballPathSubsystem.getBallCount() >= _dashboardSubsystem.getMaxBallCount(); 
+               _ballPathSubsystem.getBallCount() >= Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT; 
     }
 }

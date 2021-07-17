@@ -37,14 +37,14 @@ public class CmdDashboardUpdate extends SwartdogCommand
     @Override
     public void execute() 
     {
-        _dashboardSubsystem.setFrontLeftModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.FL_INDEX).getPosition()));
-        _dashboardSubsystem.setFrontLeftModuleDistance(_driveSubsystem.getSwerveModule(Constants.FL_INDEX).getDriveMotor().getPositionSensor().get());
-        _dashboardSubsystem.setFrontRightModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.FR_INDEX).getPosition()));
-        _dashboardSubsystem.setFrontRightModuleDistance(_driveSubsystem.getSwerveModule(Constants.FR_INDEX).getDriveMotor().getPositionSensor().get());
-        _dashboardSubsystem.setBackLeftModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.BL_INDEX).getPosition()));
-        _dashboardSubsystem.setBackLeftModuleDistance(_driveSubsystem.getSwerveModule(Constants.BL_INDEX).getDriveMotor().getPositionSensor().get());
-        _dashboardSubsystem.setBackRightModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.BR_INDEX).getPosition()));
-        _dashboardSubsystem.setBackRightModuleDistance(_driveSubsystem.getSwerveModule(Constants.BR_INDEX).getDriveMotor().getPositionSensor().get());
+        // _dashboardSubsystem.setFrontLeftModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.FL_INDEX).getPosition()));
+        // _dashboardSubsystem.setFrontLeftModuleDistance(_driveSubsystem.getSwerveModule(Constants.FL_INDEX).getDriveMotor().getPositionSensor().get());
+        // _dashboardSubsystem.setFrontRightModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.FR_INDEX).getPosition()));
+        // _dashboardSubsystem.setFrontRightModuleDistance(_driveSubsystem.getSwerveModule(Constants.FR_INDEX).getDriveMotor().getPositionSensor().get());
+        // _dashboardSubsystem.setBackLeftModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.BL_INDEX).getPosition()));
+        // _dashboardSubsystem.setBackLeftModuleDistance(_driveSubsystem.getSwerveModule(Constants.BL_INDEX).getDriveMotor().getPositionSensor().get());
+        // _dashboardSubsystem.setBackRightModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.BR_INDEX).getPosition()));
+        // _dashboardSubsystem.setBackRightModuleDistance(_driveSubsystem.getSwerveModule(Constants.BR_INDEX).getDriveMotor().getPositionSensor().get());
         _dashboardSubsystem.setRobotRotation(_driveSubsystem.getHeading());
 
         _dashboardSubsystem.setPickupDeployed(_pickupSubsystem.isPickupDeployed());
@@ -62,6 +62,7 @@ public class CmdDashboardUpdate extends SwartdogCommand
         _dashboardSubsystem.setShooterHoodPosition(_shooterSubsystem.getHoodPosition());
         _dashboardSubsystem.setShooterHoodTarget(_shooterSubsystem.getHoodSetpoint());
         _dashboardSubsystem.setShooterRPM(_shooterSubsystem.getShooterMotor());
+        _dashboardSubsystem.setShooterOn(_shooterSubsystem.isShooterOn());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Dashboard;
@@ -27,7 +28,7 @@ public class CmdPickupDeploy extends SwartdogCommand
     public void initialize() 
     {
         if (!_ballPathSubsystem.isJammed() &&
-             _ballPathSubsystem.getBallCount() < _dashboardSubsystem.getMaxBallCount() &&
+             _ballPathSubsystem.getBallCount() < Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT &&
              !_shooterSubsystem.isShooterOn())
         {
             _pickupSubsystem.setLeftMotor(_dashboardSubsystem.getPickupSpeed());

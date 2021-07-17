@@ -245,7 +245,7 @@ public class RobotContainer
         // _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
         _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetEncoders()));
         _robotMap.getCoDriveJoy().getButton(4).whenActivated(SwartdogCommand.run(() -> {_ballPathSubsystem.decrementBallCount(); System.out.println("Ball Count: " + _ballPathSubsystem.getBallCount());}));
-        _robotMap.getCoDriveJoy().getButton(5).whenActivated(SwartdogCommand.run(() -> {_ballPathSubsystem.incrementBallCount(_dashboardSubsystem.getMaxBallCount()); System.out.println("Ball Count: " + _ballPathSubsystem.getBallCount());}));
+        _robotMap.getCoDriveJoy().getButton(5).whenActivated(SwartdogCommand.run(() -> {_ballPathSubsystem.incrementBallCount(Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT); System.out.println("Ball Count: " + _ballPathSubsystem.getBallCount());}));
         // _robotMap.getCoDriveJoy().getButton(6).whenActivated(new CmdPickupDeploy(_ballPathSubsystem, _pickupSubsystem));
         // _robotMap.getCoDriveJoy().getButton(7).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
 
