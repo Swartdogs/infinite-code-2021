@@ -2,8 +2,15 @@ package frc.robot.subsystems;
 
 import frc.robot.abstraction.NetworkTableBoolean;
 import frc.robot.abstraction.NetworkTableDouble;
+import frc.robot.abstraction.NetworkTableString;
 import frc.robot.abstraction.ShuffleboardTab;
 import frc.robot.abstraction.SwartdogSubsystem;
+import frc.robot.abstraction.ShuffleboardLayout;
+
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+
+import java.util.Map;
 
 public class Dashboard extends SwartdogSubsystem 
 {
@@ -17,16 +24,17 @@ public class Dashboard extends SwartdogSubsystem
     private NetworkTableDouble  _brModuleDistance;
     private NetworkTableDouble  _robotRotation;
     private NetworkTableDouble  _ballCount;
-    private NetworkTableBoolean _pickupDeployed;
-    private NetworkTableBoolean _pickupActive;
-    private NetworkTableBoolean _ballPathRaised;
+    private NetworkTableString _pickupDeployed;
+    private NetworkTableString _pickupActive;
+    private NetworkTableString _ballPathRaised;
     private NetworkTableBoolean _ballPathJammed;
-    private NetworkTableBoolean _ballPathActive;
-    private NetworkTableBoolean _hangerReleased;
-    private NetworkTableBoolean _hangerLatched;
-    private NetworkTableDouble  _hangerPosition;
-    private NetworkTableDouble  _shooterHoodPosition;
-    private NetworkTableDouble  _shooterRPM;
+    private NetworkTableString _ballPathActive;
+    private NetworkTableString _hangerReleased;
+    private NetworkTableString _hangerLatched;
+    private NetworkTableDouble _hangerPosition;
+    private NetworkTableDouble _shooterHoodPosition;
+    private NetworkTableDouble _shooterHoodTarget;
+    private NetworkTableDouble _shooterRPM;
 
     private NetworkTableDouble  _driveFLModuleOffset;
     private NetworkTableDouble  _driveFRModuleOffset;
@@ -34,6 +42,7 @@ public class Dashboard extends SwartdogSubsystem
     private NetworkTableDouble  _driveBRModuleOffset;
     private NetworkTableDouble  _hangerMinPosition;
     private NetworkTableDouble  _hangerMaxPosition;
+    private NetworkTableDouble  _hangerSpeed;
     private NetworkTableDouble  _maxBallCount;
     private NetworkTableDouble  _pickupSpeed;
     private NetworkTableDouble  _pickupClogTime;
@@ -54,7 +63,54 @@ public class Dashboard extends SwartdogSubsystem
 
     public Dashboard(ShuffleboardTab dashboardTab, ShuffleboardTab settingsTab) 
     {
+        dashboardTab.addStringWidget("Game Mode", "Autonomous", 11, 10, 11, 2, BuiltInWidgets.kTextView, null);
+        _ballCount = dashboardTab.addDoubleWidget("Ball Count", 0, 0, 7, 10, 5, BuiltInWidgets.kDial, Map.of("Min", 0, "Max", 3, "Show value", true));
+        dashboardTab.addAutonomousChooser(11, 0, 11, 3, BuiltInWidgets.kComboBoxChooser);
 
+        ShuffleboardLayout ballPath = dashboardTab.addShuffleboardLayout("Ball Path Subsystem", BuiltInLayouts.kList, 23, 7, 10, 5, Map.of("Label position", "LEFT"));
+        _ballPathRaised = ballPath.addStringWidget("Upper Track State", "Raised", BuiltInWidgets.kTextView, null);
+        _ballPathActive = ballPath.addStringWidget("Ball Path State", "Active", BuiltInWidgets.kTextView, null);
+        _ballPathJammed = ballPath.addBooleanWidget("Ball Path Jammed", false, BuiltInWidgets.kBooleanBox, Map.of("Color when true", "Red", "Color when false", "Lime"));
+
+        ShuffleboardLayout drive = dashboardTab.addShuffleboardLayout("Drive Subsystem", BuiltInLayouts.kList, 0, 0, 10, 7, Map.of("Label position", "LEFT"));
+        drive.addDoubleWidget("Left Encoder", 0, BuiltInWidgets.kTextView, null);
+        drive.addDoubleWidget("Right Encoder", 0, BuiltInWidgets.kTextView, null);
+
+        ShuffleboardLayout hanger = dashboardTab.addShuffleboardLayout("Hanger Subsystem", BuiltInLayouts.kList, 23, 3, 10, 4, Map.of("Label position", "LEFT"));
+        _hangerReleased = hanger.addStringWidget("Deploy State", "Deployed", BuiltInWidgets.kTextView, null);
+        _hangerLatched  = hanger.addStringWidget("Ratchet State", "Latched", BuiltInWidgets.kTextView, null);
+        _hangerPosition = hanger.addDoubleWidget("Position", 0, BuiltInWidgets.kTextView, Map.of("Color when false", "Lime", "Color when true", "Red"));
+
+        ShuffleboardLayout pickup = dashboardTab.addShuffleboardLayout("Pickup Subsystem", BuiltInLayouts.kList, 23, 0, 10, 3, Map.of("Label position", "LEFT"));
+        _pickupDeployed = pickup.addStringWidget("Deploy State", "Deployed", BuiltInWidgets.kTextView, null);
+        _pickupActive   = pickup.addStringWidget("Motor State", "Active", BuiltInWidgets.kTextView, null);
+
+        ShuffleboardLayout shooter = dashboardTab.addShuffleboardLayout("Shooter Subsystem", BuiltInLayouts.kList, 11, 3, 11, 7, Map.of("Label position", "LEFT"));
+        shooter.addBooleanWidget("Camera Found Target", false, BuiltInWidgets.kBooleanBox, Map.of("Color when true", "Lime", "Color when false", "Red"));
+        _shooterHoodTarget = shooter.addDoubleWidget("Hood Target", 0, BuiltInWidgets.kTextView, null);
+        _shooterHoodPosition = shooter.addDoubleWidget("Hood Position", 0, BuiltInWidgets.kTextView, null);
+        _shooterRPM = shooter.addDoubleWidget("Shooter RPM", 0, BuiltInWidgets.kTextView, null);
+        shooter.addDoubleWidget("Camera Distance", 0, BuiltInWidgets.kTextView, null);
+        shooter.addDoubleWidget("Camera Angle", 0, BuiltInWidgets.kTextView, null);
+
+        ShuffleboardLayout shootSetting = settingsTab.addShuffleboardLayout("Shooter", BuiltInLayouts.kList, 8, 1, 11, 5, Map.of("Label position", "LEFT"));
+        _hoodMinPosition = shootSetting.addDoubleWidget("Hood Low Limit", 0, BuiltInWidgets.kTextView, null);
+        _hoodMaxPosition = shootSetting.addDoubleWidget("Hood High Limit", 0, BuiltInWidgets.kTextView, null);
+
+        ShuffleboardLayout ballPathSetting = settingsTab.addShuffleboardLayout("Ball Path", BuiltInLayouts.kList, 8, 6, 11, 5, Map.of("Label position", "LEFT"));
+        _ballPathJamTime = ballPathSetting.addDoubleWidget("Ball Path Jam Timeout", 0, BuiltInWidgets.kTextView, null);
+        _ballPathSpeed = ballPathSetting.addDoubleWidget("Ball Path Speed", 0, BuiltInWidgets.kTextView, null);
+        _ballPathRampMin = ballPathSetting.addDoubleWidget("Ball Path Ramp Min", 0, BuiltInWidgets.kTextView, null);
+        _ballPathRampStep = ballPathSetting.addDoubleWidget("Ball Path Ramp Step", 0, BuiltInWidgets.kTextView, null);
+
+        ShuffleboardLayout hangerSetting = settingsTab.addShuffleboardLayout("Hanger", BuiltInLayouts.kList, 20, 1, 11, 5, Map.of("Label position", "LEFT"));
+        _hangerSpeed = hangerSetting.addDoubleWidget("Hanger Speed", 0, BuiltInWidgets.kTextView, null);
+        hangerSetting.addDoubleWidget("Hanger Pot Zero", 0, BuiltInWidgets.kTextView, null);
+        _hangerMinPosition = hangerSetting.addDoubleWidget("Hanger Low Limit", 0, BuiltInWidgets.kTextView, null);
+        _hangerMaxPosition = hangerSetting.addDoubleWidget("Hanger High Limit", 0, BuiltInWidgets.kTextView, null);
+
+        ShuffleboardLayout pickupSetting = settingsTab.addShuffleboardLayout("Pickup", BuiltInLayouts.kList, 20, 6, 11, 5, Map.of("Label position", "LEFT"));
+        _pickupSpeed = pickupSetting.addDoubleWidget("Pickup Speed", 0, BuiltInWidgets.kTextView, null);
     }
 
     public void setFrontLeftModuleRotation(double rotation)
@@ -109,17 +165,17 @@ public class Dashboard extends SwartdogSubsystem
 
     public void setPickupDeployed(boolean deployed)
     {
-        _pickupDeployed.set(deployed);
+        _pickupDeployed.set(deployed ? "Deployed" : "Stowed");
     }
 
     public void setPickupActive(boolean active)
     {
-        _pickupActive.set(active);
+        _pickupActive.set(active ? "Active" : "Disabled");
     }
 
     public void setBallPathRaised(boolean raised)
     {
-        _ballPathRaised.set(raised);
+        _ballPathRaised.set(raised ? "Raised" : "Lowered");
     }
 
     public void setBallPathJammed(boolean jammed)
@@ -129,17 +185,17 @@ public class Dashboard extends SwartdogSubsystem
 
     public void setBallPathActive(boolean active)
     {
-        _ballPathActive.set(active);
+        _ballPathActive.set(active ? "Active" : "Disabled");
     }
 
     public void setHangerReleased(boolean released)
     {
-        _hangerReleased.set(released);
+        _hangerReleased.set(released ? "Deployed" : "Stowed");
     }
 
     public void setHangerLatched(boolean latched)
     {
-        _hangerLatched.set(latched);
+        _hangerLatched.set(latched ? "Latched" : "Released");
     }
 
     public void setHangerPosition(double position)
@@ -150,6 +206,11 @@ public class Dashboard extends SwartdogSubsystem
     public void setShooterHoodPosition(double position)
     {
         _shooterHoodPosition.set(position);
+    }
+
+    public void setShooterHoodTarget(double target)
+    {
+        _shooterHoodTarget.set(target);
     }
 
     public void setShooterRPM(double RPM)
@@ -185,6 +246,11 @@ public class Dashboard extends SwartdogSubsystem
     public double getHangerMaxPosition()
     {
         return _hangerMaxPosition.get();
+    }
+
+    public double getHangerSpeed()
+    {
+        return _hangerSpeed.get();
     }
 
     public int getMaxBallCount()

@@ -16,6 +16,7 @@ public class Shooter extends SwartdogSubsystem
 
     private boolean         _shooterOn;
     private double          _targetDistance;
+    private double          _hoodSetpoint;
 
     public Shooter(Motor shooterMotor, Motor hoodMotor, PositionSensor hoodSensor, PIDControl hoodPID) 
     {
@@ -26,6 +27,7 @@ public class Shooter extends SwartdogSubsystem
         _hoodPID        = hoodPID;
 
         _targetDistance = 0;
+        _hoodSetpoint   = 0;
     }
 
     public boolean isShooterOn()
@@ -90,6 +92,12 @@ public class Shooter extends SwartdogSubsystem
 
     public void setHoodSetpoint(double setpoint)
     {
-        _hoodPID.setSetpoint(setpoint, _hoodSensor.get());
+        _hoodSetpoint = setpoint;
+        _hoodPID.setSetpoint(_hoodSetpoint, _hoodSensor.get());
+    }
+
+    public double getHoodSetpoint()
+    {
+        return _hoodSetpoint;
     }
 }

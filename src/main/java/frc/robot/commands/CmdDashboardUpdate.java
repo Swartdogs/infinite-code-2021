@@ -60,6 +60,7 @@ public class CmdDashboardUpdate extends SwartdogCommand
         _dashboardSubsystem.setHangerPosition(_hangerSubsystem.getPosition());
 
         _dashboardSubsystem.setShooterHoodPosition(_shooterSubsystem.getHoodPosition());
+        _dashboardSubsystem.setShooterHoodTarget(_shooterSubsystem.getHoodSetpoint());
         _dashboardSubsystem.setShooterRPM(_shooterSubsystem.getShooterMotor());
     }
 
