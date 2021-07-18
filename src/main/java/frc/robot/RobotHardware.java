@@ -25,7 +25,6 @@ public class RobotHardware implements RobotMap
 
     private  Joystick               _driveJoy;
     private  Joystick               _coDriveJoy;
-    private  Joystick               _buttonBox;
 
     private  PositionSensor         _driveGyro;
     private  PIDControl             _driveDrivePID;
@@ -112,7 +111,6 @@ public class RobotHardware implements RobotMap
         // Create
         _driveJoy   = Hardware.Controls.joystick(0);
         _coDriveJoy = Hardware.Controls.joystick(1);
-        _buttonBox  = Hardware.Controls.joystick(2);
 
         // Configure
         _driveJoy.setXDeadband(0.05);
@@ -122,8 +120,7 @@ public class RobotHardware implements RobotMap
         _hardware.addHardware
         (
             _driveJoy,
-            _coDriveJoy,
-            _buttonBox
+            _coDriveJoy
         );
     }
 
@@ -228,13 +225,15 @@ public class RobotHardware implements RobotMap
     private void createAndConfigureHangerSubsystemHardware()
     {
         // Create
-        _hangerHangerMotor          = null;
-        _hangerReleaseSolenoid      = null;
-        _hangerRatchetSolenoid      = null;
-        _hangerHangerPositionSensor = null;
+        _hangerHangerMotor          = Hardware.Actuators.victorSPX(11);
+        _hangerReleaseSolenoid      = Hardware.Actuators.solenoid(5);
+        _hangerRatchetSolenoid      = Hardware.Actuators.solenoid(6);
+        _hangerHangerPositionSensor = Hardware.Sensors.analogInput(7);
 
         // Configure
+        _hangerHangerMotor = Motor.invert(_hangerHangerMotor);
         _hangerReleaseSolenoid = Solenoid.invert(_hangerReleaseSolenoid);
+        _hangerHangerPositionSensor.setScalingFunction((position) -> -position);
 
         _hardware.addHardware
         (
@@ -352,12 +351,6 @@ public class RobotHardware implements RobotMap
     public Joystick getCoDriveJoy()
     {
         return _coDriveJoy;
-    }
-
-    @Override
-    public Joystick getButtonBox()
-    {
-        return _buttonBox;
     }
 
     @Override

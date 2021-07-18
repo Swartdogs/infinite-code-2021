@@ -2,6 +2,7 @@
 package frc.robot.subsystems;
 
 import PIDControl.PIDControl;
+import frc.robot.Constants;
 import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.PositionSensor;
 import frc.robot.abstraction.SwartdogSubsystem;
@@ -26,7 +27,7 @@ public class Shooter extends SwartdogSubsystem
         _hoodSensor     = hoodSensor;
         _hoodPID        = hoodPID;
 
-        _targetDistance = 0;
+        _targetDistance = Constants.SHOOTER_FAR_DISTANCE;
         _hoodSetpoint   = 0;
     }
 

@@ -33,6 +33,7 @@ public class BallPath extends SwartdogSubsystem
         _position2Sensor       = position2Sensor;
         _shooterSensor         = shooterSensor;
 
+        _ballCount             = Constants.DEFAULT_BALLPATH_STARTING_BALL_COUNT;
         _isJammed              = false;
     }
 
@@ -81,7 +82,17 @@ public class BallPath extends SwartdogSubsystem
         return _ballCount;
     }
 
-    public void incrementBallCount(int amount)
+    public void incrementBallCount()
+    {
+        modifyBallCount(1);
+    }
+
+    public void decrementBallCount()
+    {
+        modifyBallCount(-1);
+    }
+
+    private void modifyBallCount(int amount)
     {
         _ballCount += amount;
         
@@ -94,16 +105,6 @@ public class BallPath extends SwartdogSubsystem
         {
             _ballCount = 0;
         }
-    }
-
-    public void incrementBallCount()
-    {
-        incrementBallCount(1);
-    }
-
-    public void decrementBallCount()
-    {
-        incrementBallCount(-1);
     }
 
     public boolean isJammed()

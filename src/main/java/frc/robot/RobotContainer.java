@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.abstraction.Switch;
 import frc.robot.abstraction.Enumerations.State;
 import frc.robot.abstraction.SwartdogCommand;
+import frc.robot.commands.CmdBallPathDecrementBallCount;
+import frc.robot.commands.CmdBallPathIncrementBallCount;
 import frc.robot.commands.CmdBallPathLoad;
 import frc.robot.commands.CmdBallPathLower;
 import frc.robot.commands.CmdBallPathRaise;
@@ -11,12 +13,12 @@ import frc.robot.commands.CmdDashboardUpdate;
 import frc.robot.commands.CmdDriveWithJoystick;
 import frc.robot.commands.CmdHangerManual;
 import frc.robot.commands.CmdHangerRelease;
-import frc.robot.commands.CmdPickupDefault;
 import frc.robot.commands.CmdPickupDeploy;
 import frc.robot.commands.CmdPickupStow;
 import frc.robot.commands.CmdShooterDefault;
 import frc.robot.commands.CmdShooterFire;
 import frc.robot.commands.CmdShooterStart;
+import frc.robot.commands.CmdShooterStop;
 import frc.robot.commands.CmdSpinnerManual;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.ControlPanelSpinner;
@@ -45,35 +47,45 @@ public class RobotContainer
     {
         _robotMap = robotMap;
 
-        // _hangerReleaseMultiButton = new Switch()
-        // {
-        //     @Override
-        //     protected State getRaw() 
-        //     {
-        //         return _robotMap.getDriveJoy().getButton(9).get() == State.On && _robotMap.getCoDriveJoy().getButton(9).get() == State.On ? State.On : State.Off;
-        //     }
+        _hangerReleaseMultiButton = new Switch()
+        {
+            private SwartdogCommand _command;
 
-        //     @Override
-        //     public void whenActivated(SwartdogCommand command, boolean interruptible) 
-        //     {
-        //         if (transitionedTo(State.On))
-        //         {
-        //             schedule(command);
-        //         }                
-        //     }
+            @Override
+            protected State getRaw() 
+            {
+                return _robotMap.getDriveJoy().getButton(9).get() == State.On && _robotMap.getCoDriveJoy().getButton(11).get() == State.On ? State.On : State.Off;
+            }
 
-        //     @Override
-        //     public void whileActive(SwartdogCommand command, boolean interruptible) 
-        //     {
-        //         return;
-        //     }
+            @Override
+            public void whenActivated(SwartdogCommand command, boolean interruptible) 
+            {
+                _command = command;
+            }
 
-        //     @Override
-        //     public void cancelWhenActivated(SwartdogCommand command) 
-        //     {
-        //         return;
-        //     }
-        // };
+            @Override
+            public void whileActive(SwartdogCommand command, boolean interruptible) 
+            {
+                return;
+            }
+
+            @Override
+            public void cancelWhenActivated(SwartdogCommand command) 
+            {
+                return;
+            }
+
+            @Override
+            public void cache()
+            {
+                super.cache();
+
+                if (transitionedTo(State.On))
+                {
+                    schedule(_command);
+                }                
+            }
+        };
 
         createSubsystems();
         configureDefaultCommands();
@@ -184,9 +196,9 @@ public class RobotContainer
                     double manual = 0;
 
                     if (_hangerSubsystem.isHangerReleased() &&
-                        _robotMap.getDriveJoy().getButton(2).get() == State.On)
+                        _robotMap.getCoDriveJoy().getButton(2).get() == State.On)
                     {
-                        manual = _robotMap.getDriveJoy().getY();
+                        manual = _robotMap.getCoDriveJoy().getY();
                     }
 
                     return manual;
@@ -194,14 +206,6 @@ public class RobotContainer
             )
         );
         
-        // _pickupSubsystem.setDefaultCommand
-        // (
-        //     new CmdPickupDefault
-        //     (
-        //         _pickupSubsystem
-        //     )
-        // );
-
         _shooterSubsystem.setDefaultCommand
         (
             new CmdShooterDefault
@@ -212,57 +216,57 @@ public class RobotContainer
             )
         );
 
-        // _spinnerSubsystem.setDefaultCommand
-        // (
-        //     new CmdSpinnerManual
-        //     (
-        //         _spinnerSubsystem, 
-        //         () ->
-        //         {
-        //             double manual = 0;
+        _spinnerSubsystem.setDefaultCommand
+        (
+            new CmdSpinnerManual
+            (
+                _spinnerSubsystem, 
+                () ->
+                {
+                    double manual = 0;
 
-        //             if (_robotMap.getDriveJoy().getButton(2).get() == State.On)
-        //             {
-        //                 manual = _robotMap.getDriveJoy().getX();
-        //             }
+                    if (_robotMap.getCoDriveJoy().getButton(2).get() == State.On)
+                    {
+                        manual = _robotMap.getCoDriveJoy().getX();
+                    }
 
-        //             return manual;
-        //         }
-        //     )
-        // );
+                    return manual;
+                }
+            )
+        );
     }
 
     private void configureButtonBindings() 
     {
-        _robotMap.getDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetGyro()));
+        _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetGyro()));
 
-        _robotMap.getDriveJoy().getButton(3).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem, _shooterSubsystem));
-        _robotMap.getDriveJoy().getButton(4).whenActivated(new CmdBallPathRaise(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
+        _robotMap.getDriveJoy().getButton(3).whenActivated(new CmdShooterStop(_driveSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(4).whenActivated(new CmdShooterStart(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(5).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(6).whenActivated(new CmdBallPathRaise(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
 
-        _robotMap.getDriveJoy().getButton(5).whenActivated(new CmdPickupDeploy(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
-        _robotMap.getDriveJoy().getButton(6).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
+        _robotMap.getDriveJoy().getButton(8).whileActive(new CmdShooterFire(_dashboardSubsystem, _driveSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
 
-        // _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
-        _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetEncoders()));
-        _robotMap.getCoDriveJoy().getButton(4).whenActivated(SwartdogCommand.run(() -> {_ballPathSubsystem.decrementBallCount(); System.out.println("Ball Count: " + _ballPathSubsystem.getBallCount());}));
-        _robotMap.getCoDriveJoy().getButton(5).whenActivated(SwartdogCommand.run(() -> {_ballPathSubsystem.incrementBallCount(Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT); System.out.println("Ball Count: " + _ballPathSubsystem.getBallCount());}));
-        // _robotMap.getCoDriveJoy().getButton(6).whenActivated(new CmdPickupDeploy(_ballPathSubsystem, _pickupSubsystem));
-        // _robotMap.getCoDriveJoy().getButton(7).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
-
-        _robotMap.getDriveJoy().getButton(7).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(_dashboardSubsystem.getShooterNearDistance())));
-        _robotMap.getDriveJoy().getButton(8).whenActivated(new CmdShooterStart(_ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
-        _robotMap.getDriveJoy().getButton(9).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(_dashboardSubsystem.getShooterFarDistance())));
-        _robotMap.getDriveJoy().getButton(10).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.stopShooter()));
-
-        _robotMap.getCoDriveJoy().getButton(1).whileActive(new CmdShooterFire(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));;
+        _robotMap.getCoDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
+        _robotMap.getCoDriveJoy().getButton(3).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
+        _robotMap.getCoDriveJoy().getButton(4).whenActivated(new CmdBallPathDecrementBallCount(_ballPathSubsystem));
+        _robotMap.getCoDriveJoy().getButton(5).whenActivated(new CmdPickupDeploy(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
+        _robotMap.getCoDriveJoy().getButton(6).whenActivated(new CmdBallPathIncrementBallCount(_ballPathSubsystem));
+        _robotMap.getCoDriveJoy().getButton(7).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(Constants.SHOOTER_NEAR_DISTANCE)));
+        _robotMap.getCoDriveJoy().getButton(9).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(Constants.SHOOTER_FAR_DISTANCE)));
 
         _robotMap.getBallPathPosition1Sensor().whenActivated(new CmdBallPathLoad(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
 
-        // _hangerReleaseMultiButton.whenActivated(new CmdHangerRelease(_ballPathSubsystem, _hangerSubsystem));
+        _hangerReleaseMultiButton.whenActivated(new CmdHangerRelease(_ballPathSubsystem, _hangerSubsystem));
     }
 
     public Command getAutonomousCommand() 
     {
         return null;
+    }
+
+    public void periodic()
+    {
+        _hangerReleaseMultiButton.cache();
     }
 }

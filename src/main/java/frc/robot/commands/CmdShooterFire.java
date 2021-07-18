@@ -6,20 +6,24 @@ import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.drive.Drive;
 
 public class CmdShooterFire extends SwartdogCommand 
 {
     private Dashboard _dashboardSubsystem;
+    private Drive     _driveSubsystem;
     private BallPath  _ballPathSubsystem;
     private Pickup    _pickupSubsystem;
     private Shooter   _shooterSubsystem;
 
     public CmdShooterFire(Dashboard dashboardSubsystem,
+                          Drive     driveSubsystem,
                           BallPath  ballPathSubsystem, 
                           Pickup    pickupSubsystem, 
                           Shooter   shooterSubsystem) 
     {
         _dashboardSubsystem = dashboardSubsystem;
+        _driveSubsystem     = driveSubsystem;
         _ballPathSubsystem  = ballPathSubsystem;
         _pickupSubsystem    = pickupSubsystem;
         _shooterSubsystem   = shooterSubsystem;
@@ -46,9 +50,16 @@ public class CmdShooterFire extends SwartdogCommand
     {
         _ballPathSubsystem.setTrackMotor(0);
         
-        if (_shooterSubsystem.isShooterOn()) _pickupSubsystem.setPrimaryMotor(0);
+        if (_shooterSubsystem.isShooterOn()) 
+        {
+            _pickupSubsystem.setPrimaryMotor(0);
+        }
 
-        if (!interrupted) _shooterSubsystem.stopShooter();
+        if (!interrupted) 
+        {
+            _shooterSubsystem.stopShooter();
+            _driveSubsystem.setRotateScaler(1.0);
+        }
     }
 
     @Override

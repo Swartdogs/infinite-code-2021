@@ -38,7 +38,7 @@ public class CmdBallPathLoad extends SwartdogCommand
         if (!_ballPathSubsystem.isJammed() && 
             _ballPathSubsystem.getBallCount() < Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT)
         {
-            _ballPathSubsystem.incrementBallCount(Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT);
+            _ballPathSubsystem.incrementBallCount();
 
             _loadTimer       = Math.max(0, (int)(50 * _dashboardSubsystem.getBallPathJamTime()));
             _trackMotorSpeed = _dashboardSubsystem.getBallPathRampMin();

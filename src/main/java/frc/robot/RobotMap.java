@@ -14,7 +14,6 @@ public interface RobotMap
 {
     public Joystick             getDriveJoy();
     public Joystick             getCoDriveJoy();
-    public Joystick             getButtonBox();
 
     public PositionSensor       getDriveGyro();
     public PIDControl           getDriveDrivePID();

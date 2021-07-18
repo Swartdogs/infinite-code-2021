@@ -22,7 +22,6 @@ public class MockRobotMap implements RobotMap
 {
     private MockJoystick            _driveJoy;
     private MockJoystick            _coDriveJoy;
-    private MockJoystick            _buttonBox;
 
     private MockPositionSensor      _driveGyro;
     private PIDControl              _driveDrivePID;
@@ -84,7 +83,6 @@ public class MockRobotMap implements RobotMap
     {
         _driveJoy                   = new MockJoystick(12);
         _coDriveJoy                 = new MockJoystick(11);
-        _buttonBox                  = new MockJoystick(12);
 
         _driveGyro                  = new MockPositionSensor();        
         _driveDrivePID              = new PIDControl();
@@ -153,12 +151,6 @@ public class MockRobotMap implements RobotMap
     public Joystick getCoDriveJoy()
     {
         return _coDriveJoy;
-    }
-
-    @Override
-    public Joystick getButtonBox()
-    {
-        return _buttonBox;
     }
 
     @Override
