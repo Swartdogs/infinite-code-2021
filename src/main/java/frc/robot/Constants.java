@@ -26,6 +26,8 @@ public final class Constants
     public static final double              BR_MODULE_X             = ROBOT_WIDTH / 2;
     public static final double              BR_MODULE_Y             = -ROBOT_LENGTH / 2;
 
+    public static final double              MAX_ROTATE_SPEED        = 0.75;
+
     public static final double              LIMELIGHT_LED_OFF       = 1;
     public static final double              LIMELIGHT_LED_ON        = 3;
 

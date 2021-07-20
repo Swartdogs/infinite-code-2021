@@ -55,7 +55,7 @@ public class RobotContainer
             @Override
             protected State getRaw() 
             {
-                return _robotMap.getDriveJoy().getButton(9).get() == State.On && _robotMap.getCoDriveJoy().getButton(11).get() == State.On ? State.On : State.Off;
+                return _robotMap.getDriveJoy().getButton(11).get() == State.On && _robotMap.getCoDriveJoy().getButton(11).get() == State.On ? State.On : State.Off;
             }
 
             @Override
@@ -226,12 +226,12 @@ public class RobotContainer
     {
         _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetGyro()));
 
-        _robotMap.getDriveJoy().getButton(3).whenActivated(new CmdShooterStop(_driveSubsystem, _shooterSubsystem));
-        _robotMap.getDriveJoy().getButton(4).whenActivated(new CmdShooterStart(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(5).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(6).whenActivated(new CmdBallPathRaise(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
 
+        _robotMap.getDriveJoy().getButton(7).whenActivated(new CmdShooterStop(_driveSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(8).whileActive(new CmdShooterFire(_dashboardSubsystem, _driveSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(9).whenActivated(new CmdShooterStart(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
 
         _robotMap.getCoDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
         _robotMap.getCoDriveJoy().getButton(3).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
@@ -276,14 +276,17 @@ public class RobotContainer
             farPosition  = _dashboardSubsystem.getHoodFarPosition();
         }
 
-        if (targetDistance == Constants.SHOOTER_NEAR_DISTANCE)
+        if (!_hangerSubsystem.isHangerReleased())
         {
-            target = nearPosition;
-        }
+            if (targetDistance == Constants.SHOOTER_NEAR_DISTANCE)
+            {
+                target = nearPosition;
+            }
 
-        else if (targetDistance == Constants.SHOOTER_FAR_DISTANCE)
-        {
-            target = farPosition;
+            else if (targetDistance == Constants.SHOOTER_FAR_DISTANCE)
+            {
+                target = farPosition;
+            }
         }
 
         return target;

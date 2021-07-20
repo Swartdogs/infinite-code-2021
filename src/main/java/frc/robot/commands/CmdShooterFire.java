@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.Enumerations.State;
 import frc.robot.subsystems.BallPath;
@@ -58,7 +59,7 @@ public class CmdShooterFire extends SwartdogCommand
         if (!interrupted) 
         {
             _shooterSubsystem.stopShooter();
-            _driveSubsystem.setRotateScaler(1.0);
+            _driveSubsystem.setRotateScaler(Constants.MAX_ROTATE_SPEED);
         }
     }
 
