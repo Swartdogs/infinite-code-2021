@@ -7,6 +7,7 @@ import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.NetworkTableString;
 import frc.robot.abstraction.ShuffleboardTab;
 import frc.robot.abstraction.SwartdogSubsystem;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.Vector;
 import frc.robot.abstraction.ShuffleboardLayout;
 
@@ -19,6 +20,12 @@ import java.util.Map;
 
 public class Dashboard extends SwartdogSubsystem 
 {
+    private Drive               _driveSubsystem;
+    private BallPath            _ballPathSubsystem;
+    private Hanger              _hangerSubsystem;
+    private Pickup              _pickupSubsystem;
+    private Shooter             _shooterSubsystem;
+
     private NetworkTableDouble  _flModuleRotation;
     private NetworkTableDouble  _flModuleDistance;
     private NetworkTableDouble  _frModuleRotation;
@@ -63,8 +70,14 @@ public class Dashboard extends SwartdogSubsystem
     private NetworkTableDouble  _shooterNearSpeed;
     private NetworkTableDouble  _shooterFarSpeed;
 
-    public Dashboard(ShuffleboardTab dashboardTab, ShuffleboardTab settingsTab) 
+    public Dashboard(Drive driveSubsystem, BallPath ballPathSubsystem, Hanger hangerSubsystem, Pickup pickupSubsystem, Shooter shooterSubsystem, ShuffleboardTab dashboardTab, ShuffleboardTab settingsTab) 
     {
+        _driveSubsystem     = driveSubsystem;
+        _ballPathSubsystem  = ballPathSubsystem;
+        _hangerSubsystem    = hangerSubsystem;
+        _pickupSubsystem    = pickupSubsystem;
+        _shooterSubsystem   = shooterSubsystem;
+
         _ballCount = dashboardTab.addDoubleWidget("Ball Count", 0, 23, 3, 10, 5, BuiltInWidgets.kDial, Map.of("Min", 0, "Max", Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT, "Show value", true));
         dashboardTab.addAutonomousChooser(11, 0, 11, 3, BuiltInWidgets.kComboBoxChooser);
 
@@ -362,5 +375,36 @@ public class Dashboard extends SwartdogSubsystem
         bd = bd.setScale(2, RoundingMode.HALF_UP);
 
         return bd.doubleValue();
+    }
+
+    @Override
+    public void periodic() 
+    {
+        setFrontLeftModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.FL_INDEX).getPosition()));
+        setFrontLeftModuleDistance(_driveSubsystem.getSwerveModule(Constants.FL_INDEX).getDriveMotor().getPositionSensor().get());
+        setFrontRightModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.FR_INDEX).getPosition()));
+        setFrontRightModuleDistance(_driveSubsystem.getSwerveModule(Constants.FR_INDEX).getDriveMotor().getPositionSensor().get());
+        setBackLeftModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.BL_INDEX).getPosition()));
+        setBackLeftModuleDistance(_driveSubsystem.getSwerveModule(Constants.BL_INDEX).getDriveMotor().getPositionSensor().get());
+        setBackRightModuleRotation(Vector.normalizeAngle(_driveSubsystem.getSwerveModule(Constants.BR_INDEX).getPosition()));
+        setBackRightModuleDistance(_driveSubsystem.getSwerveModule(Constants.BR_INDEX).getDriveMotor().getPositionSensor().get());
+        setRobotRotation(_driveSubsystem.getHeading());
+
+        setPickupDeployed(_pickupSubsystem.isPickupDeployed());
+        setPickupActive(Math.abs(_pickupSubsystem.getPrimaryMotor()) > Constants.MOTOR_MOTION_THRESHOLD);
+
+        setBallCount(_ballPathSubsystem.getBallCount());
+        setBallPathRaised(_ballPathSubsystem.isUpperTrackRaised());
+        setBallPathJammed(_ballPathSubsystem.isJammed());
+        setBallPathActive(Math.abs(_ballPathSubsystem.getTrackMotor()) > Constants.MOTOR_MOTION_THRESHOLD);
+
+        setHangerReleased(_hangerSubsystem.isHangerReleased());
+        setHangerLatched(_hangerSubsystem.isHangerLatched());
+        setHangerPosition(_hangerSubsystem.getPosition());
+
+        setShooterHoodPosition(_shooterSubsystem.getHoodPosition());
+        setShooterHoodTarget(_shooterSubsystem.getHoodSetpoint());
+        setShooterRPM(_shooterSubsystem.getShooterMotor());
+        setShooterOn(_shooterSubsystem.isShooterOn());
     }
 }

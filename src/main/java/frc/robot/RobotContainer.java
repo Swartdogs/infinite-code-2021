@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.function.DoubleUnaryOperator;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.abstraction.Switch;
 import frc.robot.abstraction.Enumerations.State;
@@ -9,17 +11,16 @@ import frc.robot.commands.CmdBallPathIncrementBallCount;
 import frc.robot.commands.CmdBallPathLoad;
 import frc.robot.commands.CmdBallPathLower;
 import frc.robot.commands.CmdBallPathRaise;
-import frc.robot.commands.CmdDashboardUpdate;
 import frc.robot.commands.CmdDriveWithJoystick;
 import frc.robot.commands.CmdHangerManual;
 import frc.robot.commands.CmdHangerRelease;
 import frc.robot.commands.CmdPickupDeploy;
 import frc.robot.commands.CmdPickupStow;
-import frc.robot.commands.CmdShooterDefault;
 import frc.robot.commands.CmdShooterFire;
 import frc.robot.commands.CmdShooterStart;
 import frc.robot.commands.CmdShooterStop;
 import frc.robot.commands.CmdSpinnerManual;
+import frc.robot.groups.GrpAutoShoot3AndMove;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.ControlPanelSpinner;
 import frc.robot.subsystems.Dashboard;
@@ -90,20 +91,15 @@ public class RobotContainer
         createSubsystems();
         configureDefaultCommands();
         configureButtonBindings();
+        configureAutonomousModes();
     }
 
     private void createSubsystems()
     {
-        _dashboardSubsystem = new Dashboard
-        (
-            _robotMap.getDashboardTab(), 
-            _robotMap.getSettingsTab()
-        );
-
-        SwerveModule driveFLModule = new SwerveModule(_robotMap.getDriveFLModuleDriveMotor(), _robotMap.getDriveFLModuleRotateMotor(), _robotMap.getDriveFLModulePositionSensor(), _robotMap.getDriveFLModulePIDControl(), Constants.FL_MODULE_X, Constants.FL_MODULE_Y, _dashboardSubsystem::getDriveFLModuleOffset);
-        SwerveModule driveFRModule = new SwerveModule(_robotMap.getDriveFRModuleDriveMotor(), _robotMap.getDriveFRModuleRotateMotor(), _robotMap.getDriveFRModulePositionSensor(), _robotMap.getDriveFRModulePIDControl(), Constants.FR_MODULE_X, Constants.FR_MODULE_Y, _dashboardSubsystem::getDriveFRModuleOffset);
-        SwerveModule driveBLModule = new SwerveModule(_robotMap.getDriveBLModuleDriveMotor(), _robotMap.getDriveBLModuleRotateMotor(), _robotMap.getDriveBLModulePositionSensor(), _robotMap.getDriveBLModulePIDControl(), Constants.BL_MODULE_X, Constants.BL_MODULE_Y, _dashboardSubsystem::getDriveBLModuleOffset);
-        SwerveModule driveBRModule = new SwerveModule(_robotMap.getDriveBRModuleDriveMotor(), _robotMap.getDriveBRModuleRotateMotor(), _robotMap.getDriveBRModulePositionSensor(), _robotMap.getDriveBRModulePIDControl(), Constants.BR_MODULE_X, Constants.BR_MODULE_Y, _dashboardSubsystem::getDriveBRModuleOffset);
+        SwerveModule driveFLModule = new SwerveModule(_robotMap.getDriveFLModuleDriveMotor(), _robotMap.getDriveFLModuleRotateMotor(), _robotMap.getDriveFLModulePositionSensor(), _robotMap.getDriveFLModulePIDControl(), Constants.FL_MODULE_X, Constants.FL_MODULE_Y, () -> _dashboardSubsystem.getDriveFLModuleOffset());
+        SwerveModule driveFRModule = new SwerveModule(_robotMap.getDriveFRModuleDriveMotor(), _robotMap.getDriveFRModuleRotateMotor(), _robotMap.getDriveFRModulePositionSensor(), _robotMap.getDriveFRModulePIDControl(), Constants.FR_MODULE_X, Constants.FR_MODULE_Y, () -> _dashboardSubsystem.getDriveFRModuleOffset());
+        SwerveModule driveBLModule = new SwerveModule(_robotMap.getDriveBLModuleDriveMotor(), _robotMap.getDriveBLModuleRotateMotor(), _robotMap.getDriveBLModulePositionSensor(), _robotMap.getDriveBLModulePIDControl(), Constants.BL_MODULE_X, Constants.BL_MODULE_Y, () -> _dashboardSubsystem.getDriveBLModuleOffset());
+        SwerveModule driveBRModule = new SwerveModule(_robotMap.getDriveBRModuleDriveMotor(), _robotMap.getDriveBRModuleRotateMotor(), _robotMap.getDriveBRModulePositionSensor(), _robotMap.getDriveBRModulePIDControl(), Constants.BR_MODULE_X, Constants.BR_MODULE_Y, () -> _dashboardSubsystem.getDriveBRModuleOffset());
 
         _driveSubsystem = new Drive
         (
@@ -148,7 +144,9 @@ public class RobotContainer
             _robotMap.getShooterShooterMotor(),
             _robotMap.getShooterHoodMotor(),
             _robotMap.getShooterHoodSensor(),
-            _robotMap.getShooterHoodPID()
+            _robotMap.getShooterHoodPID(),
+            calculateHoodAngle,
+            calculateShooterRPM
         );
 
         _spinnerSubsystem = new ControlPanelSpinner
@@ -157,23 +155,21 @@ public class RobotContainer
             _robotMap.getSpinnerPositionSensor(),
             _robotMap.getSpinnerSpinnerPID()
         );
+
+        _dashboardSubsystem = new Dashboard
+        (
+            _driveSubsystem,
+            _ballPathSubsystem,
+            _hangerSubsystem,
+            _pickupSubsystem,
+            _shooterSubsystem,
+            _robotMap.getDashboardTab(), 
+            _robotMap.getSettingsTab()
+        );
     }
 
     private void configureDefaultCommands()
     {
-        _dashboardSubsystem.setDefaultCommand
-        (
-            new CmdDashboardUpdate
-            (
-                _dashboardSubsystem, 
-                _driveSubsystem, 
-                _ballPathSubsystem, 
-                _hangerSubsystem, 
-                _pickupSubsystem, 
-                _shooterSubsystem
-            )
-        );
-
         _driveSubsystem.setDefaultCommand
         (
             new CmdDriveWithJoystick
@@ -203,16 +199,6 @@ public class RobotContainer
 
                     return manual;
                 }
-            )
-        );
-        
-        _shooterSubsystem.setDefaultCommand
-        (
-            new CmdShooterDefault
-            (
-                _dashboardSubsystem,
-                _shooterSubsystem, 
-                _ballPathSubsystem
             )
         );
 
@@ -260,13 +246,71 @@ public class RobotContainer
         _hangerReleaseMultiButton.whenActivated(new CmdHangerRelease(_ballPathSubsystem, _hangerSubsystem));
     }
 
+    private void configureAutonomousModes()
+    {
+        _robotMap.getDashboardTab().addDefaultAutonomous("None", null);
+
+        _robotMap.getDashboardTab().addAutonomous("Shoot 3 and Drive", new GrpAutoShoot3AndMove(_dashboardSubsystem, _ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
+    }
+
     public Command getAutonomousCommand() 
     {
-        return null;
+        return _robotMap.getDashboardTab().getSelectedAutonomous();
     }
 
     public void periodic()
     {
         _hangerReleaseMultiButton.cache();
     }
+
+    private DoubleUnaryOperator calculateHoodAngle = (targetDistance) ->
+    { 
+        double target       = Constants.DEFAULT_HOOD_MIN_POSITION;
+        double nearPosition = Constants.DEFAULT_HOOD_NEAR_TARGET;
+        double farPosition  = Constants.DEFAULT_HOOD_FAR_TARGET;
+
+        if (_dashboardSubsystem != null)
+        {
+            target       = _dashboardSubsystem.getHoodMinPosition();
+            nearPosition = _dashboardSubsystem.getHoodNearPosition();
+            farPosition  = _dashboardSubsystem.getHoodFarPosition();
+        }
+
+        if (targetDistance == Constants.SHOOTER_NEAR_DISTANCE)
+        {
+            target = nearPosition;
+        }
+
+        else if (targetDistance == Constants.SHOOTER_FAR_DISTANCE)
+        {
+            target = farPosition;
+        }
+
+        return target;
+    };
+
+    private DoubleUnaryOperator calculateShooterRPM = (targetDistance) ->
+    {
+        double target    = 0;
+        double nearSpeed = Constants.DEFAULT_SHOOTER_NEAR_SPEED;
+        double farSpeed  = Constants.DEFAULT_SHOOTER_FAR_SPEED;
+
+        if (_dashboardSubsystem != null)
+        {
+            nearSpeed = _dashboardSubsystem.getShooterNearSpeed();
+            farSpeed  = _dashboardSubsystem.getShooterFarSpeed();
+        }
+
+        if (targetDistance == Constants.SHOOTER_NEAR_DISTANCE)
+        {
+            target = nearSpeed;
+        }
+
+        else if (targetDistance == Constants.SHOOTER_FAR_DISTANCE)
+        {
+            target = farSpeed;
+        }
+
+        return target;
+    };
 }

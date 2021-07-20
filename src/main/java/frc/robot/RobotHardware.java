@@ -281,12 +281,12 @@ public class RobotHardware implements RobotMap
         // Configure
         _shooterHoodMotor           = Motor.invert(_shooterHoodMotor);
 
-        _shooterHoodPID.setCoefficient(Coefficient.P, 0, 0.005, 0);
-        _shooterHoodPID.setCoefficient(Coefficient.I, 0, 0, 0);
-        _shooterHoodPID.setCoefficient(Coefficient.D, 400, 0, 0.001);
+        _shooterHoodPID.setCoefficient(Coefficient.P, 0,  0.016, 0);
+        _shooterHoodPID.setCoefficient(Coefficient.I, 10, 0,     0.001);
+        _shooterHoodPID.setCoefficient(Coefficient.D, 0,  0,     0);
         _shooterHoodPID.setInputRange(Constants.DEFAULT_HOOD_MAX_POSITION, Constants.DEFAULT_HOOD_MIN_POSITION);
         _shooterHoodPID.setOutputRange(-1, 1);
-        _shooterHoodPID.setSetpointDeadband(50);
+        _shooterHoodPID.setSetpointDeadband(2);
 
         _hardware.addHardware
         (

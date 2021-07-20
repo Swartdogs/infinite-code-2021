@@ -1,6 +1,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleUnaryOperator;
+
 import PIDControl.PIDControl;
 import frc.robot.Constants;
 import frc.robot.abstraction.Motor;
@@ -9,26 +11,33 @@ import frc.robot.abstraction.SwartdogSubsystem;
 
 public class Shooter extends SwartdogSubsystem 
 {
-    private Motor           _shooterMotor;
-    private Motor           _hoodMotor;
+    private Motor               _shooterMotor;
+    private Motor               _hoodMotor;
 
-    private PositionSensor  _hoodSensor;
-    private PIDControl      _hoodPID;
+    private PositionSensor      _hoodSensor;
+    private PIDControl          _hoodPID;
 
-    private boolean         _shooterOn;
-    private double          _targetDistance;
-    private double          _hoodSetpoint;
+    private DoubleUnaryOperator _calculateHoodAngle;
+    private DoubleUnaryOperator _calculateShooterRPM;
 
-    public Shooter(Motor shooterMotor, Motor hoodMotor, PositionSensor hoodSensor, PIDControl hoodPID) 
+    private boolean             _shooterOn;
+    private double              _targetDistance;
+    private double              _hoodSetpoint;
+
+    public Shooter(Motor shooterMotor, Motor hoodMotor, PositionSensor hoodSensor, PIDControl hoodPID, DoubleUnaryOperator calculateHoodAngle, DoubleUnaryOperator calculateShooterRPM) 
     {
-        _shooterMotor   = shooterMotor;
-        _hoodMotor      = hoodMotor;
+        _shooterMotor           = shooterMotor;
+        _hoodMotor              = hoodMotor;
 
-        _hoodSensor     = hoodSensor;
-        _hoodPID        = hoodPID;
+        _hoodSensor             = hoodSensor;
+        _hoodPID                = hoodPID;
 
-        _targetDistance = Constants.SHOOTER_FAR_DISTANCE;
-        _hoodSetpoint   = 0;
+        _calculateHoodAngle     = calculateHoodAngle;
+        _calculateShooterRPM    = calculateShooterRPM;
+
+        _targetDistance         = Constants.SHOOTER_FAR_DISTANCE;
+
+        setHoodSetpoint(_calculateHoodAngle.applyAsDouble(_targetDistance));
     }
 
     public boolean isShooterOn()
@@ -39,11 +48,13 @@ public class Shooter extends SwartdogSubsystem
     public void startShooter()
     {
         _shooterOn = true;
+        _shooterMotor.set(_calculateShooterRPM.applyAsDouble(_targetDistance));
     }
 
     public void stopShooter()
     {
         _shooterOn = false;
+        _shooterMotor.set(0);
     }
 
     public double getTargetDistance()
@@ -54,11 +65,12 @@ public class Shooter extends SwartdogSubsystem
     public void setTargetDistance(double distance)
     {
         _targetDistance = distance;
-    }
+        setHoodSetpoint(_calculateHoodAngle.applyAsDouble(_targetDistance));
 
-    public void setShooterMotor(double speed)
-    {
-        _shooterMotor.set(speed);
+        if (isShooterOn()) 
+        {
+            _shooterMotor.set(_calculateShooterRPM.applyAsDouble(_targetDistance));
+        }
     }
 
     public double getShooterMotorSetpoint()
@@ -71,11 +83,6 @@ public class Shooter extends SwartdogSubsystem
         return _shooterMotor.getVelocitySensor().get();
     }
 
-    public void setHoodMotor(double speed)
-    {
-        _hoodMotor.set(speed);
-    }
-
     public double getHoodPosition()
     {
         return _hoodSensor.get();
@@ -84,11 +91,6 @@ public class Shooter extends SwartdogSubsystem
     public boolean hoodAtSetpoint()
     {
         return _hoodPID.atSetpoint();
-    }
-
-    public double hoodExec()
-    {
-        return _hoodPID.calculate(_hoodSensor.get());
     }
 
     public void setHoodSetpoint(double setpoint)
@@ -100,5 +102,11 @@ public class Shooter extends SwartdogSubsystem
     public double getHoodSetpoint()
     {
         return _hoodSetpoint;
+    }
+
+    @Override
+    public void periodic()
+    {
+        _hoodMotor.set(_hoodPID.calculate(getHoodPosition()));
     }
 }
