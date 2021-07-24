@@ -32,7 +32,7 @@ public class ControlPanelSpinner extends SwartdogSubsystem
 
     public void spinnerInit(double setpoint)
     {
-        _positionSensor.reset();
+        _positionSensor.set(0);
         _spinnerPID.setSetpoint(setpoint, _positionSensor.get());
     }
 
