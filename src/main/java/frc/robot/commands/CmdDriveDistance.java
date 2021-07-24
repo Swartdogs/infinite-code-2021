@@ -46,6 +46,8 @@ public class CmdDriveDistance extends SwartdogCommand
         
         translateVector.setPolarPosition(_driveSubsystem.driveExec(), _heading);
         _driveSubsystem.drive(translateVector, _driveSubsystem.rotateExec(), _absolute);
+
+        System.out.println("Target: " + _distance + " Pos: " + _driveSubsystem.getAverageDistance() + " Speed: " + translateVector.getR());
     }
 
     @Override

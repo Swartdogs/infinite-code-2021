@@ -20,6 +20,7 @@ import frc.robot.commands.CmdShooterFire;
 import frc.robot.commands.CmdShooterStart;
 import frc.robot.commands.CmdShooterStop;
 import frc.robot.commands.CmdSpinnerManual;
+import frc.robot.groups.GrpAuto6BallFriendlyTrench;
 import frc.robot.groups.GrpAutoShoot3AndMove;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.ControlPanelSpinner;
@@ -224,14 +225,14 @@ public class RobotContainer
 
     private void configureButtonBindings() 
     {
-        _robotMap.getDriveJoy().getButton(2).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetGyro()));
-
         _robotMap.getDriveJoy().getButton(5).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(6).whenActivated(new CmdBallPathRaise(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
 
-        _robotMap.getDriveJoy().getButton(7).whenActivated(new CmdShooterStop(_driveSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(7).whenActivated(new CmdShooterStart(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(8).whileActive(new CmdShooterFire(_dashboardSubsystem, _driveSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
-        _robotMap.getDriveJoy().getButton(9).whenActivated(new CmdShooterStart(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(9).whenActivated(new CmdShooterStop(_driveSubsystem, _shooterSubsystem));
+
+        _robotMap.getDriveJoy().getButton(12).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetGyro()));
 
         _robotMap.getCoDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
         _robotMap.getCoDriveJoy().getButton(3).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
@@ -250,6 +251,7 @@ public class RobotContainer
     {
         _robotMap.getDashboardTab().addDefaultAutonomous("None", null);
 
+        _robotMap.getDashboardTab().addAutonomous("6 Ball, Friendly Trench", new GrpAuto6BallFriendlyTrench(_dashboardSubsystem, _ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDashboardTab().addAutonomous("Shoot 3 and Drive", new GrpAutoShoot3AndMove(_dashboardSubsystem, _ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
     }
 

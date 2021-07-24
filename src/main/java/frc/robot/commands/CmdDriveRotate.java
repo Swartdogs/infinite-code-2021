@@ -36,7 +36,11 @@ public class CmdDriveRotate extends SwartdogCommand
     @Override
     public void execute()
     {
-        _driveSubsystem.drive(0, 0, _driveSubsystem.rotateExec());
+        double speed = _driveSubsystem.rotateExec();
+
+        _driveSubsystem.drive(0, 0, speed);
+
+        System.out.println("Rotate Power: " + speed);
     }
 
     @Override

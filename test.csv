@@ -1,0 +1,5 @@
+gameTime,vbat,time,gameMode,commandMode,command
+3,1.0,3,autonomous,,
+2,1.0,5,,start,CmdExample
+4,1.0,7,,end,CmdExample
+7,1.0,10,disabled,,

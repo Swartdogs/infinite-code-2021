@@ -7,6 +7,8 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import PIDControl.PIDControl;
 import PIDControl.PIDControl.Coefficient;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import frc.robot.abstraction.Abstraction;
 import frc.robot.abstraction.Hardware;
 import frc.robot.abstraction.Joystick;
@@ -99,6 +101,10 @@ public class RobotHardware implements RobotMap
         createAndConfigureSpinnerSubsystemHardware(leftPickupAndControlPanel);
         createAndConfigureDashboardSubsystemHardware();
 
+        UsbCamera driverCamera = CameraServer.getInstance().startAutomaticCapture("Driver Camera", 0);
+        driverCamera.setBrightness(35);
+        driverCamera.setExposureAuto();
+
         _hardware.addHardware
         (
             rightAndPrimaryPickupMotor,
@@ -160,8 +166,8 @@ public class RobotHardware implements RobotMap
         _driveBLDriveMotor.getPositionSensor().setScalingFunction(raw -> raw * Constants.DRIVE_ENCODER_SCALE);
         _driveBRDriveMotor.getPositionSensor().setScalingFunction(raw -> raw * Constants.DRIVE_ENCODER_SCALE);
 
-        _driveRotatePID.setCoefficient(Coefficient.P, 0, 0.010, 0);
-        _driveRotatePID.setCoefficient(Coefficient.I, 0, 0,    0);
+        _driveRotatePID.setCoefficient(Coefficient.P, 0, 0.015, 0);
+        _driveRotatePID.setCoefficient(Coefficient.I, 20, 0,    0.001);
         _driveRotatePID.setCoefficient(Coefficient.D, 0, 0,    0);
         _driveRotatePID.setInputRange(-360, 360);
         _driveRotatePID.setOutputRamp(0.1, 0.05);

@@ -25,7 +25,7 @@ public class CmdBallPathLoad extends SwartdogCommand
         _loadTimer          = 0;
         _trackMotorSpeed    = 0;
 
-        addRequirements(_ballPathSubsystem, _pickupSubsystem);
+        //addRequirements(_ballPathSubsystem, _pickupSubsystem);
     }
 
     @Override
