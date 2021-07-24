@@ -232,7 +232,7 @@ public class RobotContainer
         _robotMap.getDriveJoy().getButton(8).whileActive(new CmdShooterFire(_dashboardSubsystem, _driveSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(9).whenActivated(new CmdShooterStop(_driveSubsystem, _shooterSubsystem));
 
-        _robotMap.getDriveJoy().getButton(12).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.resetGyro()));
+        _robotMap.getDriveJoy().getButton(12).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.setGyro(180)));
 
         _robotMap.getCoDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
         _robotMap.getCoDriveJoy().getButton(3).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));

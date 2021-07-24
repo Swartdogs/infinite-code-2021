@@ -64,10 +64,10 @@ public final class Constants
     public static final double              DEFAULT_PICKUP_STOW_DELAY            = 1.5;
 
     public static final int                 DEFAULT_SHOOTER_RPM_DEADBAND         = 50;
-    public static final double              DEFAULT_HOOD_MIN_POSITION            = 1090;
-    public static final double              DEFAULT_HOOD_NEAR_TARGET             = DEFAULT_HOOD_MIN_POSITION - 60;
-    public static final double              DEFAULT_HOOD_FAR_TARGET              = DEFAULT_HOOD_MIN_POSITION - 520;
-    public static final double              DEFAULT_HOOD_MAX_POSITION            = DEFAULT_HOOD_MIN_POSITION - 710;
+    public static final double              DEFAULT_HOOD_MIN_POSITION            = 1035;
+    public static final double              DEFAULT_HOOD_NEAR_TARGET             = DEFAULT_HOOD_MIN_POSITION - 50;
+    public static final double              DEFAULT_HOOD_FAR_TARGET              = DEFAULT_HOOD_MIN_POSITION - 540;
+    public static final double              DEFAULT_HOOD_MAX_POSITION            = DEFAULT_HOOD_MIN_POSITION - 700;
     public static final double              DEFAULT_SHOOTER_NEAR_SPEED           = 3400;
     public static final double              DEFAULT_SHOOTER_FAR_SPEED            = 4800;
     public static final double              DEFAULT_SHOOTER_ROTATE_SCALER        = 0.25;

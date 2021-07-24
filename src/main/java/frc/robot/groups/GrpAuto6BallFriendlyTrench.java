@@ -22,6 +22,7 @@ public class GrpAuto6BallFriendlyTrench extends SwartdogSequentialCommandGroup
     {
         super
         (
+            SwartdogCommand.run(() -> driveSubsystem.setGyro(-20)),
             SwartdogCommand.run(() -> shooterSubsystem.setTargetDistance(Constants.SHOOTER_FAR_DISTANCE)),
             new CmdShooterStart(ballPathSubsystem, driveSubsystem, pickupSubsystem, shooterSubsystem),
             new CmdWait(1.0),
@@ -35,7 +36,8 @@ public class GrpAuto6BallFriendlyTrench extends SwartdogSequentialCommandGroup
             new CmdDriveRotate(driveSubsystem, -16, 0.7, true),
             new CmdShooterStart(ballPathSubsystem, driveSubsystem, pickupSubsystem, shooterSubsystem),
             new CmdWait(1.0),
-            new CmdShooterFire(dashboardSubsystem, driveSubsystem, ballPathSubsystem, pickupSubsystem, shooterSubsystem)
+            new CmdShooterFire(dashboardSubsystem, driveSubsystem, ballPathSubsystem, pickupSubsystem, shooterSubsystem),
+            SwartdogCommand.run(() -> driveSubsystem.setGyro(driveSubsystem.getHeading() + 180))
         );
     }
 }

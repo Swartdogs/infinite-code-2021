@@ -23,7 +23,8 @@ public class GrpAutoShoot3AndMove extends SwartdogSequentialCommandGroup
             new CmdDriveDistance(driveSubsystem, 12, 0, 0.5, 0, true, true),
             new CmdShooterStart(ballPathSubsystem, driveSubsystem, pickupSubsystem, shooterSubsystem),
             new CmdWait(1.0),
-            new CmdShooterFire(dashboardSubsystem, driveSubsystem, ballPathSubsystem, pickupSubsystem, shooterSubsystem)
+            new CmdShooterFire(dashboardSubsystem, driveSubsystem, ballPathSubsystem, pickupSubsystem, shooterSubsystem),
+            SwartdogCommand.run(() -> driveSubsystem.setGyro(driveSubsystem.getHeading() + 180))
         );
     }
 }
