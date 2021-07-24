@@ -25,9 +25,21 @@ public class CmdDriveWithJoystick extends SwartdogCommand
     }
 
     @Override
+    public void initialize() 
+    {
+        _driveSubsystem.setDriveInUse(true);
+    }
+
+    @Override
     public void execute() 
     {
         _driveSubsystem.drive(_drive.getAsDouble(), _strafe.getAsDouble(), _rotate.getAsDouble());
+    }
+
+    @Override
+    public void end(boolean interrupted)
+    {
+        _driveSubsystem.setDriveInUse(false);
     }
 
     @Override

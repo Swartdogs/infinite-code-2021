@@ -31,6 +31,8 @@ public class CmdDriveRotate extends SwartdogCommand
         }
         
         _driveSubsystem.rotateInit(absoluteHeading, _maxSpeed);
+
+        _driveSubsystem.setDriveInUse(true);
     }
 
     @Override
@@ -40,13 +42,14 @@ public class CmdDriveRotate extends SwartdogCommand
 
         _driveSubsystem.drive(0, 0, speed);
 
-        System.out.println("Rotate Power: " + speed);
     }
 
     @Override
     public void end(boolean interrupted)
     {
         _driveSubsystem.drive(0, 0, 0);
+
+        _driveSubsystem.setDriveInUse(false);
     }
 
     @Override

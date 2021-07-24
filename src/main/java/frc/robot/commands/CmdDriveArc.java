@@ -38,6 +38,8 @@ public class CmdDriveArc extends SwartdogCommand
         _driveSubsystem.setOrigin(newOrigin);
       
         _driveSubsystem.rotateInit(_heading + _driveSubsystem.getHeading(), _maxSpeed);
+
+        _driveSubsystem.setDriveInUse(true);
     }
 
     @Override
@@ -51,6 +53,8 @@ public class CmdDriveArc extends SwartdogCommand
     {
         _driveSubsystem.drive(0, 0, 0);
         _driveSubsystem.setOrigin(_oldOrigin);
+
+        _driveSubsystem.setDriveInUse(false);
     }
 
     @Override

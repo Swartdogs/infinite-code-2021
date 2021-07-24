@@ -1,20 +1,24 @@
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Hanger;
+import frc.robot.subsystems.Shooter;
 
 public class CmdHangerRelease extends SwartdogCommand 
 {
     private BallPath _ballPathSubsystem;
     private Hanger   _hangerSubsystem;
+    private Shooter  _shooterSubsystem;
 
-    public CmdHangerRelease(BallPath ballPathSubsystem, Hanger hangerSubsystem)
+    public CmdHangerRelease(BallPath ballPathSubsystem, Hanger hangerSubsystem, Shooter shooterSubsystem)
     {
         _ballPathSubsystem = ballPathSubsystem;
         _hangerSubsystem   = hangerSubsystem;
+        _shooterSubsystem  = shooterSubsystem;
 
-        addRequirements(_hangerSubsystem);
+        addRequirements(_hangerSubsystem, _shooterSubsystem);
     }
 
     @Override
@@ -23,6 +27,7 @@ public class CmdHangerRelease extends SwartdogCommand
         if (_ballPathSubsystem.isUpperTrackRaised())
         {
             _hangerSubsystem.releaseHanger();
+            _shooterSubsystem.setTargetDistance(Constants.DEFAULT_HOOD_NEAR_TARGET);
         }
         
     }

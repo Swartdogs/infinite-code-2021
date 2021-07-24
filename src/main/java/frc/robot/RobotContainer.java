@@ -56,7 +56,7 @@ public class RobotContainer
             @Override
             protected State getRaw() 
             {
-                return _robotMap.getDriveJoy().getButton(11).get() == State.On && _robotMap.getCoDriveJoy().getButton(11).get() == State.On ? State.On : State.Off;
+                return _robotMap.getDriveJoy().getButton(11).get() == State.On && _robotMap.getCoDriveJoy().getButton(12).get() == State.On ? State.On : State.Off;
             }
 
             @Override
@@ -244,7 +244,7 @@ public class RobotContainer
 
         _robotMap.getBallPathPosition1Sensor().whenActivated(new CmdBallPathLoad(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
 
-        _hangerReleaseMultiButton.whenActivated(new CmdHangerRelease(_ballPathSubsystem, _hangerSubsystem));
+        _hangerReleaseMultiButton.whenActivated(new CmdHangerRelease(_ballPathSubsystem, _hangerSubsystem, _shooterSubsystem));
     }
 
     private void configureAutonomousModes()
@@ -278,17 +278,13 @@ public class RobotContainer
             farPosition  = _dashboardSubsystem.getHoodFarPosition();
         }
 
-        if (!_hangerSubsystem.isHangerReleased())
+        if (targetDistance == Constants.SHOOTER_NEAR_DISTANCE)
         {
-            if (targetDistance == Constants.SHOOTER_NEAR_DISTANCE)
-            {
-                target = nearPosition;
-            }
-
-            else if (targetDistance == Constants.SHOOTER_FAR_DISTANCE)
-            {
-                target = farPosition;
-            }
+            target = nearPosition;
+        }
+        else if (targetDistance == Constants.SHOOTER_FAR_DISTANCE)
+        {
+            target = farPosition;
         }
 
         return target;

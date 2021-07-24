@@ -37,6 +37,8 @@ public class CmdDriveDistance extends SwartdogCommand
     public void initialize() 
     {
         _driveSubsystem.driveInit(_distance, _maxSpeed, _minSpeed, _resetEncoders);
+        
+        _driveSubsystem.setDriveInUse(true);
     }
 
     @Override
@@ -54,6 +56,8 @@ public class CmdDriveDistance extends SwartdogCommand
     public void end(boolean interrupted) 
     {
         _driveSubsystem.drive(0, 0, 0);
+
+        _driveSubsystem.setDriveInUse(false);
     }
 
     @Override
