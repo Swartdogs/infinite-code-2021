@@ -70,5 +70,5 @@ public final class Constants
     public static final double              DEFAULT_HOOD_MAX_POSITION            = DEFAULT_HOOD_MIN_POSITION - 700;
     public static final double              DEFAULT_SHOOTER_NEAR_SPEED           = 3400;
     public static final double              DEFAULT_SHOOTER_FAR_SPEED            = 4800;
-    public static final double              DEFAULT_SHOOTER_ROTATE_SCALER        = 0.25;
+    public static final double              DEFAULT_SHOOTER_ROTATE_SCALER        = 0.15;
 }
