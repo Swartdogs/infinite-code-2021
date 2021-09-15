@@ -261,8 +261,8 @@ public class RobotHardware implements RobotMap
         _pickupLeftMotor            = leftPickupAndControlPanel.getMotor1();
         _pickupRightMotor           = rightAndMidPickup.getMotor2();
         _pickupDeploySolenoid       = Hardware.Actuators.solenoid(4);
-        _pickupLeftLightSensor      = null;
-        _pickupRightLightSensor     = null;
+        _pickupLeftLightSensor      = Hardware.Sensors.lightSensor(3);
+        _pickupRightLightSensor     = Hardware.Sensors.lightSensor(4);
 
         // Configure
         _pickupPrimaryMotor   = Motor.invert(_pickupPrimaryMotor);
@@ -271,9 +271,9 @@ public class RobotHardware implements RobotMap
 
         _hardware.addHardware
         (
-            _pickupDeploySolenoid
-            // _pickupLeftLightSensor,
-            // _pickupRightLightSensor,
+            _pickupDeploySolenoid,
+            _pickupLeftLightSensor,
+            _pickupRightLightSensor
         );
     }
 

@@ -14,6 +14,7 @@ import frc.robot.commands.CmdBallPathRaise;
 import frc.robot.commands.CmdDriveWithJoystick;
 import frc.robot.commands.CmdHangerManual;
 import frc.robot.commands.CmdHangerRelease;
+import frc.robot.commands.CmdPickupDefault;
 import frc.robot.commands.CmdPickupDeploy;
 import frc.robot.commands.CmdPickupStow;
 import frc.robot.commands.CmdShooterFire;
@@ -201,6 +202,11 @@ public class RobotContainer
                     return manual;
                 }
             )
+        );
+
+        _pickupSubsystem.setDefaultCommand
+        (
+            new CmdPickupDefault(_dashboardSubsystem, _pickupSubsystem)
         );
 
         _spinnerSubsystem.setDefaultCommand
