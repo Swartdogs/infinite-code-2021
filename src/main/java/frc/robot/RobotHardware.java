@@ -243,7 +243,6 @@ public class RobotHardware implements RobotMap
         // Configure
         _hangerHangerMotor = Motor.invert(_hangerHangerMotor);
         _hangerReleaseSolenoid = Solenoid.invert(_hangerReleaseSolenoid);
-        _hangerHangerPositionSensor.setScalingFunction((position) -> -position);
 
         _hardware.addHardware
         (

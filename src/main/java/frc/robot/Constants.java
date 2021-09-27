@@ -49,8 +49,8 @@ public final class Constants
     public static final double              DEFAULT_BR_MODULE_OFFSET             = 176;
 
     public static final double              DEFAULT_HANGER_SPEED                 = 1;
-    public static final double              DEFAULT_HANGER_MIN_POSITION          = -1195;
-    public static final double              DEFAULT_HANGER_MAX_POSITION          = -590;
+    public static final double              DEFAULT_HANGER_MIN_POSITION          = 500;
+    public static final double              DEFAULT_HANGER_MAX_POSITION          = 1200;
 
     public static final int                 DEFAULT_BALLPATH_MAX_BALL_COUNT      = 5;
     public static final int                 DEFAULT_BALLPATH_STARTING_BALL_COUNT = 3;

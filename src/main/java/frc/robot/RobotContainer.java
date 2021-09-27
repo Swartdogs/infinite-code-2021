@@ -218,7 +218,7 @@ public class RobotContainer
                 {
                     double manual = 0;
 
-                    if (_robotMap.getCoDriveJoy().getButton(2).get() == State.On)
+                    if (_robotMap.getCoDriveJoy().getButton(2).get() == State.On && !_hangerSubsystem.isHangerReleased())
                     {
                         manual = _robotMap.getCoDriveJoy().getX();
                     }
