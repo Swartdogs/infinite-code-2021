@@ -11,6 +11,12 @@ import frc.robot.abstraction.SwartdogSubsystem;
 
 public class Shooter extends SwartdogSubsystem 
 {
+    public enum Preset 
+    {
+        Near,
+        Far
+    }
+
     private Motor               _shooterMotor;
     private Motor               _hoodMotor;
 
@@ -24,6 +30,10 @@ public class Shooter extends SwartdogSubsystem
     private double              _targetDistance;
     private double              _hoodSetpoint;
 
+    private Preset              _preset;
+    private boolean             _visionInUse;
+
+
     public Shooter(Motor shooterMotor, Motor hoodMotor, PositionSensor hoodSensor, PIDControl hoodPID, DoubleUnaryOperator calculateHoodAngle, DoubleUnaryOperator calculateShooterRPM) 
     {
         _shooterMotor           = shooterMotor;
@@ -35,7 +45,10 @@ public class Shooter extends SwartdogSubsystem
         _calculateHoodAngle     = calculateHoodAngle;
         _calculateShooterRPM    = calculateShooterRPM;
 
-        _targetDistance         = Constants.SHOOTER_FAR_DISTANCE;
+        _targetDistance         = Constants.SHOOTER_NEAR_DISTANCE;
+
+        _preset                 = Preset.Near;
+        _visionInUse            = false;
 
         setHoodSetpoint(_calculateHoodAngle.applyAsDouble(_targetDistance));
     }
@@ -102,6 +115,16 @@ public class Shooter extends SwartdogSubsystem
     public double getHoodSetpoint()
     {
         return _hoodSetpoint;
+    }
+
+    public void setPreset(Preset preset)
+    {
+        _preset = preset;
+    }
+
+    public void setVisionInUse(boolean visionInUse)
+    {
+        _visionInUse = visionInUse;
     }
 
     @Override

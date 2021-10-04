@@ -29,6 +29,7 @@ import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveModule;
 
@@ -43,6 +44,7 @@ public class RobotContainer
     private Pickup              _pickupSubsystem;
     private Shooter             _shooterSubsystem;
     private ControlPanelSpinner _spinnerSubsystem;
+    private Vision              _visionSubsystem;
 
     private Switch              _hangerReleaseMultiButton;
 
@@ -167,6 +169,15 @@ public class RobotContainer
             _shooterSubsystem,
             _robotMap.getDashboardTab(), 
             _robotMap.getSettingsTab()
+        );
+
+        _visionSubsystem = new Vision
+        (
+            _robotMap.getVisionXPosition(), 
+            _robotMap.getVisionYPosition(), 
+            _robotMap.getVisionTargetFound(), 
+            _robotMap.getVisionLEDMode(), 
+            _robotMap.getVisionRotatePID()
         );
     }
 

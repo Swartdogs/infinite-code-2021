@@ -20,8 +20,6 @@ public class CmdShooterStart extends SwartdogCommand
         _driveSubsystem     = driveSubsystem;
         _pickupSubsystem    = pickupSubsystem;
         _shooterSubsystem   = shooterSubsystem;
-
-        addRequirements(_shooterSubsystem);
     }
 
     @Override
