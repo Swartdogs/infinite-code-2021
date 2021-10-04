@@ -20,6 +20,7 @@ import frc.robot.abstraction.ShuffleboardTab;
 import frc.robot.abstraction.Solenoid;
 import frc.robot.abstraction.Switch;
 import frc.robot.abstraction.VelocitySensor;
+import frc.robot.abstraction.PositionSensor.IMUAxis;
 
 public class RobotHardware implements RobotMap
 {
@@ -115,8 +116,8 @@ public class RobotHardware implements RobotMap
     private void createAndConfigureControlsHardware()
     {
         // Create
-        _driveJoy   = Hardware.Controls.joystick(0);
-        _coDriveJoy = Hardware.Controls.joystick(1);
+        _driveJoy   = Joystick.joystick(0);
+        _coDriveJoy = Joystick.joystick(1);
 
         // Configure
         _driveJoy.setXDeadband(0.05);
@@ -137,24 +138,24 @@ public class RobotHardware implements RobotMap
     private void createAndConfigureDriveSubsystemHardware()
     {
         // Create
-        _driveGyro             = Hardware.Sensors.imu();
+        _driveGyro             = PositionSensor.imu(IMUAxis.X, true);
         _driveDrivePID         = new PIDControl();
         _driveRotatePID        = new PIDControl();
-        _driveFLDriveMotor     = Hardware.Actuators.falcon(1);
-        _driveFLRotateMotor    = Hardware.Actuators.neo(2);
-        _driveFLPositionSensor = Hardware.Sensors.potentiometer(0, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
+        _driveFLDriveMotor     = Motor.falcon(1);
+        _driveFLRotateMotor    = Motor.neo(2);
+        _driveFLPositionSensor = PositionSensor.potentiometer(0, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
         _driveFLPIDControl     = new PIDControl();
-        _driveFRDriveMotor     = Hardware.Actuators.falcon(5);
-        _driveFRRotateMotor    = Hardware.Actuators.neo(6);
-        _driveFRPositionSensor = Hardware.Sensors.potentiometer(3, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
+        _driveFRDriveMotor     = Motor.falcon(5);
+        _driveFRRotateMotor    = Motor.neo(6);
+        _driveFRPositionSensor = PositionSensor.potentiometer(3, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
         _driveFRPIDControl     = new PIDControl();
-        _driveBLDriveMotor     = Hardware.Actuators.falcon(3);
-        _driveBLRotateMotor    = Hardware.Actuators.neo(4);
-        _driveBLPositionSensor = Hardware.Sensors.potentiometer(1, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
+        _driveBLDriveMotor     = Motor.falcon(3);
+        _driveBLRotateMotor    = Motor.neo(4);
+        _driveBLPositionSensor = PositionSensor.potentiometer(1, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
         _driveBLPIDControl     = new PIDControl();
-        _driveBRDriveMotor     = Hardware.Actuators.falcon(7);
-        _driveBRRotateMotor    = Hardware.Actuators.neo(8);
-        _driveBRPositionSensor = Hardware.Sensors.potentiometer(2, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
+        _driveBRDriveMotor     = Motor.falcon(7);
+        _driveBRRotateMotor    = Motor.neo(8);
+        _driveBRPositionSensor = PositionSensor.potentiometer(2, Constants.SWERVE_MODULE_SCALE, Constants.SWERVE_MODULE_OFFSET);
         _driveBRPIDControl     = new PIDControl();
 
         // Configure
@@ -213,11 +214,11 @@ public class RobotHardware implements RobotMap
     private void createAndConfigureBallPathSubsystemHardware()
     {
         // Create
-        _ballPathTrackMotor         = Hardware.Actuators.victorSPX(13);
-        _ballPathUpperTrackSolenoid = Hardware.Actuators.solenoid(7);
-        _ballPathPosition1Sensor    = Hardware.Sensors.lightSensor(0);
-        _ballPathPosition2Sensor    = Hardware.Sensors.lightSensor(1);
-        _ballPathShooterSensor      = Hardware.Sensors.lightSensor(2);
+        _ballPathTrackMotor         = Motor.victorSPX(13);
+        _ballPathUpperTrackSolenoid = Solenoid.solenoid(7);
+        _ballPathPosition1Sensor    = Switch.lightSensor(0);
+        _ballPathPosition2Sensor    = Switch.lightSensor(1);
+        _ballPathShooterSensor      = Switch.lightSensor(2);
 
         // Configure
         _ballPathTrackMotor = Motor.invert(_ballPathTrackMotor);
@@ -235,10 +236,10 @@ public class RobotHardware implements RobotMap
     private void createAndConfigureHangerSubsystemHardware()
     {
         // Create
-        _hangerHangerMotor          = Hardware.Actuators.victorSPX(11);
-        _hangerReleaseSolenoid      = Hardware.Actuators.solenoid(5);
-        _hangerRatchetSolenoid      = Hardware.Actuators.solenoid(6);
-        _hangerHangerPositionSensor = Hardware.Sensors.analogInput(7);
+        _hangerHangerMotor          = Motor.victorSPX(11);
+        _hangerReleaseSolenoid      = Solenoid.solenoid(5);
+        _hangerRatchetSolenoid      = Solenoid.solenoid(6);
+        _hangerHangerPositionSensor = PositionSensor.analogInput(7);
 
         // Configure
         _hangerHangerMotor = Motor.invert(_hangerHangerMotor);
@@ -259,9 +260,9 @@ public class RobotHardware implements RobotMap
         _pickupPrimaryMotor         = rightAndMidPickup.getMotor1();
         _pickupLeftMotor            = leftPickupAndControlPanel.getMotor1();
         _pickupRightMotor           = rightAndMidPickup.getMotor2();
-        _pickupDeploySolenoid       = Hardware.Actuators.solenoid(4);
-        _pickupLeftLightSensor      = Hardware.Sensors.lightSensor(3);
-        _pickupRightLightSensor     = Hardware.Sensors.lightSensor(4);
+        _pickupDeploySolenoid       = Solenoid.solenoid(4);
+        _pickupLeftLightSensor      = Switch.lightSensor(3);
+        _pickupRightLightSensor     = Switch.lightSensor(4);
 
         // Configure
         _pickupPrimaryMotor   = Motor.invert(_pickupPrimaryMotor);
@@ -279,12 +280,12 @@ public class RobotHardware implements RobotMap
     private void createAndConfigureShooterSubsystemHardware()
     {
         // Create
-        Motor primaryShooterMotor   = Hardware.Actuators.falconFlywheel(9,  6300);
-        Motor secondaryShooterMotor = Hardware.Actuators.falconFlywheel(10, 6300);
+        Motor primaryShooterMotor   = Motor.falconFlywheel(9,  6300);
+        Motor secondaryShooterMotor = Motor.falconFlywheel(10, 6300);
 
         _shooterShooterMotor        = Motor.compose(primaryShooterMotor, secondaryShooterMotor);
-        _shooterHoodMotor           = Hardware.Actuators.victorSPX(14);
-        _shooterHoodSensor          = Hardware.Sensors.analogInput(5);
+        _shooterHoodMotor           = Motor.victorSPX(14);
+        _shooterHoodSensor          = PositionSensor.analogInput(5);
         _shooterHoodPID             = new PIDControl();
 
         // Configure
@@ -319,10 +320,10 @@ public class RobotHardware implements RobotMap
     private void createAndConfigureVisionSubsystemHardware()
     {
         // Create
-        _visionXPosition   = Hardware.NetworkTable.networkTableDouble("limelight", "tx");
-        _visionYPosition   = Hardware.NetworkTable.networkTableDouble("limelight", "ty");
-        _visionTargetFound = Hardware.NetworkTable.networkTableBoolean("limelight", "ta");
-        _visionLEDMode     = Hardware.NetworkTable.networkTableDouble("limelight", "ledMode");
+        _visionXPosition   = NetworkTableDouble.networkTableDouble("limelight", "tx");
+        _visionYPosition   = NetworkTableDouble.networkTableDouble("limelight", "ty");
+        _visionTargetFound = NetworkTableBoolean.networkTableBoolean("limelight", "ta");
+        _visionLEDMode     = NetworkTableDouble.networkTableDouble("limelight", "ledMode");
         _visionRotatePID   = new PIDControl();
 
         // Configure
@@ -338,8 +339,8 @@ public class RobotHardware implements RobotMap
     private void createAndConfigureDashboardSubsystemHardware()
     {
         // Create
-        _dashboardTab = Hardware.NetworkTable.shuffleboardTab("Dashboard");
-        _settingsTab  = Hardware.NetworkTable.shuffleboardTab("Settings");
+        _dashboardTab = ShuffleboardTab.shuffleboardTab("Dashboard");
+        _settingsTab  = ShuffleboardTab.shuffleboardTab("Settings");
 
         // Configure
 
