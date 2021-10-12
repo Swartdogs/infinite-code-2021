@@ -11,23 +11,38 @@ public class Vision extends SwartdogSubsystem
 {
     NetworkTableDouble  _xPosition;
     NetworkTableDouble  _yPosition;
-    NetworkTableBoolean _targetFound;
+    NetworkTableDouble  _targetFound;
     NetworkTableDouble  _ledMode;
+    NetworkTableDouble  _pipeline;
     PIDControl          _rotatePID;
 
     public Vision(NetworkTableDouble  xPosition,
                   NetworkTableDouble  yPosition,
-                  NetworkTableBoolean targetFound,
+                  NetworkTableDouble  targetFound,
                   NetworkTableDouble  ledMode,
+                  NetworkTableDouble  pipeline,
                   PIDControl          rotatePID)
     {
         _xPosition   = xPosition;
         _yPosition   = yPosition;
         _targetFound = targetFound;
         _ledMode     = ledMode;
+        _pipeline    = pipeline;
         _rotatePID   = rotatePID;
 
         _ledMode.set(Constants.LIMELIGHT_LED_OFF);
+    }
+
+    public void enableVisionProcessing()
+    {
+        setLEDs(State.On);
+        _pipeline.set(Constants.LIMELIGHT_VISION_PROCESSING);
+    }
+
+    public void disableVisionProcessing()
+    {
+        setLEDs(State.Off);
+        _pipeline.set(Constants.LIMELIGHT_DRIVER_CAMERA);
     }
 
     public void setLEDs(State state)
@@ -49,7 +64,7 @@ public class Vision extends SwartdogSubsystem
 
     public boolean targetFound()
     {
-        return _targetFound.get();
+        return _targetFound.get() > Constants.LIMELIGHT_TARGET_NOT_FOUND;
     }
 
     public double getTargetAngle()

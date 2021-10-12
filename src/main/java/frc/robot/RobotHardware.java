@@ -74,8 +74,9 @@ public class RobotHardware implements RobotMap
 
     private  NetworkTableDouble     _visionXPosition;
     private  NetworkTableDouble     _visionYPosition;
-    private  NetworkTableBoolean    _visionTargetFound;
+    private  NetworkTableDouble     _visionTargetFound;
     private  NetworkTableDouble     _visionLEDMode;
+    private  NetworkTableDouble     _visionPipeline;
     private  PIDControl             _visionRotatePID;
 
     private  Motor                  _spinnerSpinnerMotor;
@@ -218,7 +219,7 @@ public class RobotHardware implements RobotMap
         _ballPathUpperTrackSolenoid = Solenoid.solenoid(7);
         _ballPathPosition1Sensor    = Switch.lightSensor(0);
         _ballPathPosition2Sensor    = Switch.lightSensor(1);
-        _ballPathShooterSensor      = Switch.lightSensor(2);
+        _ballPathShooterSensor      = Switch.lightSensor(3);
 
         // Configure
         _ballPathTrackMotor = Motor.invert(_ballPathTrackMotor);
@@ -261,8 +262,8 @@ public class RobotHardware implements RobotMap
         _pickupLeftMotor            = leftPickupAndControlPanel.getMotor1();
         _pickupRightMotor           = rightAndMidPickup.getMotor2();
         _pickupDeploySolenoid       = Solenoid.solenoid(4);
-        _pickupLeftLightSensor      = Switch.lightSensor(3);
-        _pickupRightLightSensor     = Switch.lightSensor(4);
+        _pickupLeftLightSensor      = Switch.lightSensor(4);
+        _pickupRightLightSensor     = Switch.lightSensor(5);
 
         // Configure
         _pickupPrimaryMotor   = Motor.invert(_pickupPrimaryMotor);
@@ -322,8 +323,9 @@ public class RobotHardware implements RobotMap
         // Create
         _visionXPosition   = NetworkTableDouble.networkTableDouble("limelight", "tx");
         _visionYPosition   = NetworkTableDouble.networkTableDouble("limelight", "ty");
-        _visionTargetFound = NetworkTableBoolean.networkTableBoolean("limelight", "ta");
+        _visionTargetFound = NetworkTableDouble.networkTableDouble("limelight", "tv");
         _visionLEDMode     = NetworkTableDouble.networkTableDouble("limelight", "ledMode");
+        _visionPipeline    = NetworkTableDouble.networkTableDouble("limelight", "pipeline");
         _visionRotatePID   = new PIDControl();
 
         // Configure
@@ -332,7 +334,8 @@ public class RobotHardware implements RobotMap
             _visionXPosition,
             _visionYPosition,
             _visionTargetFound,
-            _visionLEDMode
+            _visionLEDMode,
+            _visionPipeline
         );
     }
 
@@ -604,7 +607,7 @@ public class RobotHardware implements RobotMap
     }
 
     @Override
-    public NetworkTableBoolean getVisionTargetFound()
+    public NetworkTableDouble getVisionTargetFound()
     {
         return _visionTargetFound;
     }
@@ -613,6 +616,12 @@ public class RobotHardware implements RobotMap
     public NetworkTableDouble getVisionLEDMode()
     {
         return _visionLEDMode;
+    }
+
+    @Override
+    public NetworkTableDouble getVisionPipeline()
+    {
+        return _visionPipeline;
     }
 
     @Override

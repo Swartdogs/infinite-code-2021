@@ -60,8 +60,9 @@ public interface RobotMap
 
     public NetworkTableDouble   getVisionXPosition();
     public NetworkTableDouble   getVisionYPosition();
-    public NetworkTableBoolean  getVisionTargetFound();
+    public NetworkTableDouble   getVisionTargetFound();
     public NetworkTableDouble   getVisionLEDMode();
+    public NetworkTableDouble   getVisionPipeline();
     public PIDControl           getVisionRotatePID();
 
     public Motor                getSpinnerSpinnerMotor();

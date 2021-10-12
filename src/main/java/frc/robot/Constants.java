@@ -31,11 +31,17 @@ public final class Constants
     public static final double              LIMELIGHT_LED_OFF       = 1;
     public static final double              LIMELIGHT_LED_ON        = 3;
 
-    public static final double              TARGET_HEIGHT           = 0;
-    public static final double              LIMELIGHT_HEIGHT        = 0;
+    public static final double              LIMELIGHT_VISION_PROCESSING = 0;
+    public static final double              LIMELIGHT_DRIVER_CAMERA     = 1;
+
+    public static final double              LIMELIGHT_TARGET_NOT_FOUND = 0;
+    public static final double              LIMELIGHT_TARGET_FOUND     = 1;
+
+    public static final double              TARGET_HEIGHT           = 83.25;
+    public static final double              LIMELIGHT_HEIGHT        = 34;
     public static final double              TARGET_HEIGHT_DELTA     = TARGET_HEIGHT - LIMELIGHT_HEIGHT;
 
-    public static final double              LIMELIGHT_ANGLE         = 0;
+    public static final double              LIMELIGHT_ANGLE         = 30;
 
     public static final double              MOTOR_MOTION_THRESHOLD  = 0.02;
 

@@ -68,8 +68,9 @@ public class MockRobotMap implements RobotMap
 
     private MockNetworkTableDouble  _visionXPosition;
     private MockNetworkTableDouble  _visionYPosition;
-    private MockNetworkTableBoolean _visionTargetFound;
+    private MockNetworkTableDouble  _visionTargetFound;
     private MockNetworkTableDouble  _visionLEDMode;
+    private MockNetworkTableDouble  _visionPipeline;
     private PIDControl              _visionRotatePID;
 
     private MockMotor               _spinnerSpinnerMotor;
@@ -129,8 +130,9 @@ public class MockRobotMap implements RobotMap
         
         _visionXPosition            = new MockNetworkTableDouble();
         _visionYPosition            = new MockNetworkTableDouble();
-        _visionTargetFound          = new MockNetworkTableBoolean();
+        _visionTargetFound          = new MockNetworkTableDouble();
         _visionLEDMode              = new MockNetworkTableDouble();
+        _visionPipeline             = new MockNetworkTableDouble();
         _visionRotatePID            = new PIDControl();
         
         _spinnerSpinnerMotor        = new MockMotor();
@@ -394,7 +396,7 @@ public class MockRobotMap implements RobotMap
     }
 
     @Override
-    public NetworkTableBoolean getVisionTargetFound() 
+    public NetworkTableDouble getVisionTargetFound() 
     {
         return _visionTargetFound;
     }
@@ -403,6 +405,12 @@ public class MockRobotMap implements RobotMap
     public NetworkTableDouble getVisionLEDMode() 
     {
         return _visionLEDMode;
+    }
+
+    @Override
+    public NetworkTableDouble getVisionPipeline()
+    {
+        return _visionPipeline;
     }
 
     @Override

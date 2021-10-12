@@ -177,6 +177,7 @@ public class RobotContainer
             _robotMap.getVisionYPosition(), 
             _robotMap.getVisionTargetFound(), 
             _robotMap.getVisionLEDMode(), 
+            _robotMap.getVisionPipeline(),
             _robotMap.getVisionRotatePID()
         );
     }
@@ -258,6 +259,9 @@ public class RobotContainer
         _robotMap.getCoDriveJoy().getButton(6).whenActivated(new CmdBallPathIncrementBallCount(_ballPathSubsystem));
         _robotMap.getCoDriveJoy().getButton(7).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(Constants.SHOOTER_NEAR_DISTANCE)));
         _robotMap.getCoDriveJoy().getButton(9).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(Constants.SHOOTER_FAR_DISTANCE)));
+
+        _robotMap.getCoDriveJoy().getButton(8).whenActivated(SwartdogCommand.run(() -> _visionSubsystem.enableVisionProcessing()));
+        _robotMap.getCoDriveJoy().getButton(10).whenActivated(SwartdogCommand.run(() -> _visionSubsystem.disableVisionProcessing()));
 
         _robotMap.getBallPathPosition1Sensor().whenActivated(new CmdBallPathLoad(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
 

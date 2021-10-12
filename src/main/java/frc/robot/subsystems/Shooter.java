@@ -131,7 +131,5 @@ public class Shooter extends SwartdogSubsystem
     public void periodic()
     {
         _hoodMotor.set(_hoodPID.calculate(getHoodPosition()));
-
-        System.out.println("Hood Pos: " + getHoodPosition());
     }
 }
