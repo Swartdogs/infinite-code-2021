@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
+import java.lang.Math;
 
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.Enumerations.State;
@@ -16,6 +17,7 @@ public class CmdDriveWithShooter extends SwartdogCommand
     private DoubleSupplier _drive;
     private DoubleSupplier _strafe;
     private DoubleSupplier _rotate;
+    private boolean        _finished;
 
     public CmdDriveWithShooter(Drive          driveSubsystem, 
                                Shooter        shooterSubsystem, 
@@ -30,6 +32,7 @@ public class CmdDriveWithShooter extends SwartdogCommand
         _drive            = drive;
         _strafe           = strafe;
         _rotate           = rotate;
+        _finished         = false;
 
         addRequirements(_driveSubsystem);
     }
@@ -41,8 +44,10 @@ public class CmdDriveWithShooter extends SwartdogCommand
         {
             _driveSubsystem.setDriveInUse(true);
 
-            _visionSubsystem.setLEDs(State.On);
+            _visionSubsystem.enableVisionProcessing();
             _visionSubsystem.rotateInit();
+
+            _finished = false;
         }
     }
 
@@ -50,18 +55,23 @@ public class CmdDriveWithShooter extends SwartdogCommand
     public void execute() 
     {
         double rotate = 0;
+        double manual = _rotate.getAsDouble();
+
         if (_visionSubsystem.targetFound()) 
         {
             rotate = _visionSubsystem.rotateExec();
-            _shooterSubsystem.setTargetDistance(_visionSubsystem.getTargetDistance());
         }
         else
         {
-            rotate = _rotate.getAsDouble();
+            rotate = manual;
         }
 
         _driveSubsystem.drive(_drive.getAsDouble(), _strafe.getAsDouble(), rotate);
 
+        if (Math.abs(manual) >= 1) 
+        {
+            _finished = true;
+        }
     }
 
     @Override
@@ -69,12 +79,12 @@ public class CmdDriveWithShooter extends SwartdogCommand
     {
         _driveSubsystem.setDriveInUse(false);
 
-        _visionSubsystem.setLEDs(State.Off);
+        _visionSubsystem.disableVisionProcessing();
     }
 
     @Override
     public boolean isFinished() 
     {
-        return !_shooterSubsystem.isShooterOn();
+        return !_shooterSubsystem.isShooterOn() || _finished;
     }
 }

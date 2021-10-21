@@ -329,6 +329,13 @@ public class RobotHardware implements RobotMap
         _visionRotatePID   = new PIDControl();
 
         // Configure
+        _visionRotatePID.setCoefficient(Coefficient.P, 0,  0.115, 0);
+        _visionRotatePID.setCoefficient(Coefficient.I, 10, 0,     0.001);
+        _visionRotatePID.setCoefficient(Coefficient.D, 0,  0,     0);
+        _visionRotatePID.setInputRange(-360, 360);
+        _visionRotatePID.setOutputRamp(0.1, 0.05);
+        _visionRotatePID.setSetpointDeadband(2.0);
+
         _hardware.addHardware
         (
             _visionXPosition,

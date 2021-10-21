@@ -19,8 +19,9 @@ public class VisionTest
 
     private MockNetworkTableDouble  _xPosition;
     private MockNetworkTableDouble  _yPosition;
-    private MockNetworkTableBoolean _targetFound;
+    private MockNetworkTableDouble  _targetFound;
     private MockNetworkTableDouble  _ledMode;
+    private MockNetworkTableDouble  _pipeline;
     private PIDControl              _pidControl;
     private Vision                  _visionSubsystem;
 
@@ -35,8 +36,9 @@ public class VisionTest
     {
         _xPosition          = new MockNetworkTableDouble(0);
         _yPosition          = new MockNetworkTableDouble(0);
-        _targetFound        = new MockNetworkTableBoolean(false);
+        _targetFound        = new MockNetworkTableDouble(0);
         _ledMode            = new MockNetworkTableDouble(Constants.LIMELIGHT_LED_OFF);
+        _pipeline           = new MockNetworkTableDouble(0);
         _pidControl         = new PIDControl();
 
         _pidControl.setCoefficient(Coefficient.P, 0, 1, 0);
@@ -53,6 +55,7 @@ public class VisionTest
             _yPosition, 
             _targetFound, 
             _ledMode, 
+            _pipeline,
             _pidControl
         );
     }
@@ -88,7 +91,7 @@ public class VisionTest
     @Test
     public void testFindTarget()
     {
-        _targetFound.set(true);
+        _targetFound.set(1);
 
         assertTrue(_visionSubsystem.targetFound());
     }
@@ -137,7 +140,7 @@ public class VisionTest
         _xPosition.set(1);
         _visionSubsystem.rotateInit();
 
-        assertEquals(-1, _visionSubsystem.rotateExec(), EPSILON);
+        assertEquals(1, _visionSubsystem.rotateExec(), EPSILON);
         assertFalse(_visionSubsystem.rotateIsFinished());
     }
 
@@ -147,7 +150,7 @@ public class VisionTest
         _xPosition.set(-0.5);
         _visionSubsystem.rotateInit();
 
-        assertEquals(0.5, _visionSubsystem.rotateExec(), EPSILON);
+        assertEquals(-0.5, _visionSubsystem.rotateExec(), EPSILON);
         assertFalse(_visionSubsystem.rotateIsFinished());
     }
 }

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
 import java.util.function.DoubleUnaryOperator;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,6 +24,7 @@ import frc.robot.commands.CmdShooterStop;
 import frc.robot.commands.CmdSpinnerManual;
 import frc.robot.groups.GrpAuto6BallFriendlyTrench;
 import frc.robot.groups.GrpAutoShoot3AndMove;
+import frc.robot.groups.GrpShootWithVision;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.ControlPanelSpinner;
 import frc.robot.subsystems.Dashboard;
@@ -47,6 +49,10 @@ public class RobotContainer
     private Vision              _visionSubsystem;
 
     private Switch              _hangerReleaseMultiButton;
+    
+    private DoubleSupplier      _drive;
+    private DoubleSupplier      _strafe;
+    private DoubleSupplier      _rotate;
 
     public RobotContainer(RobotMap robotMap) 
     {
@@ -92,10 +98,16 @@ public class RobotContainer
             }
         };
 
+        _drive  = () -> _robotMap.getDriveJoy().getY();
+        _strafe = () -> _robotMap.getDriveJoy().getX();
+        _rotate = () -> _robotMap.getDriveJoy().getZ();
+
         createSubsystems();
         configureDefaultCommands();
         configureButtonBindings();
         configureAutonomousModes();
+
+        _visionSubsystem.disableVisionProcessing();
     }
 
     private void createSubsystems()
@@ -189,9 +201,9 @@ public class RobotContainer
             new CmdDriveWithJoystick
             (
                 _driveSubsystem, 
-                () -> _robotMap.getDriveJoy().getY(), 
-                () -> _robotMap.getDriveJoy().getX(), 
-                () -> _robotMap.getDriveJoy().getZ()
+                _drive, 
+                _strafe, 
+                _rotate
             )
         );
 
@@ -249,7 +261,7 @@ public class RobotContainer
         _robotMap.getDriveJoy().getButton(7).whenActivated(new CmdShooterStart(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(8).whileActive(new CmdShooterFire(_dashboardSubsystem, _driveSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(9).whenActivated(new CmdShooterStop(_driveSubsystem, _shooterSubsystem));
-
+        _robotMap.getDriveJoy().getButton(10).whenActivated(new GrpShootWithVision(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem, _visionSubsystem, _drive, _strafe, _rotate));
         _robotMap.getDriveJoy().getButton(12).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.setGyro(180)));
 
         _robotMap.getCoDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));

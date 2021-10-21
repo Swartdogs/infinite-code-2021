@@ -80,12 +80,12 @@ public class Vision extends SwartdogSubsystem
 
     public void rotateInit()
     {
-        _rotatePID.setSetpoint(0, getTargetAngle());
+        _rotatePID.setSetpoint(0, -getTargetAngle());
     }
 
     public double rotateExec()
     {
-        return _rotatePID.calculate(getTargetAngle());
+        return _rotatePID.calculate(-getTargetAngle());
     }
 
     public boolean rotateIsFinished()
