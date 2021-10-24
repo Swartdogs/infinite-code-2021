@@ -123,7 +123,7 @@ public class RobotHardware implements RobotMap
         // Configure
         _driveJoy.setXDeadband(0.05);
         _driveJoy.setYDeadband(0.05);
-        _driveJoy.setZDeadband(0.15);
+        _driveJoy.setZDeadband(0.235);
 
         _driveJoy.setSquareX(true);
         _driveJoy.setSquareY(true);

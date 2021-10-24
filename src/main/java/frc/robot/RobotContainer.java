@@ -1,7 +1,7 @@
 package frc.robot;
 
 import java.util.function.DoubleSupplier;
-import java.util.function.DoubleUnaryOperator;
+import java.util.function.Function;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.abstraction.Switch;
@@ -31,6 +31,7 @@ import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Preset;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -161,8 +162,8 @@ public class RobotContainer
             _robotMap.getShooterHoodMotor(),
             _robotMap.getShooterHoodSensor(),
             _robotMap.getShooterHoodPID(),
-            calculateHoodAngle,
-            calculateShooterRPM
+            _calculateHoodAngle,
+            _calculateShooterRPM
         );
 
         _spinnerSubsystem = new ControlPanelSpinner
@@ -242,7 +243,7 @@ public class RobotContainer
                 {
                     double manual = 0;
 
-                    if (_robotMap.getCoDriveJoy().getButton(2).get() == State.On && !_hangerSubsystem.isHangerReleased())
+                    if (!_pickupSubsystem.isPickupDeployed() && !_hangerSubsystem.isHangerReleased())
                     {
                         manual = _robotMap.getCoDriveJoy().getX();
                     }
@@ -255,25 +256,25 @@ public class RobotContainer
 
     private void configureButtonBindings() 
     {
+        _robotMap.getDriveJoy().getButton(2).whileActive(new CmdShooterFire(_dashboardSubsystem, _driveSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
+
         _robotMap.getDriveJoy().getButton(5).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(6).whenActivated(new CmdBallPathRaise(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
-
-        _robotMap.getDriveJoy().getButton(7).whenActivated(new CmdShooterStart(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
-        _robotMap.getDriveJoy().getButton(8).whileActive(new CmdShooterFire(_dashboardSubsystem, _driveSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(7).whileActive(new CmdShooterFire(_dashboardSubsystem, _driveSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(8).whenActivated(new GrpShootWithVision(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem, _visionSubsystem, _drive, _strafe, _rotate));
         _robotMap.getDriveJoy().getButton(9).whenActivated(new CmdShooterStop(_driveSubsystem, _shooterSubsystem));
-        _robotMap.getDriveJoy().getButton(10).whenActivated(new GrpShootWithVision(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem, _visionSubsystem, _drive, _strafe, _rotate));
         _robotMap.getDriveJoy().getButton(12).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.setGyro(180)));
 
         _robotMap.getCoDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));
         _robotMap.getCoDriveJoy().getButton(3).whenActivated(new CmdPickupStow(_ballPathSubsystem, _pickupSubsystem));
-        _robotMap.getCoDriveJoy().getButton(4).whenActivated(new CmdBallPathDecrementBallCount(_ballPathSubsystem));
+        _robotMap.getCoDriveJoy().getButton(4).whenActivated(new CmdBallPathLower(_ballPathSubsystem, _hangerSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getCoDriveJoy().getButton(5).whenActivated(new CmdPickupDeploy(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
-        _robotMap.getCoDriveJoy().getButton(6).whenActivated(new CmdBallPathIncrementBallCount(_ballPathSubsystem));
-        _robotMap.getCoDriveJoy().getButton(7).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(Constants.SHOOTER_NEAR_DISTANCE)));
-        _robotMap.getCoDriveJoy().getButton(9).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setTargetDistance(Constants.SHOOTER_FAR_DISTANCE)));
-
-        _robotMap.getCoDriveJoy().getButton(8).whenActivated(SwartdogCommand.run(() -> _visionSubsystem.enableVisionProcessing()));
-        _robotMap.getCoDriveJoy().getButton(10).whenActivated(SwartdogCommand.run(() -> _visionSubsystem.disableVisionProcessing()));
+        _robotMap.getCoDriveJoy().getButton(6).whenActivated(new CmdBallPathRaise(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
+        _robotMap.getCoDriveJoy().getButton(7).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setPreset(Preset.Near)));
+        _robotMap.getCoDriveJoy().getButton(8).whenActivated(new CmdBallPathIncrementBallCount(_ballPathSubsystem));
+        _robotMap.getCoDriveJoy().getButton(9).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setPreset(Preset.Far)));
+        _robotMap.getCoDriveJoy().getButton(10).whenActivated(new CmdBallPathDecrementBallCount(_ballPathSubsystem));
+        _robotMap.getCoDriveJoy().getButton(11).whenActivated(SwartdogCommand.run(() -> _shooterSubsystem.setPreset(Preset.Vision)));
 
         _robotMap.getBallPathPosition1Sensor().whenActivated(new CmdBallPathLoad(_dashboardSubsystem, _ballPathSubsystem, _pickupSubsystem));
 
@@ -298,7 +299,7 @@ public class RobotContainer
         _hangerReleaseMultiButton.cache();
     }
 
-    private DoubleUnaryOperator calculateHoodAngle = (targetDistance) ->
+    private Function<Preset, Double> _calculateHoodAngle = (preset) ->
     { 
         double target       = Constants.DEFAULT_HOOD_MIN_POSITION;
         double nearPosition = Constants.DEFAULT_HOOD_NEAR_TARGET;
@@ -311,19 +312,21 @@ public class RobotContainer
             farPosition  = _dashboardSubsystem.getHoodFarPosition();
         }
 
-        if (targetDistance == Constants.SHOOTER_NEAR_DISTANCE)
+        switch (preset)
         {
-            target = nearPosition;
-        }
-        else if (targetDistance == Constants.SHOOTER_FAR_DISTANCE)
-        {
-            target = farPosition;
+            case Near:
+                target = nearPosition;
+                break;
+
+            default:
+                target = farPosition;
+                break;
         }
 
         return target;
     };
 
-    private DoubleUnaryOperator calculateShooterRPM = (targetDistance) ->
+    private Function<Preset, Double> _calculateShooterRPM = (preset) ->
     {
         double target    = 0;
         double nearSpeed = Constants.DEFAULT_SHOOTER_NEAR_SPEED;
@@ -335,14 +338,15 @@ public class RobotContainer
             farSpeed  = _dashboardSubsystem.getShooterFarSpeed();
         }
 
-        if (targetDistance == Constants.SHOOTER_NEAR_DISTANCE)
+        switch (preset)
         {
-            target = nearSpeed;
-        }
+            case Near:
+                target = nearSpeed;
+                break;
 
-        else if (targetDistance == Constants.SHOOTER_FAR_DISTANCE)
-        {
-            target = farSpeed;
+            default:
+                target = farSpeed;
+                break;
         }
 
         return target;

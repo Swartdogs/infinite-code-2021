@@ -6,6 +6,7 @@ import java.lang.Math;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.Enumerations.State;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Preset;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.drive.Drive;
 
@@ -17,6 +18,7 @@ public class CmdDriveWithShooter extends SwartdogCommand
     private DoubleSupplier _drive;
     private DoubleSupplier _strafe;
     private DoubleSupplier _rotate;
+    private Preset         _preset;
     private boolean        _finished;
 
     public CmdDriveWithShooter(Drive          driveSubsystem, 
@@ -32,6 +34,7 @@ public class CmdDriveWithShooter extends SwartdogCommand
         _drive            = drive;
         _strafe           = strafe;
         _rotate           = rotate;
+        _preset           = _shooterSubsystem.getPreset();
         _finished         = false;
 
         addRequirements(_driveSubsystem);
@@ -42,10 +45,15 @@ public class CmdDriveWithShooter extends SwartdogCommand
     {
         if (_shooterSubsystem.isShooterOn())
         {
+            _preset = _shooterSubsystem.getPreset();
+
             _driveSubsystem.setDriveInUse(true);
 
-            _visionSubsystem.enableVisionProcessing();
-            _visionSubsystem.rotateInit();
+            if (_preset == Preset.Vision)
+            {
+                _visionSubsystem.enableVisionProcessing();
+                _visionSubsystem.rotateInit();
+            }
 
             _finished = false;
         }
@@ -57,21 +65,48 @@ public class CmdDriveWithShooter extends SwartdogCommand
         double rotate = 0;
         double manual = _rotate.getAsDouble();
 
-        if (_visionSubsystem.targetFound()) 
+        Preset currentPreset = _shooterSubsystem.getPreset();
+
+        if (_preset != currentPreset)
         {
-            rotate = _visionSubsystem.rotateExec();
+            _preset = currentPreset;
+
+            if (_preset == Preset.Vision)
+            {
+                _visionSubsystem.enableVisionProcessing();
+                _visionSubsystem.rotateInit();
+            }
+            
+            else
+            {
+                _visionSubsystem.disableVisionProcessing();
+            }
         }
-        else
+
+        switch (_preset)
         {
-            rotate = manual;
+            case Vision:
+                if (_visionSubsystem.targetFound()) 
+                {
+                    rotate = _visionSubsystem.rotateExec();
+                }
+                else
+                {
+                    rotate = manual;
+                }
+
+                if (Math.abs(manual) >= 1) 
+                {
+                    _finished = true;
+                }
+                break;
+
+            default:
+                rotate = manual;
+                break;
         }
 
         _driveSubsystem.drive(_drive.getAsDouble(), _strafe.getAsDouble(), rotate);
-
-        if (Math.abs(manual) >= 1) 
-        {
-            _finished = true;
-        }
     }
 
     @Override

@@ -14,6 +14,7 @@ import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Preset;
 import frc.robot.subsystems.drive.Drive;
 
 public class GrpAuto6BallFriendlyTrench extends SwartdogSequentialCommandGroup 
@@ -23,7 +24,7 @@ public class GrpAuto6BallFriendlyTrench extends SwartdogSequentialCommandGroup
         super
         (
             SwartdogCommand.run(() -> driveSubsystem.setGyro(-20)),
-            SwartdogCommand.run(() -> shooterSubsystem.setTargetDistance(Constants.SHOOTER_FAR_DISTANCE)),
+            SwartdogCommand.run(() -> shooterSubsystem.setPreset(Preset.Far)),
             new CmdShooterStart(ballPathSubsystem, driveSubsystem, pickupSubsystem, shooterSubsystem),
             new CmdWait(1.0),
             new CmdShooterFire(dashboardSubsystem, driveSubsystem, ballPathSubsystem, pickupSubsystem, shooterSubsystem),
@@ -31,7 +32,7 @@ public class GrpAuto6BallFriendlyTrench extends SwartdogSequentialCommandGroup
             new CmdDriveDistance(driveSubsystem, 76, 0, 0.5, 0, true, true),
             new CmdDriveDistance(driveSubsystem, 170, 0, 0.2, 0, false, true),
             new CmdPickupStow(ballPathSubsystem, pickupSubsystem),
-            SwartdogCommand.run(() -> shooterSubsystem.setTargetDistance(Constants.SHOOTER_FAR_DISTANCE)),
+            SwartdogCommand.run(() -> shooterSubsystem.setPreset(Preset.Far)),
             new CmdDriveDistance(driveSubsystem, 45, 0, 0.5, 0, false, true),
             new CmdDriveRotate(driveSubsystem, -17, 0.7, true),
             new CmdShooterStart(ballPathSubsystem, driveSubsystem, pickupSubsystem, shooterSubsystem),

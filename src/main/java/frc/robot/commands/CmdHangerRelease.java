@@ -5,6 +5,7 @@ import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Preset;
 
 public class CmdHangerRelease extends SwartdogCommand 
 {
@@ -27,9 +28,8 @@ public class CmdHangerRelease extends SwartdogCommand
         if (_ballPathSubsystem.isUpperTrackRaised())
         {
             _hangerSubsystem.releaseHanger();
-            _shooterSubsystem.setTargetDistance(Constants.DEFAULT_HOOD_NEAR_TARGET);
+            _shooterSubsystem.setPreset(Preset.Near);
         }
-        
     }
 
     @Override

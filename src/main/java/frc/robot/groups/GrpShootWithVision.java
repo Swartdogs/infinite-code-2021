@@ -29,7 +29,6 @@ public class GrpShootWithVision extends SwartdogSequentialCommandGroup
 
         super
         (
-            SwartdogCommand.run(() -> shooterSubsystem.setTargetDistance(Constants.SHOOTER_FAR_DISTANCE)),
             new CmdShooterStart(ballPathSubsystem, driveSubsystem, pickupSubsystem, shooterSubsystem),
             new CmdDriveWithShooter(driveSubsystem, shooterSubsystem, visionSubsystem, drive, strafe, rotate),
             new CmdShooterStop(driveSubsystem, shooterSubsystem)

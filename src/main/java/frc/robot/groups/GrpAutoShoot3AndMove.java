@@ -11,6 +11,7 @@ import frc.robot.subsystems.BallPath;
 import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.Preset;
 import frc.robot.subsystems.drive.Drive;
 
 public class GrpAutoShoot3AndMove extends SwartdogSequentialCommandGroup
@@ -19,7 +20,7 @@ public class GrpAutoShoot3AndMove extends SwartdogSequentialCommandGroup
     {
         super
         (
-            SwartdogCommand.run(() -> shooterSubsystem.setTargetDistance(Constants.SHOOTER_FAR_DISTANCE)),
+            SwartdogCommand.run(() -> shooterSubsystem.setPreset(Preset.Far)),
             new CmdShooterStart(ballPathSubsystem, driveSubsystem, pickupSubsystem, shooterSubsystem),
             new CmdWait(1.0),
             new CmdShooterFire(dashboardSubsystem, driveSubsystem, ballPathSubsystem, pickupSubsystem, shooterSubsystem),
