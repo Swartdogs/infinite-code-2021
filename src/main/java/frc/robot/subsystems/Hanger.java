@@ -58,4 +58,20 @@ public class Hanger extends SwartdogSubsystem
     {
         return _hangerPositionSensor.get();
     }
+
+    @Override
+    public void setGameMode(GameMode mode) {
+        switch (mode)
+        {
+            case Disabled:
+                setHangerMotor(0);
+                engageRatchet();
+        
+                _releaseSolenoid.extend(); 
+                break;
+    
+            default:
+                return;
+        }
+    }
 }

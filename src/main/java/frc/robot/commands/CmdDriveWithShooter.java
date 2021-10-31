@@ -4,7 +4,6 @@ import java.util.function.DoubleSupplier;
 import java.lang.Math;
 
 import frc.robot.abstraction.SwartdogCommand;
-import frc.robot.abstraction.Enumerations.State;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.Preset;
 import frc.robot.subsystems.Vision;

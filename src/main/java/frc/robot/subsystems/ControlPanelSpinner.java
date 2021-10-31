@@ -45,4 +45,17 @@ public class ControlPanelSpinner extends SwartdogSubsystem
     {
         return _spinnerPID.atSetpoint();
     }
+
+    @Override
+    public void setGameMode(GameMode mode) {
+        switch (mode)
+        {
+            case Disabled:
+                setSpinnerMotor(0);
+                break;
+
+            default:
+                break;
+        }
+    }
 }

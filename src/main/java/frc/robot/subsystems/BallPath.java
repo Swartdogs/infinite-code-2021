@@ -116,4 +116,18 @@ public class BallPath extends SwartdogSubsystem
     {
         _isJammed = jammed;
     }
+
+    @Override
+    public void setGameMode(GameMode mode) {
+        switch (mode)
+        {
+            case Disabled:
+                setTrackMotor(0);
+                raiseUpperTrack();    
+                break;
+
+            default:
+                break;
+        }
+    }
 }

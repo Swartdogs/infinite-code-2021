@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.SwartdogSubsystem;
+import frc.robot.abstraction.SwartdogSubsystem.GameMode;
 import frc.robot.subsystems.RobotLog.CommandMode;
-import frc.robot.subsystems.RobotLog.GameMode;
 
 public class RobotLogTest 
 {

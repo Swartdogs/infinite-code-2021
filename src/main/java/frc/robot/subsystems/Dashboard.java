@@ -407,4 +407,9 @@ public class Dashboard extends SwartdogSubsystem
         setShooterRPM(_shooterSubsystem.getShooterMotor());
         setShooterOn(_shooterSubsystem.isShooterOn());
     }
+
+    @Override
+    public void setGameMode(GameMode mode) {
+        return;
+    }
 }

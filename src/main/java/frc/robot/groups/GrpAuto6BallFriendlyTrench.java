@@ -1,6 +1,5 @@
 package frc.robot.groups;
 
-import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.SwartdogSequentialCommandGroup;
 import frc.robot.commands.CmdDriveDistance;
@@ -33,7 +32,7 @@ public class GrpAuto6BallFriendlyTrench extends SwartdogSequentialCommandGroup
             new CmdDriveDistance(driveSubsystem, 170, 0, 0.2, 0, false, true),
             new CmdPickupStow(ballPathSubsystem, pickupSubsystem),
             SwartdogCommand.run(() -> shooterSubsystem.setPreset(Preset.Far)),
-            new CmdDriveDistance(driveSubsystem, 45, 0, 0.5, 0, false, true),
+            new CmdDriveDistance(driveSubsystem, -125, 0, 0.5, 0, true, true),
             new CmdDriveRotate(driveSubsystem, -17, 0.7, true),
             new CmdShooterStart(ballPathSubsystem, driveSubsystem, pickupSubsystem, shooterSubsystem),
             new CmdWait(1.0),

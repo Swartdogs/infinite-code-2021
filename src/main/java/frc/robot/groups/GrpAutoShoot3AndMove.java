@@ -1,6 +1,5 @@
 package frc.robot.groups;
 
-import frc.robot.Constants;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.SwartdogSequentialCommandGroup;
 import frc.robot.commands.CmdDriveDistance;

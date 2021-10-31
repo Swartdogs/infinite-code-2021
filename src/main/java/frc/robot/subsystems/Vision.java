@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import PIDControl.PIDControl;
 import frc.robot.Constants;
-import frc.robot.abstraction.NetworkTableBoolean;
 import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.SwartdogSubsystem;
 import frc.robot.abstraction.Enumerations.State;
@@ -80,7 +79,7 @@ public class Vision extends SwartdogSubsystem
 
     public void rotateInit()
     {
-        _rotatePID.setSetpoint(0, -getTargetAngle());
+        _rotatePID.setSetpoint(Constants.VISION_OFFSET, -getTargetAngle());
     }
 
     public double rotateExec()
@@ -91,5 +90,18 @@ public class Vision extends SwartdogSubsystem
     public boolean rotateIsFinished()
     {
         return _rotatePID.atSetpoint();
+    }
+
+    @Override
+    public void setGameMode(GameMode mode) {
+        switch (mode)
+        {
+            case Disabled:
+                disableVisionProcessing();
+                break;
+
+            default:
+                return;
+        }
     }
 }

@@ -86,4 +86,20 @@ public class Pickup extends SwartdogSubsystem
     {
         return _rightLightSensor.get();
     }
+
+    @Override
+    public void setGameMode(GameMode mode) {
+        switch (mode)
+        {
+            case Disabled:
+                stowPickup();
+                setPrimaryMotor(0);
+                setRightMotor(0);
+                setLeftMotor(0);
+                break;
+
+            default:
+                return;
+        }
+    }
 }

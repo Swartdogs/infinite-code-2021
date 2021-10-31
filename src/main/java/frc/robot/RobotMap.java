@@ -3,7 +3,6 @@ package frc.robot;
 import PIDControl.PIDControl;
 import frc.robot.abstraction.Joystick;
 import frc.robot.abstraction.Motor;
-import frc.robot.abstraction.NetworkTableBoolean;
 import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.PositionSensor;
 import frc.robot.abstraction.ShuffleboardTab;

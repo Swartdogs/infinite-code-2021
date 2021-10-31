@@ -24,14 +24,6 @@ public class RobotLog extends SwartdogSubsystem
         End
     }
 
-    public enum GameMode
-    {
-        Disabled,
-        Autonomous,
-        Teleop,
-        Test
-    }
-
     private String _filePath;
     private PrintWriter _fileWriter;
 
@@ -208,5 +200,10 @@ public class RobotLog extends SwartdogSubsystem
         }
 
         return null;
+    }
+
+    @Override
+    public void setGameMode(GameMode mode) {
+        return;
     }
 }

@@ -2,7 +2,6 @@ package frc.robot.groups;
 
 import java.util.function.DoubleSupplier;
 
-import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.abstraction.SwartdogSequentialCommandGroup;
 import frc.robot.commands.CmdDriveWithShooter;
 import frc.robot.commands.CmdShooterStart;
@@ -12,7 +11,6 @@ import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.Constants;
 
 public class GrpShootWithVision extends SwartdogSequentialCommandGroup 
 {
@@ -23,8 +21,7 @@ public class GrpShootWithVision extends SwartdogSequentialCommandGroup
                               Vision         visionSubsystem, 
                               DoubleSupplier drive, 
                               DoubleSupplier strafe, 
-                              DoubleSupplier rotate
-    ) 
+                              DoubleSupplier rotate) 
     {
 
         super

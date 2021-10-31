@@ -13,7 +13,6 @@ import frc.robot.abstraction.Abstraction;
 import frc.robot.abstraction.Hardware;
 import frc.robot.abstraction.Joystick;
 import frc.robot.abstraction.Motor;
-import frc.robot.abstraction.NetworkTableBoolean;
 import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.PositionSensor;
 import frc.robot.abstraction.ShuffleboardTab;
@@ -168,15 +167,15 @@ public class RobotHardware implements RobotMap
         _driveBLDriveMotor.getPositionSensor().setScalingFunction(raw -> raw * Constants.DRIVE_ENCODER_SCALE);
         _driveBRDriveMotor.getPositionSensor().setScalingFunction(raw -> raw * Constants.DRIVE_ENCODER_SCALE);
 
-        _driveRotatePID.setCoefficient(Coefficient.P, 0, 0.015, 0);
-        _driveRotatePID.setCoefficient(Coefficient.I, 20, 0,    0.001);
-        _driveRotatePID.setCoefficient(Coefficient.D, 0, 0,    0);
+        _driveRotatePID.setCoefficient(Coefficient.P, 0,  0.015, 0);
+        _driveRotatePID.setCoefficient(Coefficient.I, 20, 0,     0.001);
+        _driveRotatePID.setCoefficient(Coefficient.D, 0,  0,     0);
         _driveRotatePID.setInputRange(-360, 360);
         _driveRotatePID.setOutputRamp(0.1, 0.05);
         _driveRotatePID.setSetpointDeadband(2.0);
 
         _driveDrivePID.setCoefficient(Coefficient.P, 0, 0.015, 0);
-        _driveDrivePID.setCoefficient(Coefficient.I, 0, 0,     0);
+        _driveDrivePID.setCoefficient(Coefficient.I, 5, 0,     0.001);
         _driveDrivePID.setCoefficient(Coefficient.D, 0, 0,     0);
         _driveDrivePID.setInputRange(0, 500);
         _driveDrivePID.setOutputRamp(0.1, 0.05);
@@ -243,7 +242,6 @@ public class RobotHardware implements RobotMap
         _hangerHangerPositionSensor = PositionSensor.analogInput(7);
 
         // Configure
-        _hangerHangerMotor = Motor.invert(_hangerHangerMotor);
         _hangerReleaseSolenoid = Solenoid.invert(_hangerReleaseSolenoid);
 
         _hardware.addHardware

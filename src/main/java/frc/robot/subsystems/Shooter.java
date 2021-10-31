@@ -1,11 +1,9 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.DoubleUnaryOperator;
 import java.util.function.Function;
 
 import PIDControl.PIDControl;
-import frc.robot.Constants;
 import frc.robot.abstraction.Motor;
 import frc.robot.abstraction.PositionSensor;
 import frc.robot.abstraction.SwartdogSubsystem;
@@ -32,8 +30,6 @@ public class Shooter extends SwartdogSubsystem
     private double                   _hoodSetpoint;
 
     private Preset                   _preset;
-    private boolean                  _visionInUse;
-
 
     public Shooter(Motor                    shooterMotor, 
                    Motor                    hoodMotor, 
@@ -50,8 +46,6 @@ public class Shooter extends SwartdogSubsystem
 
         _calculateHoodAngle     = calculateHoodAngle;
         _calculateShooterRPM    = calculateShooterRPM;
-
-        _visionInUse            = false;
 
         setPreset(Preset.Far);
     }
@@ -119,14 +113,22 @@ public class Shooter extends SwartdogSubsystem
         return _preset;
     }
 
-    public void setVisionInUse(boolean visionInUse)
-    {
-        _visionInUse = visionInUse;
-    }
-
     @Override
     public void periodic()
     {
         _hoodMotor.set(_hoodPID.calculate(getHoodPosition()));
+    }
+
+    @Override
+    public void setGameMode(GameMode mode) {
+        switch (mode)
+        {
+            case Disabled:
+                stopShooter();
+                break;
+
+            default:
+                return;
+        }
     }
 }

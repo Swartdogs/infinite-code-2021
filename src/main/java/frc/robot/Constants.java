@@ -40,6 +40,7 @@ public final class Constants
     public static final double              TARGET_HEIGHT           = 83.25;
     public static final double              LIMELIGHT_HEIGHT        = 34;
     public static final double              TARGET_HEIGHT_DELTA     = TARGET_HEIGHT - LIMELIGHT_HEIGHT;
+    public static final double              VISION_OFFSET           = 2.5;
 
     public static final double              LIMELIGHT_ANGLE         = 30;
 
@@ -49,10 +50,10 @@ public final class Constants
     public static final double              SHOOTER_FAR_DISTANCE    = 300;
 
     // Default Dashboard Settings
-    public static final double              DEFAULT_FL_MODULE_OFFSET             = 17;
-    public static final double              DEFAULT_FR_MODULE_OFFSET             = 194;
-    public static final double              DEFAULT_BL_MODULE_OFFSET             = 30;
-    public static final double              DEFAULT_BR_MODULE_OFFSET             = 176;
+    public static final double              DEFAULT_FL_MODULE_OFFSET             = 36;
+    public static final double              DEFAULT_FR_MODULE_OFFSET             = 209;
+    public static final double              DEFAULT_BL_MODULE_OFFSET             = 22;
+    public static final double              DEFAULT_BR_MODULE_OFFSET             = 197;
 
     public static final double              DEFAULT_HANGER_SPEED                 = 0.6;
     public static final double              DEFAULT_HANGER_MIN_POSITION          = 450;
@@ -72,9 +73,9 @@ public final class Constants
     public static final int                 DEFAULT_SHOOTER_RPM_DEADBAND         = 50;
     public static final double              DEFAULT_HOOD_MIN_POSITION            = 1035;
     public static final double              DEFAULT_HOOD_NEAR_TARGET             = DEFAULT_HOOD_MIN_POSITION - 60;
-    public static final double              DEFAULT_HOOD_FAR_TARGET              = DEFAULT_HOOD_MIN_POSITION - 540;
+    public static final double              DEFAULT_HOOD_FAR_TARGET              = DEFAULT_HOOD_MIN_POSITION - 565;
     public static final double              DEFAULT_HOOD_MAX_POSITION            = DEFAULT_HOOD_MIN_POSITION - 700;
     public static final double              DEFAULT_SHOOTER_NEAR_SPEED           = 3400;
-    public static final double              DEFAULT_SHOOTER_FAR_SPEED            = 4800;
+    public static final double              DEFAULT_SHOOTER_FAR_SPEED            = 5200;
     public static final double              DEFAULT_SHOOTER_ROTATE_SCALER        = 0.15;
 }

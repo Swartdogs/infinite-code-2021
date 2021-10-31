@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.abstraction.SwartdogSubsystem.GameMode;
 
 public class Robot extends TimedRobot 
 {
@@ -28,7 +29,7 @@ public class Robot extends TimedRobot
     @Override
     public void disabledInit() 
     {
-
+        _robotContainer.setGameMode(GameMode.Disabled);
     }
 
     @Override
@@ -40,6 +41,8 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit() 
     {
+        _robotContainer.setGameMode(GameMode.Autonomous);
+
         _autonomousCommand = _robotContainer.getAutonomousCommand();
 
         if (_autonomousCommand != null) 
@@ -57,6 +60,8 @@ public class Robot extends TimedRobot
     @Override
     public void teleopInit() 
     {
+        _robotContainer.setGameMode(GameMode.Teleop);
+
         if (_autonomousCommand != null) 
         {
             _autonomousCommand.cancel();
@@ -72,6 +77,8 @@ public class Robot extends TimedRobot
     @Override
     public void testInit() 
     {
+        _robotContainer.setGameMode(GameMode.Test);
+
         CommandScheduler.getInstance().cancelAll();
     }
 

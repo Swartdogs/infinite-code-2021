@@ -6,6 +6,7 @@ import java.util.function.Function;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.abstraction.Switch;
 import frc.robot.abstraction.Enumerations.State;
+import frc.robot.abstraction.SwartdogSubsystem.GameMode;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.commands.CmdBallPathDecrementBallCount;
 import frc.robot.commands.CmdBallPathIncrementBallCount;
@@ -19,10 +20,11 @@ import frc.robot.commands.CmdPickupDefault;
 import frc.robot.commands.CmdPickupDeploy;
 import frc.robot.commands.CmdPickupStow;
 import frc.robot.commands.CmdShooterFire;
-import frc.robot.commands.CmdShooterStart;
 import frc.robot.commands.CmdShooterStop;
 import frc.robot.commands.CmdSpinnerManual;
+import frc.robot.groups.GrpAuto5BallGenerator;
 import frc.robot.groups.GrpAuto6BallFriendlyTrench;
+import frc.robot.groups.GrpAuto6BallFriendlyTrenchVision;
 import frc.robot.groups.GrpAutoShoot3AndMove;
 import frc.robot.groups.GrpShootWithVision;
 import frc.robot.subsystems.BallPath;
@@ -285,8 +287,10 @@ public class RobotContainer
     {
         _robotMap.getDashboardTab().addDefaultAutonomous("None", null);
 
+        _robotMap.getDashboardTab().addAutonomous("5 Ball, Generator", new GrpAuto5BallGenerator(_dashboardSubsystem, _ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem, _visionSubsystem));
         _robotMap.getDashboardTab().addAutonomous("6 Ball, Friendly Trench", new GrpAuto6BallFriendlyTrench(_dashboardSubsystem, _ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDashboardTab().addAutonomous("Shoot 3 and Drive", new GrpAutoShoot3AndMove(_dashboardSubsystem, _ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem));
+        _robotMap.getDashboardTab().addAutonomous("6 Ball, Friendly Trench Vision", new GrpAuto6BallFriendlyTrenchVision(_dashboardSubsystem, _ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem, _visionSubsystem));
     }
 
     public Command getAutonomousCommand() 
@@ -297,6 +301,17 @@ public class RobotContainer
     public void periodic()
     {
         _hangerReleaseMultiButton.cache();
+    }
+
+    public void setGameMode(GameMode mode) {
+        _driveSubsystem.setGameMode(mode);
+        _ballPathSubsystem.setGameMode(mode);
+        _spinnerSubsystem.setGameMode(mode);
+        _dashboardSubsystem.setGameMode(mode);
+        _hangerSubsystem.setGameMode(mode);
+        _pickupSubsystem.setGameMode(mode);
+        _shooterSubsystem.setGameMode(mode);
+        _visionSubsystem.setGameMode(mode);
     }
 
     private Function<Preset, Double> _calculateHoodAngle = (preset) ->
