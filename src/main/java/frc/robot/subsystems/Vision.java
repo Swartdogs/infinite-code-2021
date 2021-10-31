@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import PIDControl.PIDControl;
+import PIDControl.PIDControl.Coefficient;
 import frc.robot.Constants;
 import frc.robot.abstraction.NetworkTableDouble;
 import frc.robot.abstraction.SwartdogSubsystem;
@@ -98,6 +99,16 @@ public class Vision extends SwartdogSubsystem
         {
             case Disabled:
                 disableVisionProcessing();
+
+                _rotatePID.setCoefficient(Coefficient.P, 0,  0.015, 0);
+                _rotatePID.setCoefficient(Coefficient.I, 20, 0,     0.001);
+                _rotatePID.setCoefficient(Coefficient.D, 0,  0,     0);        
+                break;
+
+            case Autonomous:
+                _rotatePID.setCoefficient(Coefficient.P, 0,  0.115, 0);
+                _rotatePID.setCoefficient(Coefficient.I, 10, 0,     0.001);
+                _rotatePID.setCoefficient(Coefficient.D, 0,  0,     0);    
                 break;
 
             default:
