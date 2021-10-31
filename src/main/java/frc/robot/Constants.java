@@ -73,7 +73,7 @@ public final class Constants
     public static final int                 DEFAULT_SHOOTER_RPM_DEADBAND         = 50;
     public static final double              DEFAULT_HOOD_MIN_POSITION            = 1035;
     public static final double              DEFAULT_HOOD_NEAR_TARGET             = DEFAULT_HOOD_MIN_POSITION - 60;
-    public static final double              DEFAULT_HOOD_FAR_TARGET              = DEFAULT_HOOD_MIN_POSITION - 565;
+    public static final double              DEFAULT_HOOD_FAR_TARGET              = DEFAULT_HOOD_MIN_POSITION - 575;
     public static final double              DEFAULT_HOOD_MAX_POSITION            = DEFAULT_HOOD_MIN_POSITION - 700;
     public static final double              DEFAULT_SHOOTER_NEAR_SPEED           = 3400;
     public static final double              DEFAULT_SHOOTER_FAR_SPEED            = 5200;
