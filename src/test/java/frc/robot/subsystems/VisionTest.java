@@ -43,7 +43,7 @@ public class VisionTest
         _pidControl.setCoefficient(Coefficient.P, 0, 1, 0);
         _pidControl.setCoefficient(Coefficient.I, 0, 0, 0);
         _pidControl.setCoefficient(Coefficient.D, 0, 0, 0);
-        _pidControl.setInputRange(-1, 1);
+        _pidControl.setInputRange(-27.5, 27.5);
         _pidControl.setOutputRange(-1, 1);
         _pidControl.setOutputRamp(0, 1);
         _pidControl.setSetpointDeadband(EPSILON);
