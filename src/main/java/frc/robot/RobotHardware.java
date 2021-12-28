@@ -218,7 +218,7 @@ public class RobotHardware implements RobotMap
         _ballPathUpperTrackSolenoid = Solenoid.solenoid(7);
         _ballPathPosition1Sensor    = Switch.lightSensor(0);
         _ballPathPosition2Sensor    = Switch.lightSensor(1);
-        _ballPathShooterSensor      = Switch.lightSensor(3);
+        _ballPathShooterSensor      = Switch.lightSensor(2);
 
         // Configure
         _ballPathTrackMotor = Motor.invert(_ballPathTrackMotor);

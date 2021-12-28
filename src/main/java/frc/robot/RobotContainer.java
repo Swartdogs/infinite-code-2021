@@ -10,6 +10,7 @@ import frc.robot.abstraction.SwartdogSubsystem.GameMode;
 import frc.robot.abstraction.SwartdogCommand;
 import frc.robot.commands.CmdBallPathDecrementBallCount;
 import frc.robot.commands.CmdBallPathIncrementBallCount;
+import frc.robot.commands.CmdBallPathJitter;
 import frc.robot.commands.CmdBallPathLoad;
 import frc.robot.commands.CmdBallPathLower;
 import frc.robot.commands.CmdBallPathRaise;
@@ -265,6 +266,7 @@ public class RobotContainer
         _robotMap.getDriveJoy().getButton(7).whileActive(new CmdShooterFire(_dashboardSubsystem, _driveSubsystem, _ballPathSubsystem, _pickupSubsystem, _shooterSubsystem));
         _robotMap.getDriveJoy().getButton(8).whenActivated(new GrpShootWithVision(_ballPathSubsystem, _driveSubsystem, _pickupSubsystem, _shooterSubsystem, _visionSubsystem, _drive, _strafe, _rotate));
         _robotMap.getDriveJoy().getButton(9).whenActivated(new CmdShooterStop(_driveSubsystem, _shooterSubsystem));
+        _robotMap.getDriveJoy().getButton(10).whileActive(new CmdBallPathJitter(_ballPathSubsystem, _dashboardSubsystem));
         _robotMap.getDriveJoy().getButton(12).whenActivated(SwartdogCommand.run(() -> _driveSubsystem.setGyro(180)));
 
         _robotMap.getCoDriveJoy().getButton(1).whenActivated(SwartdogCommand.run(() -> _ballPathSubsystem.setJammed(false)));

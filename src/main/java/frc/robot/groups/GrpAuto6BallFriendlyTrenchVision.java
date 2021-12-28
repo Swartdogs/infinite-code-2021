@@ -28,8 +28,9 @@ public class GrpAuto6BallFriendlyTrenchVision extends SwartdogSequentialCommandG
             new CmdDriveDistance(driveSubsystem, 170, 0, 0.2, 0, false, true),
             new CmdPickupStow(ballPathSubsystem, pickupSubsystem),
             new CmdDriveDistance(driveSubsystem, -125, 0, 0.5, 0, true, true),
-            new CmdAutoShootWithVision(driveSubsystem, pickupSubsystem, ballPathSubsystem, shooterSubsystem, visionSubsystem, dashboardSubsystem),
-            SwartdogCommand.run(() -> driveSubsystem.setGyro(driveSubsystem.getHeading() + 180))
+            new CmdPickupStow(ballPathSubsystem, pickupSubsystem),
+            SwartdogCommand.run(() -> driveSubsystem.setGyro(driveSubsystem.getHeading() + 180)),
+            new CmdAutoShootWithVision(driveSubsystem, pickupSubsystem, ballPathSubsystem, shooterSubsystem, visionSubsystem, dashboardSubsystem)
         );
     }
 }

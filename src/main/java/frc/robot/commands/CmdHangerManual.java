@@ -26,11 +26,9 @@ public class CmdHangerManual extends SwartdogCommand
     public void execute()
     {
         double speed    = _manual.getAsDouble() * _dashboardSubsystem.getHangerSpeed();
-        double position = _hangerSubsystem.getPosition();
+        // double position = _hangerSubsystem.getPosition();
 
-        if ((Math.abs(speed) < Constants.MOTOR_MOTION_THRESHOLD) || 
-            (speed < 0 && position < _dashboardSubsystem.getHangerMinPosition()) ||
-            (speed > 0 && position > _dashboardSubsystem.getHangerMaxPosition()))
+        if (Math.abs(speed) < Constants.MOTOR_MOTION_THRESHOLD)
         {
             _hangerSubsystem.engageRatchet();
             _hangerSubsystem.setHangerMotor(0);

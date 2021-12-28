@@ -39,7 +39,13 @@ public class CmdAutoShootWithVision extends SwartdogCommand {
 
     @Override
     public void execute() {
-        double rotate = _visionSubsystem.rotateExec();
+        double rotate = 0;
+        
+        if (_visionSubsystem.targetFound())
+        {
+            rotate = _visionSubsystem.rotateExec();
+        }
+        
         _driveSubsystem.drive(0, 0, rotate);
         if (_visionSubsystem.targetFound() && _visionSubsystem.rotateIsFinished()) {
             _ballPathSubsystem.setTrackMotor(_dashboardSubsystem.getBallPathSpeed());

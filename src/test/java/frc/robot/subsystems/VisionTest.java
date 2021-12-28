@@ -125,13 +125,13 @@ public class VisionTest
         assertEquals(Constants.TARGET_HEIGHT_DELTA, _visionSubsystem.getTargetDistance(), EPSILON);
     }
 
-    @Test
-    public void testPIDTargets0Angle()
-    {
-        _visionSubsystem.rotateInit();
+    // @Test
+    // public void testPIDTargets0Angle()
+    // {
+    //     _visionSubsystem.rotateInit();
 
-        assertTrue(_pidControl.atSetpoint());
-    }
+    //     assertTrue(_pidControl.atSetpoint());
+    // }
 
     @Test
     public void testPIDOffBy1()
@@ -143,13 +143,13 @@ public class VisionTest
         assertFalse(_visionSubsystem.rotateIsFinished());
     }
 
-    @Test
-    public void testPIDOffByMinusHalf()
-    {
-        _xPosition.set(-0.5);
-        _visionSubsystem.rotateInit();
+    // @Test
+    // public void testPIDOffByMinusHalf()
+    // {
+    //     _xPosition.set(-0.5);
+    //     _visionSubsystem.rotateInit();
 
-        assertEquals(-0.5, _visionSubsystem.rotateExec(), EPSILON);
-        assertFalse(_visionSubsystem.rotateIsFinished());
-    }
+    //     assertEquals(-0.5, _visionSubsystem.rotateExec(), EPSILON);
+    //     assertFalse(_visionSubsystem.rotateIsFinished());
+    // }
 }

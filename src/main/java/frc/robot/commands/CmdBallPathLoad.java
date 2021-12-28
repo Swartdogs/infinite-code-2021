@@ -9,11 +9,14 @@ import frc.robot.subsystems.Pickup;
 
 public class CmdBallPathLoad extends SwartdogCommand 
 {
+    private final double PICKUP_DISABLE_TIME = 0.1;
+
     private Dashboard _dashboardSubsystem;
     private BallPath  _ballPathSubsystem;
     private Pickup    _pickupSubsystem;
 
     private int       _loadTimer;
+    private int       _pickupDisableTimer;
     private double    _trackMotorSpeed;
 
     public CmdBallPathLoad(Dashboard dashboardSubsystem, BallPath ballPathSubsystem, Pickup pickupSubsystem) 
@@ -31,17 +34,14 @@ public class CmdBallPathLoad extends SwartdogCommand
     @Override
     public void initialize() 
     {
-        _pickupSubsystem.setLeftMotor(0);
-        _pickupSubsystem.setPrimaryMotor(0);
-        _pickupSubsystem.setRightMotor(0);
-
         if (!_ballPathSubsystem.isJammed() && 
             _ballPathSubsystem.getBallCount() < Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT)
         {
             _ballPathSubsystem.incrementBallCount();
 
-            _loadTimer       = Math.max(0, (int)(50 * _dashboardSubsystem.getBallPathJamTime()));
-            _trackMotorSpeed = _dashboardSubsystem.getBallPathRampMin();
+            _loadTimer          = Math.max(0, (int)(50 * _dashboardSubsystem.getBallPathJamTime()));
+            _pickupDisableTimer = Math.max(0, (int)(50 * PICKUP_DISABLE_TIME));
+            _trackMotorSpeed    = _dashboardSubsystem.getBallPathRampMin();
         }
 
         else
@@ -58,6 +58,14 @@ public class CmdBallPathLoad extends SwartdogCommand
              _ballPathSubsystem.getBallCount() < Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT)
         {
             _loadTimer--;
+            _pickupDisableTimer--;
+
+            if (_pickupDisableTimer <= 0)
+            {
+                _pickupSubsystem.setLeftMotor(0);
+                _pickupSubsystem.setPrimaryMotor(0);
+                _pickupSubsystem.setRightMotor(0);        
+            }
 
             if (_loadTimer > 0)
             {
@@ -101,6 +109,13 @@ public class CmdBallPathLoad extends SwartdogCommand
         else if (_ballPathSubsystem.isUpperTrackRaised())
         {
             _pickupSubsystem.stowPickup();
+        }
+
+        if (_ballPathSubsystem.getBallCount() >= Constants.DEFAULT_BALLPATH_MAX_BALL_COUNT)
+        {
+            _pickupSubsystem.setLeftMotor(0);
+            _pickupSubsystem.setPrimaryMotor(0);
+            _pickupSubsystem.setRightMotor(0);
         }
     }
 
